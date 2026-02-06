@@ -1,0 +1,88 @@
+@mixin heading(
+  $size: md,
+  $weight: 600,
+  $color: $text-dark,
+  $case: uppercase,
+) {
+  font-weight: $weight;
+  color: $color;
+text-transform: $case;
+  @if $size == sm {
+    font-size: 0.9rem;
+  } @else if $size == md {
+    font-size: 1.2rem;
+  } @else if $size == lg {
+    font-size: 1.6rem;
+  } @else if $size == xl {
+    font-size: 2rem;
+  }
+}
+
+
+
+@mixin flex(
+  $direction: row,
+  $justify: center,
+  $align: center,
+  $gap: 1rem,
+  $wrap: nowrap
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  gap: $gap;
+  flex-wrap: $wrap;
+}
+
+@mixin grid(
+  $columns: 1fr,
+  $rows: unset,
+  $gap: 1rem
+) {
+  display: grid;
+  grid-template-columns: $columns;
+  grid-template-rows: $rows;
+  gap: $gap;
+}
+
+
+// POSITION MIXIN
+
+@mixin position(
+  $type: relative,
+  $top: auto,
+  $right: auto,
+  $bottom: auto,
+  $left: auto,
+) {
+  position: $type;
+  top: $top;
+  right: $right;
+  bottom: $bottom;
+  left: $left;
+  transform: translate(50%, 50%);
+}
+
+
+// INPUT / SELECT / TEXTAREA (forms everywhere)
+
+@mixin input-base {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  background-color: $bg-white;
+  transition: $transition;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 2px rgba(22, 101, 52, 0.15);
+  }
+
+  &::placeholder {
+    color: $text-light;
+  }
+}
