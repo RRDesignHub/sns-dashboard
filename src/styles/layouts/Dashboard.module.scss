@@ -2,7 +2,7 @@
 @import "../../styles/mixin";
 
 .dashboardParent {
-    @include grid(1fr 4fr, $spacing-8);
+    @include grid(1fr 4fr, $spacing-4);
     height: 100vh;
     background-color: $color-primary-50;
 }

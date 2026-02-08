@@ -2,9 +2,15 @@
 @import "../../styles/mixin";
 
 .sidebarWrapper {
+  width: 100%;
   padding: 1.5rem 1rem;
-    background-color: $color-white;
-    box-shadow: 1px 1px 15px $color-primary-100;
+  background-color: $color-white;
+  box-shadow: 1px 1px 15px $color-primary-100;
+  z-index: 10;
+  overflow-y: auto;
+  &::-webkit-scrollbar{
+    display: none;
+  }
   .brand {
     @include flex(row, start, center, 0.75rem);
     

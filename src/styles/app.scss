@@ -25,3 +25,67 @@ a {
 li{
     list-style: none;
 }
+
+
+.home {
+  @include flex(column, center, center, 0);
+  min-height: 100vh;
+  background: linear-gradient(135deg, $color-primary-50 0%, $color-primary-100 100%);
+  padding: $spacing-4;
+}
+
+.home-container {
+  @include flex(column, center, center, 0);
+  width: 100%;
+  max-width: 400px;
+}
+
+.dashboard-button {
+  @include flex(column, center, center, 0);
+  padding: $spacing-5 $spacing-10;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  font-size: $font-xl;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  border: none;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all $transition-base;
+  box-shadow: $shadow-lg;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, $color-primary-700, $color-primary-800);
+    opacity: 0;
+    transition: opacity $transition-base;
+    z-index: -1;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-xl;
+
+    &::before {
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: $shadow-md;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $color-primary-400;
+    outline-offset: 3px;
+  }
+}
