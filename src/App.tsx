@@ -43,7 +43,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               {/* Admin Routes */}
-              <Route index element={<Overview />} />
+              <Route path="overview" element={<Overview />} />
 
               {/* User Management */}
               <Route path="create-user" element={<CreateUser />} />

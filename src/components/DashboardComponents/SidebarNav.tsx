@@ -46,14 +46,16 @@ export interface NavGroup {
 const SidebarNav = () => {
   // TEMP: later this will come from Redux / Auth Context
   const userRole: UserRole = {
-    isAdmin: false,
-    isTeacher: true,
+    isAdmin: true,
+    isTeacher: false,
     isAccountant: false,
   };
   const adminNavGroups: NavGroup[] = [
     {
       heading: "Overview",
-      links: [{ name: "ড্যাশবোর্ড", path: "/dashboard", icon: MdDashboard }],
+      links: [
+        { name: "ড্যাশবোর্ড", path: "/dashboard/overview", icon: MdDashboard },
+      ],
     },
     {
       heading: "User Management",
@@ -104,7 +106,9 @@ const SidebarNav = () => {
   const teacherNavGroups: NavGroup[] = [
     {
       heading: "Overview",
-      links: [{ name: "ডেসবোর্ড", path: "/dashboard", icon: MdDashboard }],
+      links: [
+        { name: "ডেসবোর্ড", path: "/dashboard/overview", icon: MdDashboard },
+      ],
     },
     {
       heading: "Student Management",
@@ -149,7 +153,7 @@ const SidebarNav = () => {
     {
       heading: "Overview",
       links: [
-        { name: "ডেসবোর্ড", path: "/dashboard", icon: MdDashboard },
+        { name: "ডেসবোর্ড", path: "/dashboard/overview", icon: MdDashboard },
         {
           name: "সর্বশেষ লেনদেন",
           path: "/dashboard/recent-transactions",

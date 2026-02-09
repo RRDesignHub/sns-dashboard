@@ -4,7 +4,7 @@ const Home: React.FC = () => {
   return (
     <div className="home">
       <div className="home-container">
-        <Link to="/dashboard" className="dashboard-button">
+        <Link to="/dashboard/overview" className="dashboard-button">
           Go to Dashboard
         </Link>
       </div>

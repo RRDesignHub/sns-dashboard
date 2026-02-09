@@ -20,6 +20,81 @@
   }
 }
 
+// Flexbox Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-center-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-start {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+@mixin flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+
+
+// Media Query Mixins
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: 575.98px) { @content; }
+  }
+  @else if $breakpoint == 'sm' {
+    @media (min-width: 576px) { @content; }
+  }
+  @else if $breakpoint == 'md' {
+    @media (min-width: 768px) { @content; }
+  }
+  @else if $breakpoint == 'lg' {
+    @media (min-width: 992px) { @content; }
+  }
+  @else if $breakpoint == 'xl' {
+    @media (min-width: 1200px) { @content; }
+  }
+  @else if $breakpoint == 'xxl' {
+    @media (min-width: 1400px) { @content; }
+  }
+}
+
+// Alternative breakpoint mixin with max-width
+@mixin max-width($breakpoint) {
+  @if $breakpoint == 'xs' {
+    @media (max-width: 575.98px) { @content; }
+  }
+  @else if $breakpoint == 'sm' {
+    @media (max-width: 767.98px) { @content; }
+  }
+  @else if $breakpoint == 'md' {
+    @media (max-width: 991.98px) { @content; }
+  }
+  @else if $breakpoint == 'lg' {
+    @media (max-width: 1199.98px) { @content; }
+  }
+  @else if $breakpoint == 'xl' {
+    @media (max-width: 1399.98px) { @content; }
+  }
+}
+
 @mixin flex(
   $direction: row,
   $justify: center,

@@ -5,4 +5,8 @@
     @include grid(1fr 4fr, $spacing-4);
     height: 100vh;
     background-color: $color-primary-50;
+    >main{
+        background-color: $color-primary-50;
+        min-height: 100%;
+    }
 }
