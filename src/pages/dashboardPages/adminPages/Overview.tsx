@@ -65,15 +65,6 @@ const Overview: React.FC = () => {
       bgColor: "var(--card-bg-info)",
     },
     {
-      id: 5,
-      title: "মাসিক আয়",
-      value: "৳ 56,650",
-      change: "+3%",
-      icon: <MdAttachMoney size={24} />, // Replaced DollarSign
-      color: "secondary",
-      bgColor: "var(--card-bg-secondary)",
-    },
-    {
       id: 6,
       title: "একাডেমিক ক্লাস",
       value: "22",
@@ -111,8 +102,8 @@ const Overview: React.FC = () => {
 
   // Dummy data for gender pie chart
   const genderData = [
-    { gender: "ছেলে", value: 680, percentage: 55, color: "#16a34a" },
-    { gender: "মেয়ে", value: 565, percentage: 45, color: "#22c55e" },
+    { gender: "ছেলে", value: 680, percentage: 55, color: "#017e3fff" },
+    { gender: "মেয়ে", value: 565, percentage: 45, color: "#002b4eff" },
   ];
 
   // Recent activity from logs
@@ -266,7 +257,7 @@ const Overview: React.FC = () => {
             <ResponsiveContainer width="100%" height={350}>
               <BarChart
                 data={classDistribution}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                margin={{ top: 20, right: 15, left: 15, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis
@@ -295,20 +286,53 @@ const Overview: React.FC = () => {
                 />
                 <Bar
                   dataKey="ছেলে"
-                  fill="#039e63ff"
+                  fill="#4f78ffff"
                   name="ছেলে"
                   radius={[4, 4, 0, 0]}
-                  maxBarSize={40}
+                  barSize={50}
                 />
                 <Bar
                   dataKey="মেয়ে"
-                  fill="#e94200ff"
+                  fill="#24ff91ff"
                   name="মেয়ে"
                   radius={[4, 4, 0, 0]}
-                  maxBarSize={40}
+                  maxBarSize={50}
                 />
               </BarChart>
             </ResponsiveContainer>
+
+            {/* Section 3: Recent Activities */}
+            <section className={styles.activitiesSection}>
+              <div className={styles.activitiesContainer}>
+                <h2 className={styles.sectionTitle}>
+                  <BiBell size={20} />
+                  <span>সাম্প্রতিক কার্যক্রম</span>
+                </h2>
+                <div className={styles.activitiesList}>
+                  {recentActivities.map((activity) => (
+                    <div key={activity.id} className={styles.activityItem}>
+                      <div className={styles.activityIcon}>{activity.icon}</div>
+                      <div className={styles.activityContent}>
+                        <div className={styles.activityHeader}>
+                          <span className={styles.activityAction}>
+                            {activity.action}
+                          </span>
+                          <span className={styles.activityTime}>
+                            {activity.time}
+                          </span>
+                        </div>
+                        <p className={styles.activityDetails}>
+                          {activity.details}
+                        </p>
+                        <span className={styles.activityUser}>
+                          - {activity.user}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
@@ -366,7 +390,7 @@ const Overview: React.FC = () => {
           </div>
 
           {/* Monthly Admission Trend */}
-          {/* <div className={styles.chartContainer}>
+          <div className={styles.chartContainer}>
             <h2 className={styles.sectionTitle}>
               <FiTrendingUp size={20} />
               <span>মাসিক ভর্তি প্রবণতা</span>
@@ -377,57 +401,30 @@ const Overview: React.FC = () => {
                   data={admissionTrendData}
                   margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                  <XAxis 
-                    dataKey="month" 
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#e5e7eb"
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="month"
                     stroke="#6b7280"
                     fontSize={11}
                     tickLine={false}
                   />
-                  <YAxis 
-                    stroke="#6b7280"
-                    fontSize={11}
-                    tickLine={false}
-                  />
+                  <YAxis stroke="#6b7280" fontSize={11} tickLine={false} />
                   <Tooltip content={<CustomLineTooltip />} />
                   <Line
                     type="monotone"
                     dataKey="admissions"
                     stroke="#16a34a"
                     strokeWidth={2}
-                    dot={{ fill: '#16a34a', strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6, fill: '#22c55e' }}
+                    dot={{ fill: "#16a34a", strokeWidth: 2, r: 4 }}
+                    activeDot={{ r: 6, fill: "#22c55e" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
-          </div> */}
-        </div>
-      </section>
-
-      {/* Section 3: Recent Activities */}
-      <section className={styles.activitiesSection}>
-        <div className={styles.activitiesContainer}>
-          <h2 className={styles.sectionTitle}>
-            <BiBell size={20} />
-            <span>সাম্প্রতিক কার্যক্রম</span>
-          </h2>
-          <div className={styles.activitiesList}>
-            {recentActivities.map((activity) => (
-              <div key={activity.id} className={styles.activityItem}>
-                <div className={styles.activityIcon}>{activity.icon}</div>
-                <div className={styles.activityContent}>
-                  <div className={styles.activityHeader}>
-                    <span className={styles.activityAction}>
-                      {activity.action}
-                    </span>
-                    <span className={styles.activityTime}>{activity.time}</span>
-                  </div>
-                  <p className={styles.activityDetails}>{activity.details}</p>
-                  <span className={styles.activityUser}>- {activity.user}</span>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>
