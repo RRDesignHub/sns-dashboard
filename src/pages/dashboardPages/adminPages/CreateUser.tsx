@@ -431,14 +431,6 @@ const CreateUser: React.FC = () => {
                 </div>
               </div>
             </div>
-
-            <div className={styles.infoFooter}>
-              <p className={styles.infoNote}>
-                <MdWarning size={18} />
-                প্রতিটি ইউজার তৈরি করার পর তাদের ইমেইলে লগইন নির্দেশিকা পাঠানো
-                হবে।
-              </p>
-            </div>
           </div>
         </div>
       </div>

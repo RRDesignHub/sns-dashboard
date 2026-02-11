@@ -1,0 +1,830 @@
+@import '../../styles/variables';
+@import '../../styles/mixin';
+
+.allUsersPage {
+  padding: $spacing-3;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  
+  @include respond-to('md') {
+    padding: $spacing-3;
+  }
+}
+
+/* Page Header */
+.pageHeader {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  margin-bottom: $spacing-8;
+  box-shadow: $shadow-lg;
+  border: 1px solid $color-gray-200;
+  
+  @include respond-to('md') {
+    padding: $spacing-8;
+  }
+}
+
+.headerContent {
+  @include flex(row, flex-start, center, $spacing-4);
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-6;
+  border-bottom: 2px solid rgba($color-primary-500, 0.1);
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-12;
+  height: $spacing-12;
+  background: linear-gradient(135deg, 
+    rgba($color-primary-500, 0.15) 0%, 
+    rgba($color-primary-600, 0.15) 100%
+  );
+  border-radius: $radius-lg;
+  
+  svg {
+    color: $color-primary-600;
+    filter: drop-shadow(0 4px 6px rgba($color-primary-600, 0.2));
+  }
+}
+
+.headerTitle {
+  @include flex(column, center, flex-start, $spacing-2);
+}
+
+.pageTitle {
+  @include heading(xl, $font-weight-bold, $color-gray-900);
+  margin: 0;
+  background: linear-gradient(135deg, $color-primary-700, $color-primary-600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pageSubtitle {
+  font-size: $font-lg;
+  color: $color-gray-600;
+  margin: 0;
+}
+
+/* Stats Cards */
+.statsContainer {
+  @include grid(repeat(2, 1fr), auto, $spacing-4);
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statCard {
+  @include flex(row, flex-start, center, $spacing-3);
+  padding: $spacing-4;
+  background: linear-gradient(135deg, $color-gray-100, $color-white);
+  border: 1px solid $color-primary-200;
+  border-radius: $radius-lg;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+    border: 1px solid $color-primary-300;
+    box-shadow: $shadow-md;
+  }
+}
+
+.statIcon {
+  @include flex-center;
+  width: $spacing-10;
+  height: $spacing-10;
+  border-radius: $radius-md;
+}
+
+.statInfo {
+  @include flex(column, center, flex-start, $spacing-1);
+}
+
+.statLabel {
+  font-size: $font-xs;
+  color: $color-gray-600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.statValue {
+  font-size: $font-xl;
+  font-weight: $font-weight-bold;
+  color: $color-gray-900;
+}
+
+/* Filters Section */
+.filtersSection {
+  @include flex(column, flex-start, stretch, $spacing-4);
+  margin-bottom: $spacing-4;
+  
+  @include respond-to('md') {
+    @include flex(row, space-between, center, $spacing-3);
+  }
+}
+
+.searchBox {
+  @include flex(row, flex-start, center);
+  flex: 1;
+  position: relative;
+  background: $color-white;
+  border-radius: $radius-lg;
+  border: 1px solid $color-primary-200;
+  transition: all $transition-base;
+  
+  &:focus-within {
+    border-color: $color-primary-500;
+    box-shadow: 0 0 0 3px rgba($color-primary-500, 0.1);
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: $spacing-3;
+  color: rgba($color-primary-950, 0.7);
+  font-size: $font-lg;
+}
+
+.searchInput {
+  width: 100%;
+  padding: $spacing-3 $spacing-3 $spacing-3 $spacing-10;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  background: transparent;
+  
+  &::placeholder {
+    color: $color-gray-400;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+.filterGroup {
+  @include flex(row, flex-start, center);
+  position: relative;
+  min-width: 150px;
+}
+
+.filterIcon {
+  position: absolute;
+  left: $spacing-3;
+  color: $color-gray-400;
+  z-index: 1;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: $spacing-3 $spacing-3 $spacing-3 $spacing-10;
+  border: 1px solid $color-primary-200;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  color: $color-gray-700;
+  background: $color-white;
+  cursor: pointer;
+  appearance: none;
+  transition: all $transition-base;
+  
+  &:hover {
+    border-color: $color-primary-400;
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
+    box-shadow: 0 0 0 3px rgba($color-primary-500, 0.1);
+  }
+}
+
+.exportButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: linear-gradient(135deg, $color-gray-700, $color-gray-800);
+  color: $color-white;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+    background: linear-gradient(135deg, $color-gray-800, $color-gray-900);
+  }
+  
+  svg {
+    font-size: $font-lg;
+  }
+}
+
+.addButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: linear-gradient(135deg, 
+    $color-primary-600, 
+    $color-primary-700
+  );
+  color: $color-white;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($color-primary-600, 0.3);
+  }
+  
+  svg {
+    font-size: $font-lg;
+  }
+}
+/* Table Container */
+.tableContainer {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-3;
+  box-shadow: $shadow-lg;
+  border: 1px solid $color-gray-200;
+  margin-bottom: $spacing-6;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tableHeader {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-4;
+  border-bottom: 2px solid $color-gray-100;
+}
+
+.tableTitle {
+  @include flex(row, flex-start, center, $spacing-3);
+  font-size: $font-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin: 0;
+}
+
+.userCount {
+  padding: $spacing-1 $spacing-3;
+  background: rgba($color-primary-500, 0.1);
+  color: $color-primary-700;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.userTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px; /* Ensures table doesn't shrink too much on mobile */
+  
+  thead {
+    tr {
+      border-bottom: 2px solid $color-gray-200;
+    }
+    
+    th {
+      padding: $spacing-4 $spacing-3;
+      text-align: left;
+      font-size: $font-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: $color-gray-600;
+      background: $color-gray-50;
+      white-space: nowrap;
+      position: relative;
+      
+      &:hover {
+        color: $color-primary-600;
+        background: rgba($color-primary-50, 0.5);
+      }
+      
+      /* Sortable columns */
+      &[onClick] {
+        cursor: pointer;
+        user-select: none;
+        transition: all $transition-base;
+        padding-right: $spacing-6;
+        
+        span {
+          display: inline;
+          margin-right: $spacing-2;
+        }
+        
+        svg {
+          position: absolute;
+          right: $spacing-2;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
+      
+      span {
+        display: inline;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-gray-100;
+      transition: all $transition-base;
+      
+      &:hover {
+        background: rgba($color-primary-50, 0.3);
+      }
+    }
+    
+    td {
+      padding: $spacing-3 $spacing-3;
+      font-size: $font-sm;
+      color: $color-gray-700;
+      vertical-align: middle;
+    }
+  }
+}
+
+/* User Info */
+.slNo {
+  width: 60px;
+  text-align: center;
+}
+
+.slNumber {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  background: $color-gray-100;
+  color: $color-gray-600;
+  border-radius: $radius-md;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+  margin: 0 auto;
+}
+
+.userInfo {
+  @include flex(row, flex-start, center, $spacing-2);
+  min-width: 180px;
+}
+
+.userAvatar {
+  @include flex-center;
+  width: $spacing-8;
+  height: $spacing-8;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  border-radius: $radius-md;
+  font-weight: $font-weight-bold;
+  font-size: $font-sm;
+  text-transform: uppercase;
+  box-shadow: 0 2px 4px rgba($color-primary-600, 0.2);
+  flex-shrink: 0;
+}
+
+.userDetails {
+  @include flex(column, center, flex-start, $spacing-1);
+  min-width: 0;
+}
+
+.userName {
+  font-weight: $font-weight-semibold;
+  color: $color-gray-900;
+  font-size: $font-sm;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.userId {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  white-space: nowrap;
+}
+
+.userEmail {
+  @include flex(row, flex-start, center, $spacing-2);
+  min-width: 180px;
+  
+  .emailIcon {
+    color: $color-gray-400;
+    font-size: $font-sm;
+    flex-shrink: 0;
+  }
+  
+  span {
+    color: $color-gray-700;
+    font-size: $font-sm;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+  }
+}
+
+/* Role Badges */
+.roleBadge {
+  @include flex(row, center, center, $spacing-1);
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  width: fit-content;
+  
+  svg {
+    font-size: $font-sm;
+    margin-right: $spacing-1;
+  }
+  
+  span {
+    white-space: nowrap;
+  }
+}
+
+/* Status Badges */
+.statusActive, .statusInactive {
+  @include flex(row, flex-start, center, $spacing-1);
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  
+  svg {
+    font-size: $font-sm;
+    margin-right: $spacing-1;
+  }
+}
+
+.statusActive {
+  color: #10b981;
+  
+  svg {
+    color: #10b981;
+  }
+}
+
+.statusInactive {
+  color: #ef4444;
+  
+  svg {
+    color: #ef4444;
+  }
+}
+
+/* Date */
+.joinDate {
+  @include flex(row, flex-start, center, $spacing-1);
+  min-width: 100px;
+  
+  .dateIcon {
+    color: $color-gray-400;
+    font-size: $font-sm;
+    flex-shrink: 0;
+  }
+  
+  span {
+    color: $color-gray-600;
+    font-size: $font-xs;
+    white-space: nowrap;
+  }
+}
+
+/* Action Buttons */
+.actionButtons {
+  @include flex(row, flex-start, center, $spacing-1);
+  min-width: 100px;
+}
+
+.editButton, .viewButton, .deleteButton {
+  @include flex-center;
+  width: $spacing-8;
+  height: $spacing-8;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+  padding: 0;
+  
+  svg {
+    font-size: $font-sm;
+  }
+}
+
+.editButton {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  
+  &:hover {
+    background: #3b82f6;
+    color: $color-white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+  }
+}
+
+.viewButton {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  
+  &:hover {
+    background: #10b981;
+    color: $color-white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+  }
+}
+
+.deleteButton {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  
+  &:hover {
+    background: #ef4444;
+    color: $color-white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+  }
+}
+
+/* Sort Icons */
+.sortIcon, .sortIconActive {
+  margin-left: $spacing-1;
+  display: inline-block;
+}
+
+.sortIcon {
+  color: $color-gray-400;
+  font-size: $font-xs;
+}
+
+.sortIconActive {
+  color: $color-primary-600;
+  font-size: $font-xs;
+}
+
+/* Empty State */
+.noData {
+  padding: $spacing-12 !important;
+}
+
+.emptyState {
+  @include flex(column, center, center, $spacing-4);
+  text-align: center;
+  width: 100%;
+  
+  svg {
+    color: $color-gray-300;
+    margin-bottom: $spacing-4;
+  }
+  
+  h3 {
+    font-size: $font-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-700;
+    margin: 0;
+  }
+  
+  p {
+    font-size: $font-sm;
+    color: $color-gray-500;
+    margin: 0;
+    max-width: 400px;
+  }
+}
+
+.emptyStateButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  margin-top: $spacing-4;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($color-primary-600, 0.3);
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .tableContainer {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+  }
+  
+  .userTable {
+    thead {
+      th {
+        background: $color-gray-700;
+        color: $color-gray-300;
+        
+        &:hover {
+          color: $color-primary-400;
+          background: $color-gray-600;
+        }
+      }
+    }
+    
+    tbody {
+      tr {
+        border-bottom-color: $color-gray-700;
+        
+        &:hover {
+          background: rgba($color-primary-900, 0.3);
+        }
+      }
+      
+      td {
+        color: $color-gray-300;
+      }
+    }
+  }
+  
+  .userName {
+    color: $color-gray-100;
+  }
+  
+  .slNumber {
+    background: $color-gray-700;
+    color: $color-gray-400;
+  }
+  
+  .userEmail span {
+    color: $color-gray-300;
+  }
+  
+  .joinDate span {
+    color: $color-gray-400;
+  }
+}
+
+/* Pagination */
+.pagination {
+  @include flex(row, center, center, $spacing-2);
+  margin-top: $spacing-8;
+  flex-wrap: wrap;
+}
+
+.paginationButton {
+  @include flex-center;
+  padding: $spacing-2 $spacing-4;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  color: $color-gray-600;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover:not(:disabled) {
+    background: $color-primary-50;
+    border-color: $color-primary-500;
+    color: $color-primary-600;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  &.active {
+    background: $color-primary-600;
+    border-color: $color-primary-600;
+    color: $color-white;
+  }
+}
+
+/* Sort Icons */
+.sortIcon {
+  color: $color-gray-400;
+  font-size: $font-xs;
+}
+
+.sortIconActive {
+  color: $color-primary-600;
+  font-size: $font-xs;
+}
+
+/* Loading */
+.loadingContainer {
+  padding: $spacing-12;
+  @include flex-center;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .allUsersPage {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+  
+  .pageHeader,
+  .tableContainer {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+  }
+  
+  .pageTitle {
+    background: linear-gradient(135deg, $color-primary-400, $color-primary-300);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .pageSubtitle {
+    color: $color-gray-400;
+  }
+  
+  .statCard {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    
+    .statLabel {
+      color: $color-gray-400;
+    }
+    
+    .statValue {
+      color: $color-gray-100;
+    }
+  }
+  
+  .searchBox,
+  .filterSelect {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    
+    input {
+      color: $color-gray-100;
+      
+      &::placeholder {
+        color: $color-gray-500;
+      }
+    }
+  }
+  
+  .userTable {
+    thead th {
+      background: $color-gray-700;
+      color: $color-gray-400;
+      
+      &:hover {
+        color: $color-primary-400;
+        background: $color-gray-600;
+      }
+    }
+    
+    tbody tr {
+      border-bottom-color: $color-gray-700;
+      
+      &:hover {
+        background: rgba($color-primary-900, 0.2);
+      }
+    }
+    
+    td {
+      color: $color-gray-300;
+    }
+  }
+  
+  .userName {
+    color: $color-gray-100;
+  }
+  
+  .userId {
+    color: $color-gray-500;
+  }
+  
+  .slNumber {
+    background: $color-gray-700;
+    color: $color-gray-400;
+  }
+  
+  .joinDate span {
+    color: $color-gray-400;
+  }
+}
