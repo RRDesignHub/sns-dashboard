@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
 import Loading from "./components/shared/Loading";
+import Login from "./pages/Login";
 
 const Home = lazy(() => import("./pages/Home"));
 
@@ -41,6 +42,9 @@ function App() {
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Home />} />
+
+            {/* login page */}
+            <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<DashboardLayout />}>
               {/* Admin Routes */}
               <Route path="overview" element={<Overview />} />
