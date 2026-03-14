@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
+import { AuthProvider } from "./AuthProvider/AuthProvider";
+import { PrivateRoute } from "./routes/PrivateRoute";
 import Loading from "./components/shared/Loading";
 import Login from "./pages/Login";
 
@@ -38,29 +40,38 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/" element={<Home />} />
+      <AuthProvider>
+        <BrowserRouter>
+          <Suspense fallback={<Loading />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
 
-            {/* login page */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<DashboardLayout />}>
-              {/* Admin Routes */}
-              <Route path="overview" element={<Overview />} />
+              {/* login page */}
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardLayout />
+                  </PrivateRoute>
+                }
+              >
+                {/* Admin Routes */}
+                <Route path="overview" element={<Overview />} />
 
-              {/* User Management */}
-              <Route path="create-user" element={<CreateUser />} />
-              <Route path="all-users" element={<AllUsers />} />
-              <Route path="update-user/:id" element={<UpdateUser />} />
-              {/* teachers management */}
-              <Route path="add-teacher" element={<AddTeacher />} />
-              <Route path="all-teachers" element={<AllTeachers />} />
-              {/* School and exam Management */}
-            </Route>
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
+                {/* User Management */}
+                <Route path="create-user" element={<CreateUser />} />
+                <Route path="all-users" element={<AllUsers />} />
+                <Route path="update-user/:id" element={<UpdateUser />} />
+                {/* teachers management */}
+                <Route path="add-teacher" element={<AddTeacher />} />
+                <Route path="all-teachers" element={<AllTeachers />} />
+                {/* School and exam Management */}
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </AuthProvider>
     </>
   );
 }

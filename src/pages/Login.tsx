@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaEnvelope,
@@ -11,12 +11,14 @@ import {
   FaSpinner,
 } from "react-icons/fa";
 import styles from "./../styles/Login.module.scss";
-import axios from "axios";
+import Swal from "sweetalert2";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, loader } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -63,23 +65,52 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    const email = formData.email;
+    const password = formData.password;
     if (!validateForm()) return;
 
-    // setIsLoading(true);
+    // Start loadings
+    setLoading(true);
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_SERVER_API}/api/users/login`,
-        { email: formData.email, password: formData.password },
-      );
+      const response = await login({ email, password });
 
-      console.log(data);
-    } catch (err) {
-      console.log(err);
+      if (response.success) {
+        Swal.fire({
+          icon: "success",
+          title: "লগইন সফল হয়েছে",
+          text: `স্বাগতম ${response.data.name}`,
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        // Redirect based on role
+        switch (response.data.role) {
+          case "admin":
+            navigate("/dashboard/overview");
+            break;
+          case "teacher":
+            navigate("/teacher/dashboard");
+            break;
+          case "accountant":
+            navigate("/accountant/dashboard");
+            break;
+          default:
+            navigate("/dashboard");
+        }
+      }
+    } catch (error: any) {
+      Swal.fire({
+        icon: "error",
+        title: "লগইন ব্যর্থ হয়েছে",
+        text: error.response?.data?.message || "ইমেইল বা পাসওয়ার্ড ভুল",
+        confirmButtonColor: "#166534",
+      });
+    } finally {
+      // Stop loadings
+      setLoading(false);
     }
   };
-
   return (
     <div className={styles.loginPage}>
       {/* Background Decoration */}
@@ -129,7 +160,7 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={styles.formInput}
-                  disabled={isLoading}
+                  disabled={loading || loader}
                 />
               </div>
               {errors.email && (
@@ -155,13 +186,13 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={styles.formInput}
-                  disabled={isLoading}
+                  disabled={loading || loader}
                 />
                 <button
                   type="button"
                   className={styles.passwordToggle}
                   onClick={() => setShowPassword(!showPassword)}
-                  disabled={isLoading}
+                  disabled={loading || loader}
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
@@ -175,9 +206,9 @@ const Login = () => {
             <button
               type="submit"
               className={styles.submitButton}
-              disabled={isLoading}
+              disabled={loading || loader}
             >
-              {isLoading ? (
+              {loading || loader ? (
                 <>
                   <FaSpinner className={styles.spinner} />
                   <span>প্রবেশ করা হচ্ছে...</span>

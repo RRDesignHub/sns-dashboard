@@ -16,8 +16,8 @@ import {
   FaUserShield,
   FaSpinner,
 } from "react-icons/fa";
-import { MdWarning } from "react-icons/md";
 import styles from "../../../styles/DashboardPages/CreateUserPage.module.scss";
+import axios from "axios";
 
 interface PasswordValidation {
   length: boolean;
@@ -94,48 +94,54 @@ const CreateUser: React.FC = () => {
     console.log(newUser);
     setIsSubmitting(false);
 
-    // try {
-    //   const { data } = await axiosSecure.post(`/create-user`, newUser);
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_SERVER_API}/api/users/register`,
+        newUser,
+      );
 
-    //   if (data?.message) {
-    //     Swal.fire({
-    //       icon: 'info',
-    //       title: data.message,
-    //       confirmButtonColor: '#166534'
-    //     });
-    //     return;
-    //   }
+      if (data?.message) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${newUser.name}’কে সফলভাবে ${newUser.role}-এ অনুমতি দেয়া হয়েছে!`,
+          showConfirmButton: true,
+          confirmButtonColor: "#166534",
+          timer: 1500,
+        });
+        return;
+      }
 
-    //   if (data.insertedId) {
-    //     Swal.fire({
-    //       position: "center",
-    //       icon: "success",
-    //       title: `${newUser.name}’কে সফলভাবে ${newUser.role}-এ অনুমতি দেয়া হয়েছে!`,
-    //       showConfirmButton: true,
-    //       confirmButtonColor: '#166534',
-    //       timer: 1500,
-    //     });
-    //   }
-    // } catch (err: any) {
-    //   console.error(err);
+      if (data.insertedId) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: `${newUser.name}’কে সফলভাবে ${newUser.role}-এ অনুমতি দেয়া হয়েছে!`,
+          showConfirmButton: true,
+          confirmButtonColor: "#166534",
+          timer: 1500,
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
 
-    //   let errorMessage = "ইউজার তৈরিতে সমস্যা হয়েছে। পরে চেষ্টা করুন।";
+      let errorMessage = "ইউজার তৈরিতে সমস্যা হয়েছে। পরে চেষ্টা করুন।";
 
-    //   if (err.response?.data?.message) {
-    //     errorMessage = err.response.data.message;
-    //   } else if (err.response?.status === 409) {
-    //     errorMessage = "এই ইমেইল ইতিমধ্যে রেজিস্টার্ড আছে।";
-    //   }
+      if (err.response?.data?.message) {
+        errorMessage = err.response.data.message;
+      } else if (err.response?.status === 409) {
+        errorMessage = "এই ইমেইল ইতিমধ্যে রেজিস্টার্ড আছে।";
+      }
 
-    //   Swal.fire({
-    //     icon: 'error',
-    //     title: 'ত্রুটি',
-    //     text: errorMessage,
-    //     confirmButtonColor: '#166534'
-    //   });
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
+      Swal.fire({
+        icon: "error",
+        title: "ত্রুটি",
+        text: errorMessage,
+        confirmButtonColor: "#166534",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -303,19 +309,19 @@ const CreateUser: React.FC = () => {
             <div className={styles.roleOptions}>
               {[
                 {
-                  value: "Teacher",
+                  value: "teacher",
                   label: "শিক্ষক/শিক্ষিকা",
                   icon: <FaChalkboardTeacher size={24} />,
                   description: "ক্লাস ও রেজাল্ট ম্যানেজমেন্ট",
                 },
                 {
-                  value: "Accountant",
+                  value: "accountant",
                   label: "হিসাবরক্ষক",
                   icon: <FaMoneyBillWave size={24} />,
                   description: "ফাইন্যান্স ও একাউন্টস",
                 },
                 {
-                  value: "Admin",
+                  value: "admin",
                   label: "অ্যাডমিন",
                   icon: <FaUserShield size={24} />,
                   description: "ফুল সিস্টেম কন্ট্রোল",
