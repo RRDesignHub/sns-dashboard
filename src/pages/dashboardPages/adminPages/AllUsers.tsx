@@ -243,6 +243,7 @@ const dummyUsers = [
   },
 ];
 const AllUsers = () => {
+  return <h1>All students</h1>;
   // const axiosSecure = useAxiosSec();
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -250,7 +251,6 @@ const AllUsers = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-
   const handleDelete = async (id: string, userName: string) => {
     try {
       const result = await Swal.fire({
