@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { AuthContext } from "./AuthContext"; // Import from the other file
+import { AuthContext } from "./AuthContext";
 import axios from "axios";
 import type {
   LoginCredentials,

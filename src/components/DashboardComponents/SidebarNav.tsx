@@ -44,7 +44,6 @@ export interface NavGroup {
 }
 
 const SidebarNav = () => {
-  // TEMP: later this will come from Redux / Auth Context
   const userRole: UserRole = {
     isAdmin: true,
     isTeacher: false,
@@ -230,22 +229,9 @@ const SidebarNav = () => {
       ],
     },
   ];
+
   return (
     <div className={styles.sidebarWrapper}>
-      {/* 1. Branding Section - Now inside the wrapper for proper styling */}
-      <div className={styles.brand}>
-        <img src="/logo.png" alt="SNS_logo" />
-        <div className={styles.brandText}>
-          <h2>Dashboard</h2>
-          <span>
-            {userRole.isAdmin
-              ? "Admin"
-              : userRole.isAdmin
-                ? "Teacher"
-                : "Accountant"}
-          </span>
-        </div>
-      </div>
       <div className={styles.navDivider}></div>
       {/* 2. Navigation Flow - Logic Only */}
       <nav className={styles.navigation}>
