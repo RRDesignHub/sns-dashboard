@@ -3,31 +3,26 @@ import { Link } from "react-router-dom";
 import {
   FaUserEdit,
   FaUserShield,
-  FaUserGraduate,
   FaUserTie,
-  FaUserClock,
   FaEnvelope,
   FaCalendarAlt,
-  FaIdCard,
-  FaCheckCircle,
   FaTimesCircle,
   FaFilter,
   FaSearch,
   FaSort,
   FaSortUp,
   FaSortDown,
-  FaDownload,
   FaTrashAlt,
   FaEye,
   FaUserPlus,
 } from "react-icons/fa";
-import { MdDelete, MdMoreVert, MdAdminPanelSettings } from "react-icons/md";
-import { GiTeacher, GiMoneyStack } from "react-icons/gi";
+import { MdAdminPanelSettings } from "react-icons/md";
 import Swal from "sweetalert2";
 // import { format } from "date-fns";
 // import { useAxiosSec } from "../../../Hooks/useAxiosSec";
 import styles from "../../../styles/DashboardPages/AllUsers.module.scss";
 import Loading from "../../../components/shared/Loading";
+import { GiMoneyStack, GiTeacher } from "react-icons/gi";
 const dummyUsers = [
   {
     _id: "67d8f2b1a4e3f5c7d9b2a1e3",
@@ -255,19 +250,6 @@ const AllUsers = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
-  // Add this to your AllUsers.tsx file or create a separate dummyData.ts file
-
-  // const {
-  //   data: users = [],
-  //   isLoading,
-  //   refetch,
-  // } = useQuery({
-  //   queryKey: ["users"],
-  //   queryFn: async () => {
-  //     const { data } = await axiosSecure.get(`/all-users`);
-  //     return data || [];
-  //   },
-  // });
 
   const handleDelete = async (id: string, userName: string) => {
     try {
@@ -298,20 +280,7 @@ const AllUsers = () => {
         `,
       });
 
-      // if (result.isConfirmed) {
-      //   const { data } = await axiosSecure.delete(`/delete-user/${id}`);
-      //   if (data?.deletedCount) {
-      //     await Swal.fire({
-      //       title: "ডিলিট সম্পন্ন!",
-      //       text: "ইউজার সফলভাবে ডিলিট হয়েছে",
-      //       icon: "success",
-      //       confirmButtonColor: "#16a34a",
-      //       timer: 2000,
-      //       showConfirmButton: true,
-      //     });
-      //     refetch();
-      //   }
-      // }
+      console.log(result);
     } catch (err) {
       console.log("Delete user Error--->", err);
       Swal.fire({
@@ -325,7 +294,7 @@ const AllUsers = () => {
 
   // Filter and sort users
   const filteredUsers = useMemo(() => {
-    let filtered = dummyUsers.filter((user: any) => {
+    const filtered = dummyUsers.filter((user) => {
       // Search filter
       const matchesSearch =
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -336,21 +305,6 @@ const AllUsers = () => {
       const matchesRole = roleFilter === "all" || user.role === roleFilter;
 
       return matchesSearch && matchesRole;
-    });
-
-    // Sort
-    filtered.sort((a: any, b: any) => {
-      let aVal = a[sortField];
-      let bVal = b[sortField];
-
-      if (sortField === "joinedAt") {
-        aVal = new Date(aVal).getTime();
-        bVal = new Date(bVal).getTime();
-      }
-
-      if (aVal < bVal) return sortOrder === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortOrder === "asc" ? 1 : -1;
-      return 0;
     });
 
     return filtered;
@@ -466,7 +420,7 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>অ্যাডমিন</span>
               <span className={styles.statValue}>
-                {dummyUsers.filter((u: any) => u.role === "Admin").length} জন
+                {dummyUsers.filter((u) => u.role === "Admin").length} জন
               </span>
             </div>
           </div>
@@ -481,7 +435,7 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>শিক্ষক</span>
               <span className={styles.statValue}>
-                {dummyUsers.filter((u: any) => u.role === "Teacher").length} জন
+                {dummyUsers.filter((u) => u.role === "Teacher").length} জন
               </span>
             </div>
           </div>
@@ -496,8 +450,7 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>হিসাবরক্ষক</span>
               <span className={styles.statValue}>
-                {dummyUsers.filter((u: any) => u.role === "Accountant").length}{" "}
-                জন
+                {dummyUsers.filter((u) => u.role === "Accountant").length} জন
               </span>
             </div>
           </div>
@@ -581,7 +534,7 @@ const AllUsers = () => {
                 </thead>
                 <tbody>
                   {paginatedUsers.length > 0 ? (
-                    paginatedUsers.map((user: any, idx: number) => (
+                    paginatedUsers.map((user, idx: number) => (
                       <tr key={user._id} className={styles.userRow}>
                         <td className={styles.slNo}>
                           <span className={styles.slNumber}>
