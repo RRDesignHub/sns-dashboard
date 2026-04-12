@@ -91,7 +91,6 @@ const CreateUser: React.FC = () => {
       number: false,
       special: false,
     });
-    console.log(newUser);
     setIsSubmitting(false);
 
     try {

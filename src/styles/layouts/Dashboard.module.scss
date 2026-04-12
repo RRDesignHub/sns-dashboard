@@ -3,55 +3,144 @@
 
 
 .dashboardParent {
-    @include grid(1fr 4fr, $spacing-0);
+    @include grid(1fr, $spacing-0);
     height: 100vh;
     background-color: $color-primary-50;
+    position: relative;
     
-    > main {
-        background-color: $color-primary-50;
-        min-height: 100%;
-        @include flex(column, flex-start, stretch, 0);
+    /* Desktop: 2 columns */
+    @include respond-to('md') {
+        @include grid(280px 1fr, $spacing-0);
+    }
+    
+    @include respond-to('lg') {
+        @include grid(300px 1fr, $spacing-0);
     }
 }
 
 /* Sidebar Styles */
 .sidebar {
-    background: linear-gradient(180deg, $color-primary-900 0%, $color-primary-800 100%);
+    background: rgba(0, 0, 0, 0.178);
     color: $color-white;
     overflow-y: auto;
     height: 100vh;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    transition: transform $transition-base;
+    
+    /* Desktop: Sidebar visible */
+    @include respond-to('md') {
+        position: sticky;
+        transform: translateX(0);
+        width: 100%;
+    }
+    
+    &.open {
+        transform: translateX(0);
+        box-shadow: $shadow-lg;
+    }
     
     // Custom scrollbar
     &::-webkit-scrollbar {
-        width: 6px;
+       display: none;
     }
     
-    &::-webkit-scrollbar-track {
-        background: rgba($color-white, 0.1);
+   
+
+    >button{
+        /* Desktop: Sidebar visible */
+    @include respond-to('md') {
+       width: 100%;
     }
-    
-    &::-webkit-scrollbar-thumb {
-        background: $color-primary-600;
-        border-radius: $radius-full;
         
-        &:hover {
-            background: $color-primary-500;
-        }
     }
 }
 
-/* ========== FIXED HEADER STYLES ========== */
+/* Main Content */
+.mainContent {
+    flex: 1;
+    min-height: 100vh;
+    @include flex(column, flex-start, stretch, 0);
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* Mobile Menu Toggle Button */
+.mobileMenuToggle {
+    position: fixed;
+    bottom: $spacing-4;
+    right: $spacing-4;
+    width: $spacing-12;
+    height: $spacing-12;
+    border-radius: $radius-full;
+    background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+    color: $color-white;
+    border: none;
+    cursor: pointer;
+    @include flex-center;
+    @include transition(all);
+    z-index: 101;
+    box-shadow: $shadow-lg;
+    
+    @include respond-to('md') {
+        display: none;
+    }
+    
+    &:hover {
+        transform: scale(1.05);
+        background: linear-gradient(135deg, $color-primary-700, $color-primary-800);
+    }
+    
+    &:active {
+        transform: scale(0.95);
+    }
+    
+    svg {
+        font-size: $font-xl;
+    }
+}
+
+/* Sidebar Overlay */
+.sidebarOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    visibility: hidden;
+    transition: all $transition-base;
+    
+    &.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+    
+    @include respond-to('md') {
+        display: none;
+    }
+}
+
+/* Dashboard Header */
 .dashboardHeader {
     @include flex-between;
     position: sticky;
     top: 0;
     z-index: 10;
     background: $color-white;
-    padding: $spacing-4 $spacing-6;
+    padding: $spacing-3 $spacing-4;
     border-bottom: 1px solid $color-gray-200;
     box-shadow: $shadow-sm;
+    
+    @include respond-to('sm') {
+        padding: $spacing-4 $spacing-6;
+    }
     
     @include respond-to('md') {
         padding: $spacing-4 $spacing-8;
@@ -59,72 +148,78 @@
 }
 
 .headerLeft {
-    @include flex-start;
-    .brand {
-    @include flex(row, start, center, 0.75rem);
+    @include flex(row, flex-start, center, $spacing-3);
     
-    img {
-      height: 45px;
-      width: 45px;
-      border-radius: 50%;
-      box-shadow: 0 4px 10px rgba($color-primary-400, 0.2);
-    }
-
-    h2 {
-      @include heading(lg, 800, uppercase);
-      color: $color-primary-950;
-      line-height: 1.2;
-        opacity: 0.8;
-      span {
-        display: block;
-        font-size: $font-sm;
-        font-weight: 500;
-        text-transform: capitalize;
-        color: $color-gray-400;
-        opacity: 0.5;
-      }
-    }
-  }
-    .pageTitle {
-        h1 {
-            font-size: $font-lg;
-            font-weight: $font-weight-semibold;
-            color: $color-gray-800;
-            margin: 0;
+    .brand {
+        @include flex(row, flex-start, center, $spacing-2);
+        
+        img {
+            height: 35px;
+            width: 35px;
+            border-radius: $radius-full;
+            object-fit: cover;
             
-            @include respond-to('md') {
-                font-size: $font-xl;
+            @include respond-to('sm') {
+                height: 40px;
+                width: 40px;
+            }
+        }
+        
+        .brandText {
+            h2 {
+                font-size: $font-md;
+                font-weight: $font-weight-bold;
+                color: $color-primary-800;
+                margin: 0;
+                
+                @include respond-to('sm') {
+                    font-size: $font-lg;
+                }
             }
         }
     }
 }
 
 .headerRight {
-    @include flex(row, flex-end, center, $spacing-3);
+    @include flex(row, flex-end, center, $spacing-2);
+    
+    @include respond-to('sm') {
+        gap: $spacing-3;
+    }
 }
-/* Icon Buttons (Home & Logout) */
+
+/* Icon Buttons */
 .iconButton {
-    @include flex(row, center, center, $spacing-2);
-    padding: $spacing-2 $spacing-4;
+    @include flex(row, center, center, $spacing-1);
+    padding: $spacing-1 $spacing-2;
     background: transparent;
     border: none;
     border-radius: $radius-md;
     color: $color-gray-700;
-    font-size: $font-sm;
+    font-size: $font-xs;
     font-weight: $font-weight-medium;
     cursor: pointer;
     @include transition(all);
     text-decoration: none;
     
+    @include respond-to('sm') {
+        padding: $spacing-2 $spacing-3;
+        gap: $spacing-2;
+        font-size: $font-sm;
+    }
+    
     svg {
         font-size: $font-md;
-        transition: transform $transition-base;
+        
+        @include respond-to('sm') {
+            font-size: $font-lg;
+        }
     }
     
     span {
         display: none;
         
-        @include respond-to('sm') {
+        @include respond-to('xs') {
             display: inline;
         }
     }
@@ -149,39 +244,36 @@
     }
 }
 
-/* Logout Button Specific Style */
-.iconButton:last-of-type {
-    &:hover {
-        background: rgba($color-error, 0.1);
-        color: $color-error;
-    }
-}
-
-
+/* User Info */
 .userInfo {
     @include flex(row, center, center, $spacing-2);
-    padding: $spacing-2 $spacing-3;
+    padding: $spacing-1 $spacing-2;
     background: transparent;
     border: none;
     border-radius: $radius-lg;
-    cursor: pointer;
-    @include transition(all);
+    cursor: default;
     
-    &:hover {
-        background: $color-gray-100;
+    @include respond-to('sm') {
+        padding: $spacing-1 $spacing-3;
     }
 }
 
 .userAvatar {
     @include flex-center;
-    width: $spacing-8;
-    height: $spacing-8;
+    width: $spacing-6;
+    height: $spacing-6;
     background: linear-gradient(135deg, $color-primary-500, $color-primary-700);
     color: $color-white;
     border-radius: $radius-full;
     font-weight: $font-weight-bold;
-    font-size: $font-md;
+    font-size: $font-sm;
     text-transform: uppercase;
+    
+    @include respond-to('sm') {
+        width: $spacing-8;
+        height: $spacing-8;
+        font-size: $font-md;
+    }
 }
 
 .userDetails {
@@ -194,37 +286,60 @@
 }
 
 .userName {
-    font-size: $font-sm;
+    font-size: $font-xs;
     font-weight: $font-weight-semibold;
     color: $color-gray-800;
     line-height: 1.3;
+    
+    @include respond-to('sm') {
+        font-size: $font-sm;
+    }
 }
 
 .userRole {
-    font-size: $font-xs;
+    font-size: $font-xxs;
     color: $color-gray-500;
     line-height: 1.3;
+    
+    @include respond-to('sm') {
+        font-size: $font-xs;
+    }
 }
 
 /* Page Content */
 .pageContent {
-    padding: $spacing-6;
+    padding: $spacing-4;
     flex: 1;
+    
+    @include respond-to('sm') {
+        padding: $spacing-6;
+    }
     
     @include respond-to('md') {
         padding: $spacing-8;
     }
 }
 
-/* Animations */
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
+/* Mobile Menu Button in Header (for better UX) */
+.mobileMenuBtn {
+    display: block;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    @include flex-center;
+    color: $color-gray-700;
+    font-size: $font-xl;
+    padding: $spacing-2;
+    border-radius: $radius-md;
+    @include transition(all);
+    
+    @include respond-to('md') {
+        display: none;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    &:hover {
+        background: $color-gray-100;
+        color: $color-primary-600;
     }
 }
 
@@ -234,22 +349,27 @@
         background: $color-gray-800;
         border-bottom-color: $color-gray-700;
         
-        .pageTitle h1 {
+        .brandText h2 {
             color: $color-gray-100;
+        }
+        
+        .mobileMenuBtn {
+            color: $color-gray-300;
+            
+            &:hover {
+                background: $color-gray-700;
+                color: $color-primary-400;
+            }
         }
     }
     
     .iconButton {
-        color: $color-gray-400;
+        color: $color-gray-300;
         
         &:hover {
             background: $color-gray-700;
             color: $color-primary-400;
         }
-    }
-    
-    .userInfo:hover {
-        background: $color-gray-700;
     }
     
     .userName {
@@ -258,20 +378,5 @@
     
     .userRole {
         color: $color-gray-400;
-    }
-  
-}
-
-/* Responsive Adjustments */
-@include respond-to('md') {
-    .dashboardParent {
-        grid-template-columns: 260px 1fr;
-        gap: $spacing-0;
-    }
-}
-
-@include respond-to('lg') {
-    .dashboardParent {
-        grid-template-columns: 280px 1fr;
     }
 }

@@ -84,20 +84,7 @@ const Login = () => {
           showConfirmButton: false,
         });
 
-        // Redirect based on role
-        switch (response.data.role) {
-          case "admin":
-            navigate("/dashboard/overview");
-            break;
-          case "teacher":
-            navigate("/teacher/dashboard");
-            break;
-          case "accountant":
-            navigate("/accountant/dashboard");
-            break;
-          default:
-            navigate("/dashboard");
-        }
+        navigate("/dashboard/overview");
       }
     } catch (error: any) {
       Swal.fire({

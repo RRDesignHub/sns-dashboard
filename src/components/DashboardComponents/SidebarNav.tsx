@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 import styles from "./../../styles/components/Sidebar.module.scss";
 import type { IconType } from "react-icons";
 import {
@@ -44,10 +45,11 @@ export interface NavGroup {
 }
 
 const SidebarNav = () => {
+  const { user } = useAuth();
   const userRole: UserRole = {
-    isAdmin: true,
-    isTeacher: false,
-    isAccountant: false,
+    isAdmin: user?.role === "admin",
+    isTeacher: user?.role === "teacher",
+    isAccountant: user?.role === "accountant",
   };
   const adminNavGroups: NavGroup[] = [
     {

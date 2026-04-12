@@ -1,0 +1,370 @@
+@import "_variables";
+@import "_mixin";
+.errorPage {
+  min-height: 100vh;
+  width: 100%;
+  @include flex-center;
+  position: relative;
+  background: linear-gradient(135deg, $color-primary-50 0%, $color-gray-50 100%);
+  padding: $spacing-6;
+  overflow: hidden;
+  
+  @include respond-to('md') {
+    padding: $spacing-8;
+  }
+}
+
+/* Background Decoration */
+.bgDecoration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bgCircle1, .bgCircle2, .bgCircle3 {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.3;
+  animation: float 20s infinite ease-in-out;
+}
+
+.bgCircle1 {
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, $color-primary-400, $color-primary-600);
+  top: -150px;
+  right: -150px;
+  animation-delay: 0s;
+}
+
+.bgCircle2 {
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, $color-error, rgba($color-error, 0.5));
+  bottom: -150px;
+  left: -100px;
+  animation-delay: 5s;
+}
+
+.bgCircle3 {
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, $color-info, rgba($color-info, 0.3));
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 10s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(60px, 0) scale(1);
+  }
+  75% {
+    transform: translate(30px, 30px) scale(0.9);
+  }
+}
+
+/* Error Container */
+.errorContainer {
+  position: relative;
+  z-index: 1;
+  max-width: 600px;
+  width: 100%;
+  @include flex(column, center, center, $spacing-8);
+  text-align: center;
+}
+
+/* Error Icon */
+.errorIconWrapper {
+  position: relative;
+  animation: shake 0.5s ease-in-out;
+}
+
+.iconBg {
+  @include flex-center;
+  width: 150px;
+  height: 150px;
+  background: $color-white;
+  border-radius: 50%;
+  box-shadow: $shadow-xl;
+  position: relative;
+  border: 4px solid rgba($color-primary-500, 0.2);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $color-primary-500, $color-primary-700);
+    z-index: -1;
+    opacity: 0.1;
+  }
+}
+
+.errorIcon {
+  font-size: 80px;
+  color: $color-primary-600;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.errorStatus {
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  font-size: $font-xl;
+  font-weight: $font-weight-bold;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $radius-full;
+  box-shadow: $shadow-md;
+  min-width: 70px;
+  text-align: center;
+}
+
+/* Error Content */
+.errorContent {
+  @include flex(column, center, center, $spacing-4);
+  width: 100%;
+}
+
+.errorTitle {
+  @include heading(xl, $font-weight-bold, $color-gray-900);
+  margin: 0;
+  background: linear-gradient(135deg, $color-primary-700, $color-primary-600);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  @include respond-to('md') {
+    font-size: 3rem;
+  }
+}
+
+.errorMessage {
+  font-size: $font-md;
+  color: $color-gray-600;
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0;
+  
+  @include respond-to('md') {
+    font-size: $font-lg;
+  }
+}
+
+.errorDetails {
+  margin-top: $spacing-4;
+  width: 100%;
+  text-align: left;
+  background: rgba($color-gray-100, 0.5);
+  border-radius: $radius-md;
+  padding: $spacing-4;
+  
+  summary {
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    margin-bottom: $spacing-2;
+    
+    &:hover {
+      color: $color-primary-600;
+    }
+  }
+}
+
+.errorStack {
+  font-size: $font-xs;
+  color: $color-gray-600;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  margin: $spacing-2 0 0 0;
+  padding: $spacing-2;
+  background: $color-gray-900;
+  border-radius: $radius-sm;
+  color: $color-gray-300;
+}
+
+/* Action Buttons */
+.errorActions {
+  @include flex(column, center, stretch, $spacing-3);
+  width: 100%;
+  margin-top: $spacing-4;
+  
+  @include respond-to('sm') {
+    @include flex(row, center, center, $spacing-3);
+  }
+}
+
+.actionButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  @include transition(all);
+  text-decoration: none;
+  min-width: 160px;
+  
+  svg {
+    font-size: $font-md;
+  }
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $color-primary-500;
+    outline-offset: 2px;
+  }
+}
+
+.backButton {
+  background: $color-gray-100;
+  color: $color-gray-700;
+  border: 1px solid $color-gray-200;
+  
+  &:hover {
+    background: $color-gray-200;
+    border-color: $color-gray-300;
+  }
+}
+
+.homeButton {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  box-shadow: 0 4px 12px rgba($color-primary-600, 0.3);
+  
+  &:hover {
+    background: linear-gradient(135deg, $color-primary-700, $color-primary-800);
+    box-shadow: 0 6px 16px rgba($color-primary-600, 0.4);
+  }
+}
+
+.retryButton {
+  background: transparent;
+  color: $color-primary-600;
+  border: 2px solid $color-primary-600;
+  
+  &:hover {
+    background: rgba($color-primary-600, 0.1);
+  }
+}
+
+/* Help Text */
+.helpText {
+  margin-top: $spacing-6;
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-200;
+  
+  p {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin: 0;
+    
+    a {
+      color: $color-primary-600;
+      text-decoration: none;
+      font-weight: $font-weight-medium;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Dark Theme Support */
+[data-theme="dark"] {
+  .errorPage {
+    background: linear-gradient(135deg, $color-gray-900 0%, $color-primary-950 100%);
+  }
+  
+  .iconBg {
+    background: $color-gray-800;
+    border-color: rgba($color-primary-400, 0.2);
+    
+    &::before {
+      background: linear-gradient(135deg, $color-primary-400, $color-primary-600);
+    }
+  }
+  
+  .errorTitle {
+    background: linear-gradient(135deg, $color-primary-400, $color-primary-300);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .errorMessage {
+    color: $color-gray-400;
+  }
+  
+  .errorDetails {
+    background: rgba($color-gray-800, 0.5);
+    
+    summary {
+      color: $color-gray-300;
+    }
+  }
+  
+  .backButton {
+    background: $color-gray-700;
+    color: $color-gray-300;
+    border-color: $color-gray-600;
+    
+    &:hover {
+      background: $color-gray-600;
+    }
+  }
+  
+  .helpText {
+    border-top-color: $color-gray-700;
+    
+    p {
+      color: $color-gray-400;
+    }
+  }
+}
