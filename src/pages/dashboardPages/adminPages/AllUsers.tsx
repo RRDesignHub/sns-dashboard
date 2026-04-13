@@ -7,7 +7,6 @@ import {
   FaUserTie,
   FaEnvelope,
   FaCalendarAlt,
-  FaTimesCircle,
   FaFilter,
   FaSearch,
   FaSort,
@@ -25,7 +24,17 @@ import styles from "../../../styles/DashboardPages/AllUsers.module.scss";
 import Loading from "../../../components/shared/Loading";
 import { GiMoneyStack, GiTeacher } from "react-icons/gi";
 import { useAxiosSecure } from "../../../hooks/useAxiosSecure";
+import { format } from "date-fns";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  status?: string;
+  joinedAt?: Date;
+  createdAt?: Date;
+}
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
   // all users data for admin and teachers dashboard
@@ -35,15 +44,13 @@ const AllUsers = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["users"], // Changed from "students" to "users"
+    queryKey: ["users"],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/api/users`); // Use the instance
+      const { data } = await axiosSecure.get(`/api/users`);
       return data || [];
     },
   });
 
-  console.log(users);
-  return <h1>All students</h1>;
   // const axiosSecure = useAxiosSec();
   const [searchTerm, setSearchTerm] = useState("");
   const [roleFilter, setRoleFilter] = useState("all");
@@ -79,8 +86,51 @@ const AllUsers = () => {
           no-repeat
         `,
       });
+      // Only proceed if user confirmed
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: "ডিলিট হচ্ছে...",
+          text: "দয়া করে অপেক্ষা করুন",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
-      console.log(result);
+        // Make the delete request
+        const { data } = await axiosSecure.delete(`/api/users/${id}`); // Removed /api/ prefix if you have baseURL set
+
+        if (data?.deletedCount > 0 || data?.success) {
+          // Success message
+          Swal.fire({
+            title: "ডিলিট সম্পন্ন!",
+            html: `
+            <div style="margin: 20px 0;">
+              <p style="font-size: 16px; color: #1f2937;">
+                <strong>${userName}</strong> সফলভাবে ডিলিট করা হয়েছে
+              </p>
+            </div>
+          `,
+            icon: "success",
+            confirmButtonColor: "#16a34a",
+            confirmButtonText: "ঠিক আছে",
+            timer: 2000,
+            timerProgressBar: true,
+          });
+
+          // Refetch users list to update UI
+          if (refetch) {
+            refetch();
+          }
+
+          // Optional: Close modal if open
+          if (onclose) {
+            onclose();
+          }
+        } else {
+          throw new Error("Delete operation failed");
+        }
+      }
     } catch (err) {
       console.log("Delete user Error--->", err);
       Swal.fire({
@@ -94,7 +144,7 @@ const AllUsers = () => {
 
   // Filter and sort users
   const filteredUsers = useMemo(() => {
-    const filtered = users.filter((user) => {
+    const filtered = users.filter((user: User) => {
       // Search filter
       const matchesSearch =
         user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -120,11 +170,11 @@ const AllUsers = () => {
   // Get role icon
   const getRoleIcon = (role: string) => {
     switch (role) {
-      case "Admin":
+      case "admin":
         return <MdAdminPanelSettings />;
-      case "Teacher":
+      case "teacher":
         return <GiTeacher />;
-      case "Accountant":
+      case "accountant":
         return <GiMoneyStack />;
       default:
         return <FaUserTie />;
@@ -134,31 +184,15 @@ const AllUsers = () => {
   // Get role color
   const getRoleColor = (role: string) => {
     switch (role) {
-      case "Admin":
+      case "admin":
         return styles.roleAdmin;
-      case "Teacher":
+      case "teacher":
         return styles.roleTeacher;
-      case "Accountant":
+      case "accountant":
         return styles.roleAccountant;
       default:
         return styles.roleUser;
     }
-  };
-
-  // Get status badge
-  const getStatusBadge = (status: string) => {
-    if (status === "active") {
-      return (
-        <span className={styles.statusActive}>
-          <FaCheckCircle /> সক্রিয়
-        </span>
-      );
-    }
-    return (
-      <span className={styles.statusInactive}>
-        <FaTimesCircle /> নিষ্ক্রিয়
-      </span>
-    );
   };
 
   const handleSort = (field: string) => {
@@ -181,6 +215,7 @@ const AllUsers = () => {
 
   return (
     <div className={styles.allUsersPage}>
+      {isLoading && <Loading />}
       {/* Page Header */}
       <div className={styles.pageHeader}>
         <div className={styles.headerContent}>
@@ -220,7 +255,7 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>অ্যাডমিন</span>
               <span className={styles.statValue}>
-                {users.filter((u) => u.role === "Admin").length} জন
+                {users.filter((u: User) => u?.role === "admin").length} জন
               </span>
             </div>
           </div>
@@ -235,7 +270,7 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>শিক্ষক</span>
               <span className={styles.statValue}>
-                {users.filter((u) => u.role === "Teacher").length} জন
+                {users.filter((u: User) => u.role === "teacher").length} জন
               </span>
             </div>
           </div>
@@ -250,13 +285,12 @@ const AllUsers = () => {
             <div className={styles.statInfo}>
               <span className={styles.statLabel}>হিসাবরক্ষক</span>
               <span className={styles.statValue}>
-                {users.filter((u) => u.role === "Accountant").length} জন
+                {users.filter((u: User) => u.role === "accountant").length} জন
               </span>
             </div>
           </div>
         </div>
       </div>
-
       {/* Filters Section */}
       <div className={styles.filtersSection}>
         <div className={styles.searchBox}>
@@ -289,7 +323,6 @@ const AllUsers = () => {
           <span>নতুন ইউজার</span>
         </Link>
       </div>
-
       {/* table of users */}
       {users.length === 0 ? (
         <div className={styles.loadingContainer}>
@@ -324,7 +357,6 @@ const AllUsers = () => {
                       <span>ভূমিকা</span>
                       {getSortIcon("role")}
                     </th>
-                    <th>স্ট্যাটাস</th>
                     <th onClick={() => handleSort("joinedAt")}>
                       <span>যোগদানের তারিখ</span>
                       {getSortIcon("joinedAt")}
@@ -334,8 +366,8 @@ const AllUsers = () => {
                 </thead>
                 <tbody>
                   {paginatedUsers.length > 0 ? (
-                    paginatedUsers.map((user, idx: number) => (
-                      <tr key={user._id} className={styles.userRow}>
+                    paginatedUsers.map((user: User, idx: number) => (
+                      <tr key={user?._id} className={styles.userRow}>
                         <td className={styles.slNo}>
                           <span className={styles.slNumber}>
                             {(currentPage - 1) * itemsPerPage + idx + 1}
@@ -374,14 +406,21 @@ const AllUsers = () => {
                           </div>
                         </td>
 
-                        <td>{getStatusBadge(user.status || "active")}</td>
-
                         <td>
                           <div className={styles.joinDate}>
                             <FaCalendarAlt className={styles.dateIcon} />
                             <span>
-                              {/* {user.joinedAt &&
-                                format(new Date(user.joinedAt), "MMM dd, yyyy")} */}
+                              {user.joinedAt
+                                ? format(
+                                    new Date(user.joinedAt),
+                                    "MMM dd, yyyy",
+                                  )
+                                : user.createdAt
+                                  ? format(
+                                      new Date(user.createdAt),
+                                      "MMM dd, yyyy",
+                                    )
+                                  : ""}
                             </span>
                           </div>
                         </td>

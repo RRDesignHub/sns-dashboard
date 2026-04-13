@@ -16,6 +16,7 @@ import {
   FaUserShield,
   FaSpinner,
 } from "react-icons/fa";
+import { useAxiosSecure } from "../../../hooks/useAxiosSecure";
 import styles from "../../../styles/DashboardPages/CreateUserPage.module.scss";
 import axios from "axios";
 
@@ -28,7 +29,7 @@ interface PasswordValidation {
 }
 
 const CreateUser: React.FC = () => {
-  // const axiosSecure = useAxiosSec();
+  const axiosSecure = useAxiosSecure();
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [validation, setValidation] = useState<PasswordValidation>({
@@ -94,10 +95,7 @@ const CreateUser: React.FC = () => {
     setIsSubmitting(false);
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_SERVER_API}/api/users/register`,
-        newUser,
-      );
+      const { data } = await axiosSecure.post(`/api/users/register`, newUser);
 
       if (data?.message) {
         Swal.fire({
