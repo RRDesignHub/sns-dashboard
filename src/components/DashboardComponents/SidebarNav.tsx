@@ -121,7 +121,7 @@ const SidebarNav = () => {
         },
         {
           name: "সকল শিক্ষার্থী",
-          path: "/dashboard/students",
+          path: "/dashboard/all-students",
           icon: PiUsersFourFill,
         },
       ],
@@ -131,7 +131,7 @@ const SidebarNav = () => {
       links: [
         {
           name: "ফলাফল তৈরি",
-          path: "/dashboard/add-result",
+          path: "/dashboard/create-result",
           icon: MdOutlineAddchart,
         },
         { name: "ফলাফল", path: "/dashboard/dashboard-results", icon: GiPapers },
