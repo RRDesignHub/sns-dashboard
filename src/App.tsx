@@ -42,6 +42,14 @@ const AllStudents = lazy(
 const CreateResult = lazy(
   () => import("./pages/dashboardPages/TeacherPages/CreateResult"),
 );
+
+const ManageSubjects = lazy(
+  () => import("./pages/dashboardPages/TeacherPages/ManageSubjects"),
+);
+
+const ClassSubjectsAssign = lazy(
+  () => import("./pages/dashboardPages/TeacherPages/ClassSubjectAssignment"),
+);
 function App() {
   useEffect(() => {
     // Remove preload class after mount
@@ -87,6 +95,11 @@ function App() {
                   <Route path="add-student" element={<AddStudent />} />
                   <Route path="all-students" element={<AllStudents />} />
                   <Route path="create-result" element={<CreateResult />} />
+                  <Route path="manage-subjects" element={<ManageSubjects />} />
+                  <Route
+                    path="class-subjects-assign"
+                    element={<ClassSubjectsAssign />}
+                  />
                 </Route>
                 <Route path="*" element={<ErrorPage />} />
               </Routes>

@@ -130,6 +130,16 @@ const SidebarNav = () => {
       heading: "Academic & Results",
       links: [
         {
+          name: "Manage Subjects",
+          path: "/dashboard/manage-subjects",
+          icon: MdOutlineAddchart,
+        },
+        {
+          name: "Class Subjects Assign",
+          path: "/dashboard/class-subjects-assign",
+          icon: MdOutlineAddchart,
+        },
+        {
           name: "ফলাফল তৈরি",
           path: "/dashboard/create-result",
           icon: MdOutlineAddchart,

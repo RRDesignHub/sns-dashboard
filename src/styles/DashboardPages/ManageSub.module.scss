@@ -1,0 +1,522 @@
+@import "../../styles/variables";
+@import "../../styles/mixin";
+
+.manageSubjects {
+  padding: $spacing-6;
+  min-height: 100vh;
+  background: $color-gray-50;
+}
+
+.pageHeader {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-xl;
+  padding: $spacing-6 $spacing-8;
+  margin-bottom: $spacing-8;
+  color: $color-white;
+}
+
+.headerContent {
+  @include flex(row, flex-start, center, $spacing-4);
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-12;
+  height: $spacing-12;
+  background: rgba($color-white, 0.2);
+  border-radius: $radius-lg;
+  
+  svg {
+    font-size: $font-xl;
+  }
+}
+
+.pageTitle {
+  @include heading(xl, $font-weight-bold, $color-white);
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: $font-sm;
+  color: rgba($color-white, 0.9);
+  margin: $spacing-2 0 0;
+}
+
+.toolbar {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-6;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+}
+
+.searchBox {
+  @include flex(row, flex-start, center);
+  flex: 1;
+  max-width: 350px;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-lg;
+  padding: $spacing-2 $spacing-3;
+  
+  .searchIcon {
+    color: $color-gray-400;
+    margin-right: $spacing-2;
+  }
+  
+  .searchInput {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: $font-sm;
+    
+    &::placeholder {
+      color: $color-gray-400;
+    }
+  }
+}
+
+.addButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
+  color: $color-white;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+.statsContainer {
+  @include grid(repeat(3, 1fr), auto, $spacing-4);
+  margin-bottom: $spacing-8;
+}
+
+.statCard {
+  background: $color-white;
+  border-radius: $radius-lg;
+  padding: $spacing-4;
+  text-align: center;
+  box-shadow: $shadow-sm;
+  
+  .statValue {
+    font-size: $font-2xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary-600;
+  }
+  
+  .statLabel {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin-top: $spacing-2;
+  }
+}
+
+.tableContainer {
+  background: $color-white;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.tableHeader {
+  @include flex(row, space-between, center);
+  padding: $spacing-4 $spacing-6;
+  border-bottom: 1px solid $color-gray-100;
+  
+  .tableTitle {
+    font-size: $font-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin: 0;
+  }
+  
+  .tableCount {
+    font-size: $font-sm;
+    color: $color-gray-500;
+    background: $color-gray-100;
+    padding: $spacing-1 $spacing-3;
+    border-radius: $radius-full;
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.subjectTable {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead th {
+    padding: $spacing-4 $spacing-4;
+    text-align: left;
+    font-size: $font-xs;
+    font-weight: $font-weight-semibold;
+    text-transform: uppercase;
+    color: $color-gray-600;
+    background: $color-gray-50;
+    border-bottom: 1px solid $color-gray-200;
+  }
+  
+  tbody td {
+    padding: $spacing-3 $spacing-4;
+    font-size: $font-sm;
+    color: $color-gray-700;
+    border-bottom: 1px solid $color-gray-100;
+  }
+}
+
+.subjectRow {
+  transition: background $transition-base;
+  
+  &:hover {
+    background: $color-primary-50;
+  }
+}
+
+.slNo {
+  width: 60px;
+  color: $color-gray-500;
+}
+
+.nameBn {
+  font-weight: $font-weight-medium;
+  color: $color-gray-800;
+}
+
+.nameEn {
+  color: $color-gray-600;
+}
+
+.code {
+  font-family: monospace;
+  font-size: $font-xs;
+  color: $color-primary-600;
+}
+
+.marksBadge {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.marks100 {
+  background: rgba($color-primary-500, 0.1);
+  color: $color-primary-700;
+}
+
+.marks50 {
+  background: rgba($color-warning, 0.1);
+  color: $color-warning;
+}
+
+.actionButtons {
+  @include flex(row, flex-start, center, $spacing-2);
+}
+
+.editBtn, .deleteBtn {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  svg {
+    font-size: $font-sm;
+  }
+}
+
+.editBtn {
+  background: rgba($color-info, 0.1);
+  color: $color-info;
+  
+  &:hover {
+    background: $color-info;
+    color: $color-white;
+  }
+}
+
+.deleteBtn {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  
+  &:hover {
+    background: $color-error;
+    color: $color-white;
+  }
+}
+
+.noData {
+  text-align: center;
+  padding: $spacing-12 !important;
+  
+  svg {
+    font-size: $font-3xl;
+    color: $color-gray-300;
+    margin-bottom: $spacing-4;
+  }
+  
+  p {
+    color: $color-gray-500;
+    margin-bottom: $spacing-4;
+  }
+}
+
+.noDataBtn {
+  padding: $spacing-2 $spacing-6;
+  background: $color-primary-600;
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  
+  &:hover {
+    background: $color-primary-700;
+  }
+}
+
+// Modal Styles
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+}
+
+.modal {
+  background: $color-white;
+  border-radius: $radius-xl;
+  width: 90%;
+  max-width: 550px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp $transition-base;
+}
+
+.modalHeader {
+  @include flex(row, space-between, center);
+  padding: $spacing-5 $spacing-6;
+  border-bottom: 1px solid $color-gray-200;
+  
+  h3 {
+    font-size: $font-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin: 0;
+  }
+  
+  .closeBtn {
+    background: none;
+    border: none;
+    font-size: $font-lg;
+    color: $color-gray-500;
+    cursor: pointer;
+    padding: $spacing-1;
+    border-radius: $radius-md;
+    
+    &:hover {
+      background: $color-gray-100;
+      color: $color-gray-700;
+    }
+  }
+}
+
+.modalForm {
+  padding: $spacing-6;
+}
+
+.formGroup {
+  margin-bottom: $spacing-5;
+  
+  label {
+    display: block;
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    margin-bottom: $spacing-2;
+    
+    span {
+      color: $color-error;
+    }
+  }
+  
+  input, select {
+    width: 100%;
+    padding: $spacing-3 $spacing-4;
+    border: 1px solid $color-gray-300;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+    transition: all $transition-base;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary-500;
+      box-shadow: 0 0 0 3px rgba($color-primary-500, 0.1);
+    }
+  }
+  
+  .readonlyInput {
+    background: $color-gray-100;
+    cursor: not-allowed;
+  }
+  
+  small {
+    display: block;
+    font-size: $font-xs;
+    color: $color-gray-500;
+    margin-top: $spacing-1;
+  }
+}
+
+.formRow {
+  @include grid(1fr 1fr, auto, $spacing-4);
+}
+
+.radioGroup {
+  @include flex(row, flex-start, center, $spacing-4);
+  
+  label {
+    @include flex(row, center, center, $spacing-2);
+    cursor: pointer;
+    margin-bottom: 0;
+    
+    input {
+      width: auto;
+      margin: 0;
+    }
+  }
+}
+
+.formActions {
+  @include flex(row, flex-end, center, $spacing-3);
+  margin-top: $spacing-8;
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-200;
+}
+
+.cancelBtn {
+  padding: $spacing-3 $spacing-6;
+  background: transparent;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-gray-100;
+  }
+}
+
+.submitBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: $color-primary-600;
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-primary-700;
+    transform: translateY(-2px);
+  }
+}
+
+.loading {
+  @include flex-center;
+  min-height: 400px;
+  font-size: $font-lg;
+  color: $color-gray-500;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Dark Theme
+[data-theme="dark"] {
+  .manageSubjects {
+    background: $color-gray-900;
+  }
+  
+  .pageHeader {
+    background: linear-gradient(135deg, $color-primary-800, $color-primary-900);
+  }
+  
+  .statCard, .tableContainer, .searchBox {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+  }
+  
+  .statValue {
+    color: $color-primary-400;
+  }
+  
+  .statLabel, .tableTitle, .nameBn, .pageTitle {
+    color: $color-gray-100;
+  }
+  
+  .subjectTable {
+    thead th {
+      background: $color-gray-700;
+      color: $color-gray-300;
+    }
+    
+    tbody td {
+      color: $color-gray-300;
+      border-color: $color-gray-700;
+    }
+  }
+  
+  .subjectRow:hover {
+    background: $color-gray-700;
+  }
+  
+  .modal {
+    background: $color-gray-800;
+  }
+  
+  .modalHeader {
+    border-color: $color-gray-700;
+    
+    h3 {
+      color: $color-gray-100;
+    }
+  }
+  
+  .formGroup label {
+    color: $color-gray-300;
+  }
+  
+  .formGroup input {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-100;
+  }
+}
