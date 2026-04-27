@@ -100,78 +100,67 @@ const DashboardLayout = () => {
         onClick={closeSidebar}
       />
 
-        {/* Sidebar */}
-        <aside
-          className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ""}`}
-        >
-          <button onClick={closeSidebar}>
-            <SidebarNav />
-          </button>
-        </aside>
-
-        {/* Mobile Menu Toggle Button (FAB) */}
-        <button
-          className={styles.mobileMenuToggle}
-          onClick={toggleSidebar}
-          aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
-        >
-          {isSidebarOpen ? <FaTimes /> : <FaBars />}
+      {/* Sidebar */}
+      <aside
+        className={`${styles.sidebar} ${isSidebarOpen ? styles.open : ""}`}
+      >
+        <button onClick={closeSidebar}>
+          <SidebarNav />
         </button>
+      </aside>
 
-        {/* Main Content */}
-        <main className={styles.mainContent}>
-          <header className={styles.dashboardHeader}>
-            <div className={styles.headerLeft}>
-              {/* Mobile Menu Button in Header */}
-              {isMobile && (
-                <button
-                  className={styles.mobileMenuBtn}
-                  onClick={toggleSidebar}
-                  aria-label="Menu"
-                >
-                  <FaBars />
-                </button>
-              )}
+      {/* Mobile Menu Toggle Button (FAB) */}
+      <button
+        className={styles.mobileMenuToggle}
+        onClick={toggleSidebar}
+        aria-label={isSidebarOpen ? "Close menu" : "Open menu"}
+      >
+        {isSidebarOpen ? <FaTimes /> : <FaBars />}
+      </button>
 
-              <div className={styles.brand}>
-                <img src="/logo.png" alt="SNS_logo" />
-                <div className={styles.brandText}>
-                  <h2>Dashboard</h2>
-                </div>
+      {/* Main Content */}
+      <main className={styles.mainContent}>
+        <header className={styles.dashboardHeader}>
+          <div className={styles.headerLeft}>
+            <div className={styles.brand}>
+              <img src="/logo.png" alt="SNS_logo" />
+              <div className={styles.brandText}>
+                <h2>Dashboard</h2>
               </div>
             </div>
-
-            <div className={styles.headerRight}>
-              {/* Home Button */}
-              <Link to="/" className={styles.iconButton}>
-                <FaHome />
-                <span>হোম পেজ</span>
-              </Link>
-
-              {/* Logout Button */}
-              <button className={styles.iconButton} onClick={() => logout()}>
-                <FaSignOutAlt />
-                <span>লগআউট</span>
-              </button>
-
-              {/* User Profile */}
-              <div className={styles.userInfo}>
-                <div className={styles.userAvatar}>{getUserInitial()}</div>
-                <div className={styles.userDetails}>
-                  <span className={styles.userName}>{user?.name || "User"}</span>
-                  <span className={styles.userRole}>
-                    {getUserRoleInBangla(user?.role)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          {/* Page Content */}
-          <div className={styles.pageContent}>
-            <Outlet />
           </div>
-        </main>
+
+          <div className={styles.headerRight}>
+            {/* Home Button */}
+            <Link to="/" className={styles.iconButton}>
+              <FaHome />
+              <span>হোম পেজ</span>
+            </Link>
+
+            {/* Logout Button */}
+            <button className={styles.iconButton} onClick={() => logout()}>
+              <FaSignOutAlt />
+              <span>লগআউট</span>
+            </button>
+
+            {/* User Profile */}
+            <div className={styles.userInfo}>
+              <div className={styles.userAvatar}>{getUserInitial()}</div>
+              <div className={styles.userDetails}>
+                <span className={styles.userName}>{user?.name || "User"}</span>
+                <span className={styles.userRole}>
+                  {getUserRoleInBangla(user?.role)}
+                </span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <div className={styles.pageContent}>
+          <Outlet />
+        </div>
+      </main>
     </section>
   );
 };

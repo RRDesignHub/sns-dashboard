@@ -7,7 +7,7 @@
   background: $color-gray-50;
 }
 
-/* ========== PAGE HEADER ========== */
+/* Header */
 .pageHeader {
   background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
   border-radius: $radius-xl;
@@ -36,44 +36,15 @@
   font-size: $font-xl;
   font-weight: $font-weight-bold;
   margin: 0;
-
-  @include respond-to("md") {
-    font-size: $font-2xl;
-  }
 }
 
 .pageSubtitle {
   font-size: $font-sm;
   color: rgba($color-white, 0.9);
-  margin: $spacing-1 0 0 0;
+  margin-top: $spacing-1;
 }
 
-/* ========== TOOLBAR ========== */
-.toolbar {
-  @include flex(row, flex-end, center);
-  margin-bottom: $spacing-6;
-}
-
-.addButton {
-  @include flex(row, center, center, $spacing-2);
-  padding: $spacing-3 $spacing-6;
-  background: $color-primary-600;
-  color: $color-white;
-  border: none;
-  border-radius: $radius-lg;
-  font-size: $font-sm;
-  font-weight: $font-weight-medium;
-  cursor: pointer;
-  transition: all $transition-base;
-
-  &:hover {
-    background: $color-primary-700;
-    transform: translateY(-2px);
-    box-shadow: $shadow-md;
-  }
-}
-
-/* ========== STATS CARDS ========== */
+/* Stats Cards */
 .statsContainer {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -87,12 +58,6 @@
   padding: $spacing-5;
   text-align: center;
   box-shadow: $shadow-sm;
-  transition: all $transition-base;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: $shadow-md;
-  }
 }
 
 .statValue {
@@ -107,182 +72,33 @@
   color: $color-gray-600;
 }
 
-/* ========== CLASS GRID ========== */
-.classGrid {
+/* Form Container - 2 columns */
+.formContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: 1fr 1fr;
   gap: $spacing-6;
 }
 
-.classCard {
+.formCard, .configListCard {
   background: $color-white;
   border-radius: $radius-lg;
-  overflow: hidden;
-  box-shadow: $shadow-sm;
-  transition: all $transition-base;
-  border: 1px solid $color-gray-200;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
-  }
-}
-
-.classCardHeader {
-  @include flex(row, space-between, center);
-  padding: $spacing-4 $spacing-5;
-  background: linear-gradient(135deg, $color-primary-600, $color-primary-700);
-  color: $color-white;
-
-  h3 {
-    margin: 0;
-    font-size: $font-md;
-    font-weight: $font-weight-semibold;
-  }
-}
-
-.classIcon {
-  font-size: $font-xl;
-}
-
-.sectionBadge {
-  padding: $spacing-1 $spacing-3;
-  background: rgba($color-white, 0.2);
-  border-radius: $radius-full;
-  font-size: $font-xs;
-}
-
-.classCardBody {
-  padding: $spacing-5;
-  @include flex(column, flex-start, stretch, $spacing-4);
-}
-
-.subjectList {
-  @include flex(row, flex-start, center, $spacing-2);
-  flex-wrap: wrap;
-  min-height: 80px;
-}
-
-.subjectTag {
-  padding: $spacing-1 $spacing-3;
-  background: rgba($color-primary-500, 0.1);
-  color: $color-primary-700;
-  border-radius: $radius-full;
-  font-size: $font-xs;
-}
-
-.subjectMore {
-  padding: $spacing-1 $spacing-3;
-  background: $color-gray-100;
-  color: $color-gray-600;
-  border-radius: $radius-full;
-  font-size: $font-xs;
-}
-
-.classCardFooter {
-  @include flex(row, space-between, center);
-  padding-top: $spacing-3;
-  border-top: 1px solid $color-gray-100;
-}
-
-.subjectCount {
-  font-size: $font-xs;
-  color: $color-gray-500;
-}
-
-.editClassBtn {
-  @include flex(row, center, center, $spacing-2);
-  padding: $spacing-2 $spacing-4;
-  background: transparent;
-  border: 1px solid $color-primary-600;
-  border-radius: $radius-md;
-  color: $color-primary-600;
-  font-size: $font-xs;
-  cursor: pointer;
-  transition: all $transition-base;
-
-  &:hover {
-    background: $color-primary-600;
-    color: $color-white;
-  }
-}
-
-.emptyState {
-  text-align: center;
-  padding: $spacing-4;
-
-  p {
-    font-size: $font-sm;
-    color: $color-gray-500;
-    margin-bottom: $spacing-4;
-  }
-}
-
-.assignBtn {
-  padding: $spacing-2 $spacing-4;
-  background: $color-primary-600;
-  color: $color-white;
-  border: none;
-  border-radius: $radius-md;
-  font-size: $font-xs;
-  cursor: pointer;
-}
-
-/* ========== MODAL ========== */
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  @include flex-center;
-  z-index: 1000;
-  padding: $spacing-4;
-}
-
-.modalLarge {
-  background: $color-white;
-  border-radius: $radius-xl;
-  width: 100%;
-  max-width: 800px;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modalHeader {
-  @include flex(row, space-between, center);
-  padding: $spacing-5 $spacing-6;
-  border-bottom: 1px solid $color-gray-200;
-
-  h3 {
-    font-size: $font-lg;
-    font-weight: $font-weight-semibold;
-    color: $color-gray-800;
-    margin: 0;
-  }
-}
-
-.closeBtn {
-  background: transparent;
-  border: none;
-  color: $color-gray-400;
-  font-size: $font-xl;
-  cursor: pointer;
-  transition: all $transition-base;
-
-  &:hover {
-    color: $color-error;
-  }
-}
-
-.modalForm {
   padding: $spacing-6;
-  @include flex(column, flex-start, stretch, $spacing-5);
+  box-shadow: $shadow-sm;
+}
+
+.formTitle {
+  @include flex(row, flex-start, center, $spacing-2);
+  font-size: $font-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin-bottom: $spacing-6;
+  padding-bottom: $spacing-4;
+  border-bottom: 2px solid $color-gray-100;
 }
 
 .formGroup {
   @include flex(column, flex-start, stretch, $spacing-2);
+  margin-bottom: $spacing-5;
 
   label {
     font-size: $font-sm;
@@ -293,66 +109,35 @@
       color: $color-error;
     }
   }
+}
 
-  select,
-  input {
-    padding: $spacing-3;
-    border: 1px solid $color-gray-300;
-    border-radius: $radius-md;
-    font-size: $font-sm;
+.selectInput {
+  padding: $spacing-3;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  width: 100%;
 
-    &:focus {
-      outline: none;
-      border-color: $color-primary-500;
-      box-shadow: 0 0 0 3px rgba($color-primary-500, 0.1);
-    }
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
   }
 }
 
-.subjectSelection {
-  @include flex(column, flex-start, stretch, $spacing-3);
-  margin-top: $spacing-2;
-}
-
-.selectionHeader {
-  @include flex(row, flex-start, center, $spacing-2);
-  font-weight: $font-weight-semibold;
-  color: $color-gray-700;
-  margin-bottom: $spacing-2;
-}
-
-.searchInputWrapper {
-  position: relative;
-
-  .searchIcon {
-    position: absolute;
-    left: $spacing-3;
-    top: 50%;
-    transform: translateY(-50%);
-    color: $color-gray-400;
-  }
-
-  input {
-    width: 100%;
-    padding: $spacing-3 $spacing-3 $spacing-3 $spacing-10;
-    border: 1px solid $color-gray-200;
-    border-radius: $radius-lg;
-  }
-}
-
+/* Subject Checklist */
 .subjectChecklist {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: $spacing-3;
-  max-height: 300px;
+  max-height: 350px;
   overflow-y: auto;
   border: 1px solid $color-gray-200;
-  border-radius: $radius-lg;
+  border-radius: $radius-md;
   padding: $spacing-4;
 }
 
 .checkboxLabel {
-  @include flex(row, flex-start, center, $spacing-3);
+  @include flex(row, flex-start, center, $spacing-2);
   cursor: pointer;
   padding: $spacing-2;
   border-radius: $radius-md;
@@ -368,25 +153,21 @@
     cursor: pointer;
     accent-color: $color-primary-600;
   }
-}
 
-.checkboxText {
-  @include flex(row, flex-start, center, $spacing-2);
-  flex: 1;
-  flex-wrap: wrap;
-
-  strong {
-    font-size: $font-sm;
-    color: $color-gray-800;
-  }
-
-  small {
-    font-size: $font-xs;
-    color: $color-gray-500;
+  span {
+    @include flex(row, flex-start, center, $spacing-2);
+    flex-wrap: wrap;
+    gap: $spacing-2;
   }
 }
 
-.marksTag {
+.code {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  font-family: monospace;
+}
+
+.marks100, .marks50 {
   padding: 2px 6px;
   border-radius: $radius-sm;
   font-size: $font-xs;
@@ -403,52 +184,24 @@
   color: $color-info;
 }
 
-.selectionSummary {
-  @include flex(row, flex-start, center, $spacing-2);
+.selectedCount {
   padding: $spacing-3;
   background: rgba($color-primary-500, 0.05);
   border-radius: $radius-md;
+  text-align: center;
   font-size: $font-sm;
   color: $color-primary-700;
-}
-
-.infoBox {
-  padding: $spacing-4;
-  background: rgba($color-info, 0.05);
-  border-left: 4px solid $color-info;
-  border-radius: $radius-md;
-
-  p {
-    font-size: $font-sm;
-    color: $color-gray-600;
-    margin: 0;
-  }
+  margin-top: $spacing-4;
 }
 
 .formActions {
-  @include flex(row, flex-end, center, $spacing-3);
-  margin-top: $spacing-4;
-  padding-top: $spacing-4;
-  border-top: 1px solid $color-gray-200;
-}
-
-.cancelBtn {
-  padding: $spacing-2 $spacing-5;
-  background: transparent;
-  border: 1px solid $color-gray-300;
-  border-radius: $radius-md;
-  font-size: $font-sm;
-  cursor: pointer;
-  transition: all $transition-base;
-
-  &:hover {
-    background: $color-gray-100;
-  }
+  margin-top: $spacing-6;
+  text-align: right;
 }
 
 .submitBtn {
   @include flex(row, center, center, $spacing-2);
-  padding: $spacing-2 $spacing-5;
+  padding: $spacing-3 $spacing-6;
   background: $color-primary-600;
   border: none;
   border-radius: $radius-md;
@@ -461,10 +214,63 @@
   &:hover {
     background: $color-primary-700;
   }
+}
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+/* Config List */
+.configList {
+  @include flex(column, flex-start, stretch, $spacing-3);
+}
+
+.configItem {
+  @include flex(row, space-between, center);
+  padding: $spacing-3 $spacing-4;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-gray-100;
+  }
+}
+
+.configInfo {
+  @include flex(column, flex-start, flex-start, $spacing-1);
+
+  strong {
+    font-size: $font-sm;
+    color: $color-gray-800;
+  }
+
+  span {
+    font-size: $font-xs;
+    color: $color-gray-500;
+  }
+}
+
+.deleteBtn {
+  @include flex-center;
+  width: $spacing-8;
+  height: $spacing-8;
+  background: rgba($color-error, 0.1);
+  border: none;
+  border-radius: $radius-md;
+  color: $color-error;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-error;
+    color: $color-white;
+  }
+}
+
+.emptyList {
+  text-align: center;
+  padding: $spacing-8;
+
+  p {
+    color: $color-gray-500;
+    font-size: $font-sm;
   }
 }
 
@@ -475,41 +281,52 @@
   }
 
   .statCard,
-  .classCard {
+  .formCard,
+  .configListCard {
     background: $color-gray-800;
-    border-color: $color-gray-700;
   }
 
   .statLabel {
     color: $color-gray-400;
   }
 
-  .subjectTag {
-    background: rgba($color-primary-500, 0.2);
-    color: $color-primary-300;
-  }
-
-  .modalLarge {
-    background: $color-gray-800;
-  }
-
-  .modalHeader {
+  .formTitle {
+    color: $color-gray-100;
     border-bottom-color: $color-gray-700;
-
-    h3 {
-      color: $color-gray-100;
-    }
   }
 
   .formGroup label {
     color: $color-gray-300;
   }
 
-  .checkboxText strong {
-    color: $color-gray-100;
-  }
-
   .subjectChecklist {
     border-color: $color-gray-700;
+  }
+
+  .checkboxLabel:hover {
+    background: rgba($color-primary-800, 0.3);
+  }
+
+  .configItem {
+    background: $color-gray-700;
+
+    &:hover {
+      background: $color-gray-600;
+    }
+  }
+
+  .configInfo strong {
+    color: $color-gray-100;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .formContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .pageTitle {
+    font-size: $font-lg;
   }
 }

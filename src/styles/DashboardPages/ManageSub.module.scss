@@ -2,7 +2,7 @@
 @import "../../styles/mixin";
 
 .manageSubjects {
-  padding: $spacing-6;
+  padding: $spacing-2;
   min-height: 100vh;
   background: $color-gray-50;
 }
@@ -13,6 +13,11 @@
   padding: $spacing-6 $spacing-8;
   margin-bottom: $spacing-8;
   color: $color-white;
+
+  @include respond-to('sm') {
+    padding: $spacing-2 $spacing-4;
+    margin-bottom: $spacing-4;
+  }
 }
 
 .headerContent {
@@ -25,7 +30,10 @@
   height: $spacing-12;
   background: rgba($color-white, 0.2);
   border-radius: $radius-lg;
-  
+  @include respond-to('sm') {
+    width: $spacing-8;
+  height: $spacing-8;
+  }
   svg {
     font-size: $font-xl;
   }
@@ -34,6 +42,9 @@
 .pageTitle {
   @include heading(xl, $font-weight-bold, $color-white);
   margin: 0;
+  @include respond-to('sm') {
+   @include heading(lg, $font-weight-bold, $color-white);
+  }
 }
 
 .pageSubtitle {

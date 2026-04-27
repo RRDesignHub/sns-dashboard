@@ -1,5 +1,5 @@
 export interface Subject {
-  _id: string;
+  _id?: string;
   name: string;
   nameBn: string;
   code: string;
@@ -10,7 +10,7 @@ export interface Subject {
 }
 
 export interface ClassConfig {
-  _id: string;
+  _id?: string;
   classId: string;
   className: string;
   section: string;

@@ -13,6 +13,7 @@ import { useAxiosSecure } from "../../../hooks/useAxiosSecure";
 import styles from "../../../styles/DashboardPages/ManageSub.module.scss";
 import Swal from "sweetalert2";
 import type { Subject } from "../../../types/loginTypes/subjectTypes";
+import Loading from "../../../components/shared/Loading";
 
 const ManageSubjects: React.FC = () => {
   const axiosSecure = useAxiosSecure();
@@ -158,7 +159,7 @@ const ManageSubjects: React.FC = () => {
       subject.code.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  if (isLoading) return <div className={styles.loading}>লোড হচ্ছে...</div>;
+  if (isLoading) return <Loading />;
 
   return (
     <div className={styles.manageSubjects}>
