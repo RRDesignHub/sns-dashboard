@@ -7,22 +7,37 @@ export interface Subject {
   academicMarks: number;
   behavioralMarks: number;
   status: "active" | "inactive";
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AssignedSubject {
+  subjectId: string;
+  order: number;
+  isActive: boolean;
+  customConfig?: {
+    totalMarks?: number;
+    academicMarks?: number;
+    behavioralMarks?: number;
+  };
 }
 
 export interface ClassConfig {
   _id?: string;
   classId: string;
   className: string;
-  section: string;
+  section: "primary" | "secondary";
   academicYear: string;
-  subjects: {
-    subjectId: string;
-    order: number;
-    isActive: boolean;
-    customConfig?: {
-      totalMarks?: number;
-      academicMarks?: number;
-      behavioralMarks?: number;
-    };
-  }[];
+  subjects: AssignedSubject[];
+  createdBy?: string;
+  updatedBy?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+// ========== SUBJECT WITH CLASS INFO (For display) ==========
+export interface ClassSubjectWithDetails extends ClassConfig {
+  subjects: (AssignedSubject & {
+    subjectDetails?: Subject;
+  })[];
 }

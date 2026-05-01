@@ -54,6 +54,13 @@ const ManageSubjects: React.FC = () => {
       closeModal();
       Swal.fire("সফল!", "বিষয়টি তৈরি করা হয়েছে", "success");
     },
+    onError: (error: any) => {
+      Swal.fire(
+        "ত্রুটি!",
+        error.response?.data?.message || "বিষয় তৈরি করতে ব্যর্থ হয়েছে",
+        "error",
+      );
+    },
   });
 
   // Update subject mutation
@@ -70,12 +77,19 @@ const ManageSubjects: React.FC = () => {
       closeModal();
       Swal.fire("সফল!", "বিষয়টি হালনাগাদ করা হয়েছে", "success");
     },
+    onError: (error: any) => {
+      Swal.fire(
+        "ত্রুটি!",
+        error.response?.data?.message || "বিষয় হালনাগাদ করতে ব্যর্থ হয়েছে",
+        "error",
+      );
+    },
   });
 
   // Delete subject mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { data } = await axiosSecure.delete(`/api/subjects/${id}`);
+      const { data } = await axiosSecure.delete(`/api/subjects/delete/${id}`);
       return data;
     },
     onSuccess: () => {
@@ -159,8 +173,6 @@ const ManageSubjects: React.FC = () => {
       subject.code.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  if (isLoading) return <Loading />;
-
   return (
     <div className={styles.manageSubjects}>
       {/* Header */}
@@ -178,7 +190,7 @@ const ManageSubjects: React.FC = () => {
           </div>
         </div>
       </div>
-
+      {isLoading && <Loading />}
       {/* Toolbar */}
       <div className={styles.toolbar}>
         <div className={styles.searchBox}>
