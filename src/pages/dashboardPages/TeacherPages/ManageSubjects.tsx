@@ -96,6 +96,13 @@ const ManageSubjects: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["subjects"] });
       Swal.fire("সফল!", "বিষয়টি মুছে ফেলা হয়েছে", "success");
     },
+    onError: (error: any) => {
+      Swal.fire(
+        "ত্রুটি!",
+        error.response?.data?.message || "Subject added to a class",
+        "error",
+      );
+    },
   });
 
   const handleTotalMarksChange = (marks: 50 | 100) => {

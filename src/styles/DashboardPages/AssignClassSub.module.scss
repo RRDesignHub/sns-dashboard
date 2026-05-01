@@ -79,7 +79,9 @@
   gap: $spacing-6;
 }
 
-.formCard, .configListCard {
+.formCard,
+.configListCard,
+.assignedSubjectsCard {
   background: $color-white;
   border-radius: $radius-lg;
   padding: $spacing-6;
@@ -167,7 +169,8 @@
   font-family: monospace;
 }
 
-.marks100, .marks50 {
+.marks100,
+.marks50 {
   padding: 2px 6px;
   border-radius: $radius-sm;
   font-size: $font-xs;
@@ -182,16 +185,6 @@
 .marks50 {
   background: rgba($color-info, 0.1);
   color: $color-info;
-}
-
-.selectedCount {
-  padding: $spacing-3;
-  background: rgba($color-primary-500, 0.05);
-  border-radius: $radius-md;
-  text-align: center;
-  font-size: $font-sm;
-  color: $color-primary-700;
-  margin-top: $spacing-4;
 }
 
 .formActions {
@@ -216,6 +209,77 @@
   }
 }
 
+/* Selected Subjects Preview */
+.selectedPreview {
+  margin-top: $spacing-4;
+  padding: $spacing-4;
+  background: rgba($color-primary-50, 0.5);
+  border-radius: $radius-lg;
+  border: 1px solid rgba($color-primary-500, 0.2);
+}
+
+.previewHeader {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-3;
+  padding-bottom: $spacing-2;
+  border-bottom: 1px solid rgba($color-primary-500, 0.2);
+
+  strong {
+    font-size: $font-sm;
+    color: $color-primary-700;
+  }
+
+  span {
+    font-size: $font-xs;
+    padding: $spacing-1 $spacing-2;
+    background: $color-primary-600;
+    color: $color-white;
+    border-radius: $radius-full;
+  }
+}
+
+.previewList {
+  @include flex(column, flex-start, stretch, $spacing-2);
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.previewItem {
+  @include flex(row, space-between, center);
+  padding: $spacing-2 $spacing-3;
+  background: $color-white;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-gray-50;
+    transform: translateX(4px);
+  }
+
+  span:first-child {
+    flex: 1;
+  }
+}
+
+.removeBtn {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  background: rgba($color-error, 0.1);
+  border: none;
+  border-radius: $radius-full;
+  color: $color-error;
+  font-size: $font-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-error;
+    color: $color-white;
+    transform: scale(1.1);
+  }
+}
+
 /* Config List */
 .configList {
   @include flex(column, flex-start, stretch, $spacing-3);
@@ -227,9 +291,21 @@
   background: $color-gray-50;
   border-radius: $radius-md;
   transition: all $transition-base;
+  cursor: pointer;
+  border: 2px solid transparent;
 
   &:hover {
     background: $color-gray-100;
+    transform: translateX(4px);
+  }
+
+  &.active {
+    background: rgba($color-primary-500, 0.1);
+    border-color: $color-primary-500;
+
+    strong {
+      color: $color-primary-700;
+    }
   }
 }
 
@@ -264,7 +340,76 @@
   }
 }
 
-.emptyList {
+/* Assigned Subjects Card */
+.assignedSubjectsCard {
+  margin-top: $spacing-0;
+  border: 1px solid $color-gray-200;
+}
+
+.assignedList {
+  @include flex(column, flex-start, stretch, $spacing-3);
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.assignedItem {
+  @include flex(row, flex-start, center, $spacing-3);
+  padding: $spacing-3;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-gray-100;
+    transform: translateX(4px);
+  }
+}
+
+.assignedNumber {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  background: $color-primary-600;
+  color: $color-white;
+  border-radius: $radius-full;
+  font-size: $font-sm;
+  font-weight: $font-weight-bold;
+}
+
+.assignedInfo {
+  flex: 1;
+  @include flex(row, space-between, center);
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.assignedName {
+  @include flex(row, flex-start, center, $spacing-2);
+  flex-wrap: wrap;
+
+  strong {
+    font-size: $font-sm;
+    color: $color-gray-800;
+  }
+}
+
+.assignedCode {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  font-family: monospace;
+}
+
+.assignedMarks {
+  @include flex(row, flex-start, center, $spacing-2);
+}
+
+.assignedOrder {
+  font-size: $font-xs;
+  color: $color-gray-500;
+}
+
+.emptyList,
+.emptyAssigned {
   text-align: center;
   padding: $spacing-8;
 
@@ -282,7 +427,8 @@
 
   .statCard,
   .formCard,
-  .configListCard {
+  .configListCard,
+  .assignedSubjectsCard {
     background: $color-gray-800;
   }
 
@@ -313,10 +459,45 @@
     &:hover {
       background: $color-gray-600;
     }
+
+    &.active {
+      background: rgba($color-primary-600, 0.2);
+      border-color: $color-primary-500;
+
+      strong {
+        color: $color-primary-300;
+      }
+    }
   }
 
-  .configInfo strong {
+  .configInfo strong,
+  .assignedName strong {
     color: $color-gray-100;
+  }
+
+  .assignedItem {
+    background: $color-gray-700;
+
+    &:hover {
+      background: $color-gray-600;
+    }
+  }
+
+  .selectedPreview {
+    background: rgba($color-primary-900, 0.3);
+    border-color: rgba($color-primary-700, 0.3);
+  }
+
+  .previewHeader strong {
+    color: $color-primary-300;
+  }
+
+  .previewItem {
+    background: $color-gray-700;
+
+    &:hover {
+      background: $color-gray-600;
+    }
   }
 }
 
@@ -325,7 +506,7 @@
   .formContainer {
     grid-template-columns: 1fr;
   }
-  
+
   .pageTitle {
     font-size: $font-lg;
   }
