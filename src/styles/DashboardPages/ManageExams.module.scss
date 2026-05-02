@@ -1,0 +1,463 @@
+@import "../variables";
+@import "../mixin";
+
+.manageExams {
+  padding: $spacing-6;
+  min-height: 100vh;
+  background: $color-gray-50;
+  @include respond-to('sm') {
+    padding: $spacing-2;
+  }
+}
+
+/* Header */
+.pageHeader {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  margin-bottom: $spacing-8;
+  color: $color-white;
+
+  @include respond-to('sm') {
+    padding: $spacing-2;
+  margin-bottom: $spacing-4;
+  }
+}
+
+.headerContent {
+  @include flex(row, flex-start, center, $spacing-4);
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-12;
+  height: $spacing-12;
+  background: rgba($color-white, 0.15);
+  border-radius: $radius-lg;
+  
+  svg {
+    font-size: $font-2xl;
+  }
+}
+
+.pageTitle {
+  font-size: $font-xl;
+  font-weight: $font-weight-bold;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: $font-sm;
+  color: rgba($color-white, 0.9);
+  margin-top: $spacing-1;
+}
+
+/* Toolbar */
+.toolbar {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-6;
+  flex-wrap: wrap;
+  gap: $spacing-4;
+}
+
+.filterGroup {
+  @include flex(row, flex-start, center, $spacing-2);
+  
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+  }
+  
+  select {
+    padding: $spacing-2 $spacing-3;
+    border: 1px solid $color-gray-300;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+  }
+}
+
+.addButton {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-5;
+  background: $color-primary-600;
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-primary-700;
+    transform: translateY(-2px);
+  }
+}
+
+/* Stats Cards */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: $spacing-5;
+  margin-bottom: $spacing-8;
+}
+
+.statCard {
+  background: $color-white;
+  border-radius: $radius-lg;
+  padding: $spacing-4;
+  text-align: center;
+  box-shadow: $shadow-sm;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: $font-weight-bold;
+  color: $color-primary-600;
+}
+
+.statLabel {
+  font-size: $font-sm;
+  color: $color-gray-600;
+  margin-top: $spacing-1;
+}
+
+/* Table */
+.tableContainer {
+  background: $color-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.tableHeader {
+  @include flex(row, space-between, center);
+  padding: $spacing-4 $spacing-6;
+  border-bottom: 1px solid $color-gray-200;
+  
+  h3 {
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    margin: 0;
+  }
+  
+  span {
+    font-size: $font-sm;
+    color: $color-gray-500;
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.examTable {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead {
+    background: $color-gray-50;
+    
+    th {
+      padding: $spacing-3 $spacing-4;
+      text-align: left;
+      font-size: $font-xs;
+      font-weight: $font-weight-semibold;
+      color: $color-gray-600;
+      text-transform: uppercase;
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-gray-100;
+      
+      &:hover {
+        background: rgba($color-primary-50, 0.3);
+      }
+      
+      td {
+        padding: $spacing-3 $spacing-4;
+        font-size: $font-sm;
+        color: $color-gray-700;
+        
+        small {
+          display: block;
+          font-size: $font-xs;
+          color: $color-gray-500;
+        }
+      }
+    }
+  }
+}
+
+/* Status Badges */
+.statusUpcoming, .statusOngoing, .statusCompleted {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+}
+
+.statusUpcoming {
+  background: rgba($color-info, 0.1);
+  color: $color-info;
+}
+
+.statusOngoing {
+  background: rgba($color-success, 0.1);
+  color: $color-success;
+}
+
+.statusCompleted {
+  background: rgba($color-gray-500, 0.1);
+  color: $color-gray-600;
+}
+
+/* Action Buttons */
+.actionButtons {
+  @include flex(row, flex-start, center, $spacing-2);
+}
+
+.editBtn, .deleteBtn {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  svg {
+    font-size: $font-md;
+  }
+}
+
+.editBtn {
+  background: rgba($color-info, 0.1);
+  color: $color-info;
+  
+  &:hover {
+    background: $color-info;
+    color: $color-white;
+  }
+}
+
+.deleteBtn {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  
+  &:hover {
+    background: $color-error;
+    color: $color-white;
+  }
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  @include flex-center;
+  z-index: 1000;
+}
+
+.modal {
+  background: $color-white;
+  border-radius: $radius-xl;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  @include flex(row, space-between, center);
+  padding: $spacing-5 $spacing-6;
+  border-bottom: 1px solid $color-gray-200;
+  
+  h3 {
+    font-size: $font-lg;
+    font-weight: $font-weight-semibold;
+    margin: 0;
+  }
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  font-size: $font-xl;
+  cursor: pointer;
+  color: $color-gray-500;
+  
+  &:hover {
+    color: $color-error;
+  }
+}
+
+.modalForm {
+  padding: $spacing-6;
+  @include flex(column, flex-start, stretch, $spacing-4);
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+}
+
+.formGroup {
+  @include flex(column, flex-start, stretch, $spacing-2);
+  
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    
+    span {
+      color: $color-error;
+    }
+    
+    small {
+      font-weight: normal;
+      color: $color-gray-500;
+      display: block;
+      font-size: $font-xs;
+    }
+  }
+  
+  
+  input, select {
+    padding: $spacing-2 $spacing-3;
+    border: 1px solid $color-gray-300;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary-500;
+    }
+  }
+}
+
+.infoNote {
+  padding: $spacing-3;
+  background: rgba($color-info, 0.05);
+  border-left: 4px solid $color-info;
+  border-radius: $radius-md;
+  margin-top: $spacing-2;
+  
+  p {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin: 0;
+    line-height: 1.6;
+    
+    strong {
+      color: $color-info;
+    }
+  }
+}
+
+.formActions {
+  @include flex(row, flex-end, center, $spacing-3);
+  margin-top: $spacing-4;
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-200;
+}
+
+.cancelBtn {
+  padding: $spacing-2 $spacing-5;
+  background: transparent;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  cursor: pointer;
+  
+  &:hover {
+    background: $color-gray-100;
+  }
+}
+
+.submitBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-5;
+  background: $color-primary-600;
+  border: none;
+  border-radius: $radius-md;
+  color: $color-white;
+  font-size: $font-sm;
+  cursor: pointer;
+  
+  &:hover {
+    background: $color-primary-700;
+  }
+}
+
+.noData {
+  text-align: center;
+  padding: $spacing-8;
+  
+  p {
+    color: $color-gray-500;
+    margin-bottom: $spacing-4;
+  }
+}
+
+.noDataBtn {
+  padding: $spacing-2 $spacing-5;
+  background: $color-primary-600;
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+}
+
+.loading {
+  @include flex-center;
+  min-height: 50vh;
+  font-size: $font-lg;
+  color: $color-gray-500;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .manageExams {
+    background: $color-gray-900;
+  }
+  
+  .statCard, .tableContainer, .modal {
+    background: $color-gray-800;
+  }
+  
+  .tableHeader {
+    border-bottom-color: $color-gray-700;
+    
+    h3, span {
+      color: $color-gray-100;
+    }
+  }
+  
+  .examTable {
+    thead th {
+      background: $color-gray-700;
+      color: $color-gray-300;
+    }
+    
+    tbody td {
+      color: $color-gray-300;
+    }
+  }
+  
+  .formGroup label {
+    color: $color-gray-300;
+  }
+  
+  .infoNote p {
+    color: $color-gray-400;
+  }
+}

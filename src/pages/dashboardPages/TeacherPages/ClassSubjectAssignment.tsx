@@ -7,6 +7,7 @@ import StatsCards from "../../../components/DashboardComponents/StatsCards";
 import ClassSelectForm from "../../../components/DashboardComponents/ClassSelectForm";
 import ClassList from "../../../components/DashboardComponents/ClassLists";
 import AssignedSubjects from "../../../components/DashboardComponents/AssignedSubjects";
+import type { Subject } from "../../../types/loginTypes/subjectTypes";
 
 const ClassSubjectAssignment: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState("");
@@ -46,6 +47,12 @@ const ClassSubjectAssignment: React.FC = () => {
           selectedClass={selectedClass}
           selectedSubjectIds={selectedSubjectIds}
           subjects={subjects}
+          existingConfigSubjects={(() => {
+            const config = classConfigs.find(
+              (c) => c.classId === selectedClass,
+            );
+            return config?.subjects.map((s) => s.subjectId as Subject) || [];
+          })()}
           onClassSelect={handleClassSelect}
           onSubjectToggle={(subjectId) => {
             setSelectedSubjectIds((prev) =>
@@ -57,7 +64,6 @@ const ClassSubjectAssignment: React.FC = () => {
           onSubmit={(config) => saveMutation.mutate(config)}
           onReset={resetForm}
         />
-
         {/* Existing Configurations List */}
         <ClassList
           classConfigs={classConfigs}
@@ -68,7 +74,6 @@ const ClassSubjectAssignment: React.FC = () => {
           }}
           onDelete={(config) => deleteMutation.mutate(config._id!)}
         />
-
         {/* Show Assigned Subjects for Selected Class */}
         {selectedClass && (
           <AssignedSubjects

@@ -3,6 +3,8 @@ import useAuth from "../../hooks/useAuth";
 import styles from "./../../styles/components/Sidebar.module.scss";
 import type { IconType } from "react-icons";
 import {
+  FaBook,
+  FaCalendarAlt,
   FaFileInvoiceDollar,
   FaRegIdCard,
   FaRegMoneyBillAlt,
@@ -15,6 +17,7 @@ import { HiDocumentReport, HiSpeakerphone } from "react-icons/hi";
 import { IoMdPersonAdd } from "react-icons/io";
 import {
   MdAddChart,
+  MdClass,
   MdDashboard,
   MdInventory,
   MdOutlineAddchart,
@@ -130,14 +133,19 @@ const SidebarNav = () => {
       heading: "Academic & Results",
       links: [
         {
-          name: "Manage Subjects",
+          name: "বিষয় ব্যবস্থাপনা",
           path: "/dashboard/manage-subjects",
-          icon: MdOutlineAddchart,
+          icon: FaBook, // or MdSubject, GiBookshelf
         },
         {
-          name: "Class Subjects Assign",
+          name: "ক্লাসভিত্তিক বিষয়",
           path: "/dashboard/class-subjects-assign",
-          icon: MdOutlineAddchart,
+          icon: MdClass, // or FaChalkboardTeacher, GiClassroom
+        },
+        {
+          name: "পরীক্ষা ব্যবস্থাপনা",
+          path: "/dashboard/manage-exams",
+          icon: FaCalendarAlt, // or MdEvent, GiNotebook
         },
         {
           name: "ফলাফল তৈরি",
