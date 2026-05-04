@@ -6,7 +6,6 @@ import PageHeader from "../../../components/DashboardComponents/PageHeader";
 import StatsCards from "../../../components/DashboardComponents/StatsCards";
 import ClassSelectForm from "../../../components/DashboardComponents/ClassSelectForm";
 import ClassList from "../../../components/DashboardComponents/ClassLists";
-import AssignedSubjects from "../../../components/DashboardComponents/AssignedSubjects";
 import type { Subject } from "../../../types/loginTypes/subjectTypes";
 
 const ClassSubjectAssignment: React.FC = () => {
@@ -74,13 +73,6 @@ const ClassSubjectAssignment: React.FC = () => {
           }}
           onDelete={(config) => deleteMutation.mutate(config._id!)}
         />
-        {/* Show Assigned Subjects for Selected Class */}
-        {selectedClass && (
-          <AssignedSubjects
-            selectedClass={selectedClass}
-            classConfigs={classConfigs}
-          />
-        )}
       </div>
     </div>
   );

@@ -107,16 +107,8 @@ const AssignedSubjects: React.FC<AssignedSubjectsProps> = ({
                       </span>
                     </div>
 
-                    {/* Order & Status */}
-                    <span className={styles.assignedOrder}>
-                      ক্রম: {assigned.order + 1}
-                    </span>
+                   
 
-                    {assigned.isActive ? (
-                      <span className={styles.activeBadge}>সক্রিয়</span>
-                    ) : (
-                      <span className={styles.inactiveBadge}>নিষ্ক্রিয়</span>
-                    )}
                   </div>
                 </div>
               </div>

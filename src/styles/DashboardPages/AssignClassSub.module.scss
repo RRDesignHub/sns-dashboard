@@ -173,13 +173,22 @@
   gap: $spacing-6;
 }
 
-.formCard,
-.configListCard,
-.assignedSubjectsCard {
-  background: $color-white;
+
+.configListCard{
+  background: $color-gray-100;
   border-radius: $radius-lg;
-  padding: $spacing-6;
+  padding: $spacing-4;
   box-shadow: $shadow-sm;
+  margin-bottom: $spacing-1;
+}
+
+.formCard,
+.assignedSubjectsCard {
+  background: $color-primary-50;
+  border-radius: $radius-lg;
+  padding: $spacing-4;
+  box-shadow: $shadow-sm;
+  margin-top: $spacing-3;
 }
 
 .formTitle {
@@ -434,16 +443,12 @@
   }
 }
 
-/* Assigned Subjects Card */
-.assignedSubjectsCard {
-  margin-top: $spacing-0;
-  border: 1px solid $color-gray-200;
-}
+
 
 .assignedList {
   @include flex(column, flex-start, stretch, $spacing-3);
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: max-content;
+  overflow-y: hidden;
 }
 
 .assignedItem {
@@ -455,7 +460,6 @@
 
   &:hover {
     background: $color-gray-100;
-    transform: translateX(4px);
   }
 }
 
@@ -497,10 +501,7 @@
   @include flex(row, flex-start, center, $spacing-2);
 }
 
-.assignedOrder {
-  font-size: $font-xs;
-  color: $color-gray-500;
-}
+
 
 .emptyList,
 .emptyAssigned {

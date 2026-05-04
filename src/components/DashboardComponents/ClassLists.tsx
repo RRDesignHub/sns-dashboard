@@ -4,6 +4,7 @@ import { FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 import styles from "../../styles/DashboardPages/AssignClassSub.module.scss";
 import type { ClassConfig } from "../../types/loginTypes/subjectTypes";
+import AssignedSubjects from "./AssignedSubjects";
 
 interface ClassListProps {
   classConfigs: ClassConfig[];
@@ -81,6 +82,12 @@ const ClassList: React.FC<ClassListProps> = ({
             </div>
           ))}
         </div>
+        {selectedClass && (
+          <AssignedSubjects
+            selectedClass={selectedClass}
+            classConfigs={classConfigs}
+          />
+        )}
       </div>
     </>
   );
