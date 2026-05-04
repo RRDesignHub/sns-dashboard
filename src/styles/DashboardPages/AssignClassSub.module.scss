@@ -81,6 +81,91 @@
   color: $color-gray-600;
 }
 
+/* Custom Marks Styles */
+.checkboxItem {
+  position: relative;
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  background: $color-white;
+  border: 1px solid $color-gray-200;
+  
+  &:hover {
+    border-color: $color-primary-300;
+  }
+}
+
+.overrideBtn {
+  position: absolute;
+  right: $spacing-2;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  font-size: $font-md;
+  cursor: pointer;
+  padding: $spacing-1;
+  border-radius: $radius-sm;
+  
+  &:hover {
+    background: $color-gray-100;
+  }
+}
+
+.customMarksPanel {
+  margin-top: $spacing-3;
+  padding: $spacing-3;
+  background: rgba($color-primary-50, 0.5);
+  border-radius: $radius-md;
+  border-left: 3px solid $color-primary-500;
+}
+
+.customMarksHeader {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-3;
+  font-weight: $font-weight-medium;
+  color: $color-primary-700;
+  
+  button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: $font-md;
+    color: $color-gray-500;
+    
+    &:hover {
+      color: $color-error;
+    }
+  }
+}
+
+.customMarksRow {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: $spacing-3;
+  
+  div {
+    @include flex(column, flex-start, stretch, $spacing-1);
+    
+    label {
+      font-size: $font-xs;
+      color: $color-gray-600;
+    }
+    
+    input {
+      padding: $spacing-2;
+      border: 1px solid $color-gray-300;
+      border-radius: $radius-md;
+      font-size: $font-sm;
+      width: 100%;
+      
+      &:focus {
+        outline: none;
+        border-color: $color-primary-500;
+      }
+    }
+  }
+}
+
 /* Form Container - 2 columns */
 .formContainer {
   display: grid;
@@ -428,6 +513,83 @@
   }
 }
 
+/* Custom Marks Styles */
+.overriddenBadge {
+  margin-left: $spacing-2;
+  padding: 2px 8px;
+  background: linear-gradient(135deg, rgba($color-warning, 0.15), rgba($color-warning, 0.05));
+  color: $color-warning;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+  border: 1px solid rgba($color-warning, 0.3);
+}
+
+.marksContainer {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.marksCustom {
+  padding: 2px 8px;
+  border-radius: $radius-sm;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+  background: linear-gradient(135deg, $color-warning, darken($color-warning, 10%));
+  color: $color-white;
+  position: relative;
+  
+  &::after {
+    content: '✨';
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    font-size: 10px;
+  }
+}
+
+.originalMarks {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  text-decoration: line-through;
+  margin-left: $spacing-1;
+}
+
+.marksBreakdown {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-3;
+  margin-left: $spacing-3;
+  padding-left: $spacing-3;
+  border-left: 1px solid $color-gray-200;
+}
+
+.academicMarks, .behavioralMarks {
+  font-size: $font-xs;
+  color: $color-gray-600;
+  
+  &:hover {
+    color: $color-primary-600;
+  }
+}
+
+/* Enhanced assigned item for better visual hierarchy */
+.assignedItem {
+  @include flex(row, flex-start, center, $spacing-3);
+  padding: $spacing-4;
+  background: $color-gray-50;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  border-left: 3px solid transparent;
+  
+  &:hover {
+    background: $color-gray-100;
+    transform: translateX(4px);
+    border-left-color: $color-primary-500;
+  }
+}
+
 /* Dark Theme */
 [data-theme="dark"] {
   .classSubjectPage {
@@ -477,6 +639,22 @@
         color: $color-primary-300;
       }
     }
+
+    .overriddenBadge {
+    background: linear-gradient(135deg, rgba($color-warning, 0.25), rgba($color-warning, 0.1));
+  }
+  
+  .originalMarks {
+    color: $color-gray-500;
+  }
+  
+  .marksBreakdown {
+    border-left-color: $color-gray-700;
+  }
+  
+  .academicMarks, .behavioralMarks {
+    color: $color-gray-400;
+  }
   }
 
   .configInfo strong,

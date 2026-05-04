@@ -3,7 +3,7 @@ export interface Subject {
   name: string;
   nameBn: string;
   code: string;
-  totalMarks: 50 | 100;
+  totalMarks: 50 | 100 | 30 | 25;
   academicMarks: number;
   behavioralMarks: number;
   status: "active" | "inactive";
