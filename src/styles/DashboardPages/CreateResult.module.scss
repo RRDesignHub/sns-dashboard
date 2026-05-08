@@ -1,0 +1,738 @@
+@import "./../variables";
+@import "./../mixin";
+
+.createResult {
+  padding: $spacing-4;
+  min-height: 100vh;
+  background: $color-gray-50;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+/* ========== PAGE HEADER ========== */
+.pageHeader {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  margin-bottom: $spacing-6;
+  color: $color-white;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+    margin-bottom: $spacing-8;
+  }
+}
+
+.headerContent {
+  @include flex(row, flex-start, center, $spacing-3);
+  
+  @include respond-to('md') {
+    gap: $spacing-4;
+  }
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-10;
+  height: $spacing-10;
+  background: rgba($color-white, 0.15);
+  border-radius: $radius-lg;
+  
+  svg {
+    font-size: $font-xl;
+    
+    @include respond-to('md') {
+      font-size: $font-2xl;
+    }
+  }
+}
+
+.pageTitle {
+  font-size: $font-lg;
+  font-weight: $font-weight-bold;
+  margin: 0;
+  
+  @include respond-to('md') {
+    font-size: $font-xl;
+  }
+}
+
+.pageSubtitle {
+  font-size: $font-xs;
+  color: rgba($color-white, 0.9);
+  margin-top: $spacing-1;
+  
+  @include respond-to('md') {
+    font-size: $font-sm;
+  }
+}
+
+/* ========== STEP INDICATOR ========== */
+.stepIndicator {
+  @include flex(row, center, center);
+  margin-bottom: $spacing-8;
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  
+  @include respond-to('md') {
+    gap: $spacing-4;
+  }
+}
+
+.step {
+  @include flex(column, center, center, $spacing-1);
+  position: relative;
+}
+
+.stepNumber {
+  width: $spacing-8;
+  height: $spacing-8;
+  background: $color-gray-200;
+  color: $color-gray-500;
+  border-radius: $radius-full;
+  @include flex-center;
+  font-weight: $font-weight-bold;
+  transition: all $transition-base;
+}
+
+.step.active .stepNumber {
+  background: $color-primary-600;
+  color: $color-white;
+  box-shadow: 0 0 0 4px rgba($color-primary-600, 0.2);
+}
+
+.step.completed .stepNumber {
+  background: $color-success;
+  color: $color-white;
+}
+
+.stepLabel {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  text-align: center;
+  
+  @include respond-to('md') {
+    font-size: $font-sm;
+    white-space: nowrap;
+  }
+}
+
+.step.active .stepLabel {
+  color: $color-primary-600;
+  font-weight: $font-weight-medium;
+}
+
+.stepLine {
+  width: $spacing-8;
+  height: 2px;
+  background: $color-gray-200;
+  
+  @include respond-to('md') {
+    width: $spacing-12;
+  }
+}
+
+/* ========== SEARCH SECTION ========== */
+.searchSection {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.searchCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow: $shadow-md;
+  
+  @include respond-to('md') {
+    padding: $spacing-8;
+  }
+}
+
+.sectionTitle {
+  @include flex(row, flex-start, center, $spacing-2);
+  font-size: $font-md;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin-bottom: $spacing-5;
+  
+  svg {
+    color: $color-primary-600;
+  }
+}
+
+.searchTypeToggle {
+  @include flex(row, center, center);
+  background: $color-gray-100;
+  border-radius: $radius-lg;
+  padding: $spacing-1;
+  margin-bottom: $spacing-5;
+}
+
+.toggleBtn {
+  flex: 1;
+  padding: $spacing-2 $spacing-3;
+  background: transparent;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  color: $color-gray-600;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &.active {
+    background: $color-white;
+    color: $color-primary-600;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.searchForm {
+  @include flex(column, flex-start, stretch, $spacing-4);
+}
+
+.formGroup {
+  @include flex(column, flex-start, stretch, $spacing-2);
+  
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+  }
+}
+
+.selectInput, .textInput {
+  padding: $spacing-3;
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  width: 100%;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
+    box-shadow: 0 0 0 2px rgba($color-primary-500, 0.1);
+  }
+}
+
+.searchBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3;
+  background: $color-primary-600;
+  color: $color-white;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover:not(:disabled) {
+    background: $color-primary-700;
+    transform: translateY(-2px);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ========== MARKS SECTION ========== */
+.marksSection {
+  @include flex(column, flex-start, stretch, $spacing-6);
+}
+
+.infoCard {
+  background: linear-gradient(135deg, $color-primary-50, $color-white);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  border: 1px solid $color-primary-100;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+.infoRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.infoItem {
+  @include flex(row, flex-start, center, $spacing-3);
+  
+  svg {
+    font-size: $font-xl;
+    color: $color-primary-600;
+  }
+  
+  label {
+    font-size: $font-xs;
+    color: $color-gray-500;
+    display: block;
+  }
+  
+  span {
+    font-size: $font-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+  }
+}
+
+/* Exam Card */
+.examCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow: $shadow-sm;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+.examList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-3;
+  
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.examBtn {
+  padding: $spacing-3;
+  background: $color-gray-50;
+  border: 2px solid $color-gray-200;
+  border-radius: $radius-lg;
+  cursor: pointer;
+  transition: all $transition-base;
+  text-align: center;
+  
+  &:hover {
+    border-color: $color-primary-300;
+    background: rgba($color-primary-50, 0.5);
+  }
+  
+  &.selected {
+    background: $color-primary-600;
+    border-color: $color-primary-600;
+    
+    .examName {
+      color: $color-white;
+    }
+    
+    .examYear {
+      color: rgba($color-white, 0.8);
+    }
+  }
+}
+
+.examName {
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin-bottom: $spacing-1;
+}
+
+.examYear {
+  font-size: $font-xs;
+  color: $color-gray-500;
+}
+
+.resetTopBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-5;
+  background: rgba($color-white, 0.2);
+  border: 1px solid rgba($color-white, 0.3);
+  border-radius: $radius-lg;
+  color: $color-white;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  margin-left: auto;
+  
+  &:hover {
+    background: rgba($color-white, 0.3);
+    transform: translateY(-2px);
+  }
+}
+
+.actionBar {
+  @include flex(row, flex-end, center);
+  margin-bottom: $spacing-4;
+}
+
+.resetBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-5;
+  background: $color-gray-100;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-lg;
+  color: $color-gray-700;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-gray-200;
+    transform: translateY(-2px);
+  }
+}
+
+
+/* Behavioral Card */
+.behavioralCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow: $shadow-sm;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+.behavioralGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.behavioralItem {
+  padding: $spacing-3;
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    display: block;
+    margin-bottom: $spacing-2;
+  }
+}
+
+.rangeInput {
+  @include flex(row, flex-start, center, $spacing-2);
+  margin-bottom: $spacing-2;
+  
+  input {
+    width: 80px;
+    padding: $spacing-2;
+    border: 1px solid $color-gray-200;
+    border-radius: $radius-md;
+    text-align: center;
+  }
+  
+  span {
+    font-size: $font-sm;
+    color: $color-gray-600;
+  }
+}
+
+.marksPreview {
+  font-size: $font-xs;
+  color: $color-primary-600;
+  font-weight: $font-weight-medium;
+}
+
+/* Subjects Card */
+.subjectsCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow: $shadow-sm;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+.subjectEntry {
+  border-bottom: 1px solid $color-gray-100;
+  padding: $spacing-4 0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.subjectHeader {
+  @include flex(row, space-between, center);
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  margin-bottom: $spacing-3;
+}
+
+.subjectInfo {
+  @include flex(row, flex-start, center, $spacing-2);
+  flex-wrap: wrap;
+  
+  strong {
+    font-size: $font-sm;
+    color: $color-gray-800;
+  }
+}
+
+.subjectCode {
+  font-size: $font-xs;
+  color: $color-gray-500;
+  font-family: monospace;
+}
+
+.customBadge {
+  padding: 2px $spacing-2;
+  background: rgba($color-warning, 0.1);
+  color: $color-warning;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+}
+
+.subjectTotal {
+  font-size: $font-xs;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-600;
+}
+
+.marksGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-3;
+  
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.marksInput {
+  label {
+    font-size: $font-xs;
+    color: $color-gray-600;
+    display: block;
+    margin-bottom: $spacing-1;
+  }
+  
+  input {
+    width: 100%;
+    padding: $spacing-2;
+    border: 1px solid $color-gray-200;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+    
+    &:focus {
+      outline: none;
+      border-color: $color-primary-500;
+    }
+  }
+}
+
+.subjectGrade {
+  @include flex(row, flex-start, center, $spacing-2);
+}
+
+.gradeBadge, .gpaBadge {
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-sm;
+  font-size: $font-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.gradeBadge {
+  background: $color-primary-600;
+  color: $color-white;
+}
+
+.gpaBadge {
+  background: $color-gray-100;
+  color: $color-gray-700;
+}
+
+/* Summary Card */
+.summaryCard {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  color: $color-white;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+  
+  .sectionTitle {
+    color: $color-white;
+    
+    svg {
+      color: $color-white;
+    }
+  }
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+  margin-bottom: $spacing-6;
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.summaryItem {
+  text-align: center;
+  
+  label {
+    font-size: $font-xs;
+    color: rgba($color-white, 0.8);
+    display: block;
+    margin-bottom: $spacing-1;
+  }
+  
+  span {
+    font-size: $font-lg;
+    font-weight: $font-weight-bold;
+    display: block;
+  }
+}
+
+.finalGrade {
+  font-size: $font-xl !important;
+  color: $color-warning !important;
+}
+
+.formActions {
+  @include flex(row, center, center, $spacing-3);
+  flex-wrap: wrap;
+}
+
+.previewBtn, .submitBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-8;
+  border: none;
+  border-radius: $radius-lg;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-base;
+}
+
+.previewBtn {
+  background: rgba($color-white, 0.2);
+  color: $color-white;
+  
+  &:hover {
+    background: rgba($color-white, 0.3);
+    transform: translateY(-2px);
+  }
+}
+
+.submitBtn {
+  background: $color-white;
+  color: $color-primary-700;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .createResult {
+    background: $color-gray-900;
+  }
+  
+  .searchCard,
+  .examCard,
+  .behavioralCard,
+  .subjectsCard {
+    background: $color-gray-800;
+  }
+  
+  .sectionTitle {
+    color: $color-gray-100;
+  }
+  
+  .infoCard {
+    background: linear-gradient(135deg, $color-gray-800, $color-gray-700);
+    border-color: $color-gray-600;
+  }
+  
+  .infoItem span {
+    color: $color-gray-100;
+  }
+  
+  .selectInput, .textInput, .marksInput input {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-100;
+  }
+  
+  .behavioralItem {
+    background: $color-gray-700;
+  }
+  
+  .subjectEntry {
+    border-bottom-color: $color-gray-700;
+  }
+  
+  .subjectInfo strong {
+    color: $color-gray-100;
+  }
+   .resetBtn {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-300;
+    
+    &:hover {
+      background: $color-gray-600;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stepLabel {
+    display: none;
+  }
+  
+  .stepLine {
+    width: $spacing-4;
+  }
+  
+  .stepNumber {
+    width: $spacing-6;
+    height: $spacing-6;
+    font-size: $font-sm;
+  }
+}

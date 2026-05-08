@@ -1,0 +1,414 @@
+@import "../variables";
+@import "../mixin";
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  @include flex-center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: $color-white;
+  border-radius: $radius-xl;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  @include flex(column, flex-start, stretch, 0);
+  box-shadow: $shadow-xl;
+  
+  @include respond-to('md') {
+    width: 85%;
+    max-width: 1000px;
+  }
+}
+
+/* Header */
+.header {
+  @include flex(row, space-between, center);
+  padding: $spacing-5 $spacing-6;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  color: $color-white;
+  position: relative;
+  
+  h2 {
+    font-size: $font-lg;
+    font-weight: $font-weight-bold;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-8;
+  height: $spacing-8;
+  background: rgba($color-white, 0.2);
+  border-radius: $radius-full;
+  
+  svg {
+    font-size: $font-xl;
+  }
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: $color-white;
+  font-size: $font-xl;
+  cursor: pointer;
+  padding: $spacing-1;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: rgba($color-white, 0.2);
+    transform: rotate(90deg);
+  }
+}
+
+/* Content */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-4 $spacing-6;
+  max-height: calc(90vh - 140px);
+}
+
+/* Section */
+.section {
+  margin-bottom: $spacing-6;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.sectionTitle {
+  @include flex(row, flex-start, center, $spacing-2);
+  font-size: $font-md;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-2;
+  border-bottom: 2px solid $color-primary-500;
+  
+  svg {
+    color: $color-primary-600;
+  }
+}
+
+/* Info Grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-3;
+}
+
+.infoItem {
+  background: $color-gray-50;
+  padding: $spacing-3;
+  border-radius: $radius-md;
+  @include flex(row, flex-start, center);
+  
+  .label {
+    font-weight: $font-weight-semibold;
+    color: $color-gray-600;
+    width: 80px;
+  }
+  
+  .value {
+    color: $color-gray-800;
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* Behavioral Grid */
+.behavioralGrid {
+  @include flex(column, flex-start, stretch, $spacing-3);
+  margin-bottom: $spacing-4;
+}
+
+.behavioralItem {
+  @include flex(row, space-between, center);
+  flex-wrap: wrap;
+  gap: $spacing-2;
+}
+
+.behavioralLabel {
+  width: 120px;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  color: $color-gray-700;
+}
+
+.behavioralBar {
+  flex: 1;
+  height: 8px;
+  background: $color-gray-200;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.behavioralFill {
+  height: 100%;
+  background: linear-gradient(90deg, $color-primary-500, $color-primary-700);
+  border-radius: $radius-full;
+  transition: width 0.3s ease;
+}
+
+.behavioralMark {
+  width: 60px;
+  text-align: right;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-600;
+}
+
+.behavioralTotal {
+  text-align: center;
+  padding: $spacing-3;
+  background: rgba($color-primary-500, 0.1);
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  
+  strong {
+    color: $color-primary-600;
+    font-size: $font-md;
+  }
+}
+
+/* Subjects Table */
+.subjectsTable {
+  border: 1px solid $color-gray-200;
+  border-radius: $radius-lg;
+  overflow: hidden;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr 0.8fr 0.8fr;
+  background: $color-gray-100;
+  padding: $spacing-3;
+  font-weight: $font-weight-semibold;
+  font-size: $font-xs;
+  color: $color-gray-600;
+  text-transform: uppercase;
+  border-bottom: 1px solid $color-gray-200;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr 0.8fr 0.8fr;
+  padding: $spacing-3;
+  border-bottom: 1px solid $color-gray-100;
+  font-size: $font-sm;
+  color: $color-gray-700;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: rgba($color-primary-50, 0.3);
+  }
+}
+
+.subjectName {
+  @include flex(column, flex-start, flex-start, 0);
+  
+  strong {
+    font-size: $font-sm;
+    color: $color-gray-800;
+  }
+  
+  small {
+    font-size: $font-xs;
+    color: $color-gray-500;
+  }
+}
+
+.totalMarks {
+  font-weight: $font-weight-semibold;
+  color: $color-primary-700;
+}
+
+.passGrade {
+  font-weight: $font-weight-bold;
+  color: $color-success;
+}
+
+.failGrade {
+  font-weight: $font-weight-bold;
+  color: $color-error;
+}
+
+/* Summary Section */
+.summarySection {
+  background: linear-gradient(135deg, $color-primary-50, $color-white);
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  margin-top: $spacing-4;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+  margin-bottom: $spacing-4;
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.summaryItem {
+  text-align: center;
+}
+
+.summaryLabel {
+  display: block;
+  font-size: $font-xs;
+  color: $color-gray-500;
+  margin-bottom: $spacing-1;
+}
+
+.summaryValue {
+  display: block;
+  font-size: $font-lg;
+  font-weight: $font-weight-bold;
+  color: $color-gray-800;
+}
+
+.summaryGrade {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-lg;
+  font-weight: $font-weight-bold;
+  
+  &.passed {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.failed {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.resultStatus {
+  text-align: center;
+  padding: $spacing-3;
+  border-radius: $radius-md;
+  font-size: $font-md;
+  font-weight: $font-weight-semibold;
+  
+  svg {
+    margin-right: $spacing-2;
+    vertical-align: middle;
+  }
+  
+  &:has(svg:first-child) {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+}
+
+/* Footer */
+.footer {
+  @include flex(row, flex-end, center, $spacing-3);
+  padding: $spacing-5 $spacing-6;
+  border-top: 1px solid $color-gray-200;
+  background: $color-gray-50;
+}
+
+.cancelBtn {
+  padding: $spacing-2 $spacing-6;
+  background: transparent;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  color: $color-gray-600;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-gray-200;
+  }
+}
+
+.confirmBtn {
+  padding: $spacing-2 $spacing-6;
+  background: $color-primary-600;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-white;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-primary-700;
+    transform: translateY(-2px);
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .modal {
+    background: $color-gray-800;
+  }
+  
+  .sectionTitle {
+    color: $color-gray-100;
+  }
+  
+  .infoItem {
+    background: $color-gray-700;
+    
+    .value {
+      color: $color-gray-100;
+    }
+  }
+  
+  .subjectsTable {
+    border-color: $color-gray-700;
+  }
+  
+  .tableHeader {
+    background: $color-gray-700;
+    color: $color-gray-300;
+  }
+  
+  .tableRow {
+    border-bottom-color: $color-gray-700;
+    
+    &:hover {
+      background: rgba($color-primary-800, 0.3);
+    }
+  }
+  
+  .summarySection {
+    background: linear-gradient(135deg, $color-gray-700, $color-gray-800);
+  }
+  
+  .summaryValue {
+    color: $color-gray-100;
+  }
+  
+  .footer {
+    background: $color-gray-700;
+    border-top-color: $color-gray-600;
+  }
+}
