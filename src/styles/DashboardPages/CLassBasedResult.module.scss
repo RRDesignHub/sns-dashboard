@@ -1,0 +1,417 @@
+@import "../variables";
+@import "../mixin";
+
+.classBasedResults {
+  padding: $spacing-4;
+  min-height: 100vh;
+  background: $color-gray-50;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+  }
+}
+
+/* ========== PAGE HEADER ========== */
+.pageHeader {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  margin-bottom: $spacing-6;
+  color: $color-white;
+  
+  @include respond-to('md') {
+    padding: $spacing-6;
+    margin-bottom: $spacing-8;
+  }
+}
+
+.headerContent {
+  @include flex(row, flex-start, center, $spacing-3);
+}
+
+.headerIcon {
+  @include flex-center;
+  width: $spacing-10;
+  height: $spacing-10;
+  background: rgba($color-white, 0.15);
+  border-radius: $radius-lg;
+  
+  svg {
+    font-size: $font-xl;
+  }
+}
+
+.pageTitle {
+  font-size: $font-lg;
+  font-weight: $font-weight-bold;
+  margin: 0;
+}
+
+.pageSubtitle {
+  font-size: $font-xs;
+  color: rgba($color-white, 0.9);
+  margin-top: $spacing-1;
+}
+
+/* ========== FILTER SECTION ========== */
+.filterSection {
+  margin-bottom: $spacing-6;
+}
+
+.filterCard {
+  background: $color-white;
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  box-shadow: $shadow-sm;
+}
+
+.filterTitle {
+  @include flex(row, flex-start, center, $spacing-2);
+  font-size: $font-md;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-800;
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-2;
+  border-bottom: 2px solid $color-primary-500;
+  
+  svg {
+    color: $color-primary-600;
+  }
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+  margin-bottom: $spacing-5;
+  
+  @include respond-to('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @include respond-to('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.filterGroup {
+  @include flex(column, flex-start, stretch, $spacing-2);
+  
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    @include flex(row, flex-start, center, $spacing-1);
+    
+    svg {
+      font-size: $font-sm;
+      color: $color-primary-600;
+    }
+    
+    span {
+      color: $color-error;
+    }
+  }
+}
+
+.filterSelect {
+  padding: $spacing-2 $spacing-3;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  background: $color-white;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
+    box-shadow: 0 0 0 2px rgba($color-primary-500, 0.1);
+  }
+  
+  &:disabled {
+    background: $color-gray-100;
+    cursor: not-allowed;
+  }
+}
+
+.filterActions {
+  @include flex(row, flex-start, center, $spacing-3);
+  margin-top: $spacing-4;
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-100;
+}
+
+.searchBtn, .exportBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-5;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.searchBtn {
+  background: $color-primary-600;
+  border: none;
+  color: $color-white;
+  
+  &:hover:not(:disabled) {
+    background: $color-primary-700;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.exportBtn {
+  background: transparent;
+  border: 1px solid $color-primary-600;
+  color: $color-primary-600;
+  
+  &:hover {
+    background: rgba($color-primary-600, 0.1);
+  }
+}
+
+/* ========== RESULTS SECTION ========== */
+.resultsSection {
+  background: $color-white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-sm;
+}
+
+.resultsHeader {
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid $color-gray-200;
+  background: $color-gray-50;
+  
+  h3 {
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    margin: 0;
+    @include flex(row, space-between, center);
+    flex-wrap: wrap;
+    gap: $spacing-2;
+  }
+}
+
+.resultCount {
+  font-size: $font-sm;
+  font-weight: $font-weight-normal;
+  color: $color-gray-500;
+  background: $color-gray-200;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+}
+
+/* ========== TABLE ========== */
+.tableContainer {
+  overflow-x: auto;
+}
+
+.tableWrapper {
+  min-width: 800px;
+}
+
+.resultTable {
+  width: 100%;
+  border-collapse: collapse;
+  
+  thead {
+    background: $color-gray-50;
+    border-bottom: 2px solid $color-gray-200;
+    
+    th {
+      padding: $spacing-3 $spacing-3;
+      text-align: left;
+      font-size: $font-xs;
+      font-weight: $font-weight-semibold;
+      text-transform: uppercase;
+      color: $color-gray-600;
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 1px solid $color-gray-100;
+      transition: background $transition-base;
+      
+      &:hover {
+        background: rgba($color-primary-50, 0.3);
+      }
+    }
+    
+    td {
+      padding: $spacing-3 $spacing-3;
+      font-size: $font-sm;
+      color: $color-gray-700;
+      vertical-align: middle;
+    }
+  }
+}
+
+.studentName {
+  font-weight: $font-weight-medium;
+  color: $color-gray-800;
+}
+
+/* Badges */
+.gradeBadge {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+  
+  &.pass {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.fail {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
+  }
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+  
+  &.published {
+    background: rgba($color-success, 0.1);
+    color: $color-success;
+  }
+  
+  &.draft {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
+  }
+}
+
+/* Action Buttons */
+.actionButtons {
+  @include flex(row, flex-start, center, $spacing-2);
+}
+
+.printBtn, .deleteBtn {
+  @include flex-center;
+  width: $spacing-6;
+  height: $spacing-6;
+  border: none;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  svg {
+    font-size: $font-md;
+  }
+}
+
+.printBtn {
+  background: rgba($color-info, 0.1);
+  color: $color-info;
+  
+  &:hover {
+    background: $color-info;
+    color: $color-white;
+  }
+}
+
+.deleteBtn {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  
+  &:hover {
+    background: $color-error;
+    color: $color-white;
+  }
+}
+
+/* Empty State */
+.emptyState {
+  @include flex(column, center, center, $spacing-3);
+  padding: $spacing-12;
+  text-align: center;
+  
+  svg {
+    font-size: 4rem;
+    color: $color-gray-300;
+  }
+  
+  p {
+    font-size: $font-md;
+    color: $color-gray-500;
+    margin: 0;
+  }
+}
+
+.emptyHint {
+  font-size: $font-sm !important;
+  color: $color-gray-400 !important;
+}
+
+.loading {
+  @include flex-center;
+  padding: $spacing-12;
+  font-size: $font-md;
+  color: $color-gray-500;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .classBasedResults {
+    background: $color-gray-900;
+  }
+  
+  .filterCard,
+  .resultsSection {
+    background: $color-gray-800;
+  }
+  
+  .filterTitle,
+  .resultsHeader h3 {
+    color: $color-gray-100;
+  }
+  
+  .filterGroup label {
+    color: $color-gray-300;
+  }
+  
+  .filterSelect {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-100;
+  }
+  
+  .resultTable {
+    thead th {
+      background: $color-gray-700;
+      color: $color-gray-300;
+    }
+    
+    tbody td {
+      color: $color-gray-300;
+    }
+  }
+  
+  .studentName {
+    color: $color-gray-100;
+  }
+  
+  .resultCount {
+    background: $color-gray-700;
+    color: $color-gray-400;
+  }
+}

@@ -53,6 +53,10 @@ const ClassSubjectsAssign = lazy(
 const ManageExams = lazy(
   () => import("./pages/dashboardPages/TeacherPages/ManageExams"),
 );
+
+const ClassBasedResult = lazy(
+  () => import("./pages/dashboardPages/TeacherPages/ClassBasedResults"),
+);
 function App() {
   useEffect(() => {
     // Remove preload class after mount
@@ -104,6 +108,10 @@ function App() {
                     element={<ClassSubjectsAssign />}
                   />
                   <Route path="manage-exams" element={<ManageExams />} />
+                  <Route
+                    path="dashboard-results"
+                    element={<ClassBasedResult />}
+                  />
                 </Route>
 
                 <Route path="*" element={<ErrorPage />} />
