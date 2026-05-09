@@ -89,3 +89,64 @@ export interface GradeResult {
   gpa: number;
   isPassed: boolean;
 }
+export interface SubjectResult {
+  subjectId: string;
+  name: string;
+  nameBn: string;
+  code: string;
+  totalMarks: number;
+  academicMarks: number;
+  behavioralMarks: number;
+  obtainedAcademic: number;
+  obtainedTotal: number;
+  grade: string;
+  gpa: number;
+  isPassed: boolean;
+  customConfig?: {
+    originalTotalMarks: number;
+  };
+}
+
+export interface BehavioralData {
+  attendance: { present: number; total: number; marks: number };
+  meetings: { attended: number; total: number; marks: number };
+  fees: { paid: number; total: number; marks: number };
+  discipline: { obtained: number; total: number; marks: number };
+  totalBehavioralMarks: number;
+}
+
+export interface ResultData {
+  _id: string;
+
+  academicYear: string;
+  studentSnapshot: {
+    studentId: string;
+    studentName: string;
+    classRoll: string;
+    className: string;
+  };
+  examSnapshot: {
+    name: string;
+    examType: string;
+  };
+  behavioralData: BehavioralData;
+  subjectResults: SubjectResult[];
+  summary: {
+    totalSubjects: number;
+    passedSubjects: number;
+    failedSubjects: number;
+    totalObtainedMarks: number;
+    totalMaxMarks: number;
+    overallPercentage: number;
+    averageGPA: number;
+    finalGrade: string;
+    isPassed: boolean;
+  };
+  status: string;
+  createdAt: string;
+}
+
+export interface ResultPrintModalProps {
+  resultId: string;
+  onClose: () => void;
+}

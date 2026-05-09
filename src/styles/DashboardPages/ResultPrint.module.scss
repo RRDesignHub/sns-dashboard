@@ -1,0 +1,599 @@
+@import "../variables";
+@import "../mixin";
+
+/* ResultPrintResult.module.scss */
+
+@media print {
+  /* ১. হেডার এবং ফুটার (টাইটেল, ডেট, ইউআরএল) হাইড করার জন্য */
+  @page {
+    margin: 0; /* এটি ব্রাউজারের ডিফল্ট হেডার-ফুটার রিমুভ করে */
+  }
+
+  body {
+    margin: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ২. কন্টেন্ট যাতে একদম পেজের বর্ডারে লেগে না যায়, তাই মেইন কন্টেইনারে প্যাডিং দিন */
+  .printContent {
+    visibility: visible !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 15mm !important; /* প্রিন্ট করার সময় মার্জিন হিসেবে কাজ করবে */
+    background: white !important;
+    box-sizing: border-box;
+  }
+
+  /* ৩. বাকি সব এলিমেন্ট হাইড করুন */
+  .modalHeader, .modalFooter, .closeBtn, .modalOverlay:not(.printContent) {
+    display: none !important;
+  }
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  @include flex-center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: $color-white;
+  border-radius: $radius-xl;
+  width: 90%;
+  max-width: 1100px;
+  max-height: 90vh;
+  overflow: hidden;
+  @include flex(column, flex-start, stretch, 0);
+  box-shadow: $shadow-xl;
+}
+
+/* Modal Header */
+.modalHeader {
+  @include flex(row, space-between, center);
+  padding: $spacing-4 $spacing-6;
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  color: $color-white;
+  
+  h2 {
+    font-size: $font-lg;
+    font-weight: $font-weight-bold;
+    margin: 0;
+  }
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: $color-white;
+  font-size: $font-xl;
+  cursor: pointer;
+  padding: $spacing-1;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: rgba($color-white, 0.2);
+    transform: rotate(90deg);
+  }
+}
+
+/* Print Content Area */
+.printContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: $spacing-6;
+  background: $color-white;
+}
+
+/* School Header */
+.schoolHeader {
+  @include flex(row, center, center, $spacing-4);
+  text-align: center;
+  margin-bottom: $spacing-6;
+  
+  .logo {
+    @include flex-center;
+    width: $spacing-12;
+    height: $spacing-12;
+    background: linear-gradient(135deg, $color-primary-50, $color-white);
+    border-radius: $radius-full;
+    color: $color-white;
+    
+    img {
+      height: 50px;
+      width: 50px;
+    }
+  }
+  
+  h1 {
+    font-size: $font-lg;
+    font-weight: $font-weight-bold;
+    color: $color-gray-800;
+    margin: 0;
+  }
+  
+  p {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin: $spacing-1 0 0 0;
+  }
+  
+  .address {
+    font-size: $font-xs;
+    color: $color-gray-500;
+  }
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent, $color-primary-500, transparent);
+  margin: $spacing-4 0;
+}
+
+/* Result Title */
+.resultTitle {
+  text-align: center;
+  margin-bottom: $spacing-6;
+  
+  h2 {
+    font-size: $font-xl;
+    font-weight: $font-weight-bold;
+    color: $color-primary-700;
+    margin: 0;
+  }
+  
+  p {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin: $spacing-1 0 0 0;
+  }
+}
+
+/* Info Card */
+.infoCard {
+  background: $color-gray-50;
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  margin-bottom: $spacing-3;
+  border: 1px solid $color-gray-200;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: $spacing-4;
+}
+
+.infoItem {
+  @include flex(row, flex-start, center, $spacing-3);
+  
+  svg {
+    font-size: $font-lg;
+    color: $color-primary-600;
+  }
+  
+  label {
+    display: block;
+    font-size: $font-xs;
+    color: $color-gray-500;
+  }
+  
+  span {
+    display: block;
+    font-size: $font-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+  }
+}
+
+/* Behavioral Section */
+.behavioralSection {
+  background: linear-gradient(135deg, rgba($color-primary-50, 0.5), $color-white);
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  margin-bottom: $spacing-1;
+  
+  h3 {
+    @include flex(row, flex-start, center, $spacing-2);
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin-bottom: $spacing-4;
+    
+    svg {
+      color: $color-primary-600;
+    }
+  }
+}
+
+
+
+.behavioralGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-4;
+  margin-bottom: $spacing-1;
+  @include max-width('md') {
+    grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-2;
+  margin-bottom: $spacing-2;
+  }
+}
+
+.behavioralItem {
+  width: 100%;
+  @include flex(row, space-between, center);
+  flex-wrap: wrap;
+  gap: $spacing-2;
+  background-color: rgba($color-primary-100, 0.5);
+  padding: $spacing-1;
+  border-radius: 8px;
+  > span:first-child {
+    width: max-content;
+    font-size: $font-sm;
+    color: $color-gray-700;
+  }
+}
+
+.behavioralBar {
+  flex: 1;
+  height: 8px;
+  background: $color-gray-200;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+
+
+.behavioralMark {
+  width: 50px;
+  text-align: right;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-600;
+}
+
+
+
+/* Behavioral Details */
+.behavioralDetails {
+  flex: 1;
+  @include flex(row, flex-start, center, $spacing-2);
+  flex-wrap: wrap;
+}
+
+.behavioralStats {
+  font-size: $font-xs;
+  color: $color-gray-600;
+  min-width: 80px;
+}
+
+/* Academic & Behavioral Marks in Table */
+.academicMarks {
+  font-weight: $font-weight-medium;
+  color: $color-primary-700;
+}
+
+.behavioralMarks {
+  color: $color-info;
+}
+
+.notApplicable {
+  color: $color-gray-400;
+}
+
+/* Responsive table - hide behavioral column on mobile if needed */
+@media (max-width: 768px) {
+  .resultTable th:nth-child(5),
+  .resultTable td:nth-child(5) {
+    display: none;
+  }
+}
+
+/* Subject Section */
+.subjectSection {
+  margin-bottom: $spacing-6;
+  
+  h3 {
+    @include flex(row, flex-start, center, $spacing-2);
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin-bottom: $spacing-4;
+    
+    svg {
+      color: $color-primary-600;
+    }
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.resultTable {
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: $spacing-3;
+    text-align: center;
+    border: 1px solid $color-gray-200;
+  }
+  
+  th {
+    background: $color-gray-100;
+    font-size: $font-xs;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-700;
+    text-transform: uppercase;
+  }
+  
+  td {
+    font-size: $font-sm;
+    color: $color-gray-700;
+  }
+}
+
+.subjectName {
+  text-align: left;
+  font-weight: $font-weight-medium;
+}
+
+.customBadge {
+  display: inline-block;
+  margin-left: $spacing-2;
+  padding: 2px 6px;
+  background: rgba($color-warning, 0.1);
+  color: $color-warning;
+  border-radius: $radius-sm;
+  font-size: $font-xs;
+}
+
+.obtainedMarks {
+  font-weight: $font-weight-bold;
+  color: $color-primary-700;
+}
+
+.totalRow {
+  background: rgba($color-primary-50, 0.5);
+  font-weight: $font-weight-bold;
+}
+
+/* Grade Badges */
+.gradeBadge {
+  display: inline-block;
+  padding: $spacing-1 $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+}
+
+.gradeAplus { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.gradeA { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.gradeAminus { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.gradeB { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.gradeC { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.gradeD { background: rgba(236, 72, 153, 0.1); color: #ec4899; }
+.gradeF { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+/* Summary Section */
+.summarySection {
+  background: linear-gradient(135deg, $color-primary-600, $color-primary-800);
+  border-radius: $radius-lg;
+  padding: $spacing-5;
+  margin-bottom: $spacing-6;
+  color: $color-white;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: $spacing-4;
+}
+
+.summaryItem {
+  text-align: center;
+  
+  label {
+    display: block;
+    font-size: $font-xs;
+    color: rgba($color-white, 0.8);
+    margin-bottom: $spacing-2;
+  }
+  
+  span {
+    display: block;
+    font-size: $font-md;
+    font-weight: $font-weight-bold;
+  }
+}
+
+.finalGrade {
+  font-size: $font-xl !important;
+}
+
+.passed, .failed {
+  @include flex(row, center, center, $spacing-1);
+  
+  svg {
+    font-size: $font-md;
+  }
+}
+
+.passed {
+  color: #86efac;
+}
+
+.failed {
+  color: #fca5a5;
+}
+
+/* Footer */
+.footer {
+  @include flex(row, space-between, center);
+  margin-top: $spacing-12;
+  padding-top: $spacing-4;
+  border-top: 1px solid $color-gray-200;
+}
+
+.signatureSection {
+  @include flex(row, flex-start, center, $spacing-8);
+}
+
+.signature, .dateStamp {
+  text-align: center;
+  
+  .signatureLine {
+    width: 120px;
+    height: 1px;
+    background: $color-gray-400;
+    margin-bottom: $spacing-2;
+  }
+  
+  p {
+    font-size: $font-xs;
+    color: $color-gray-500;
+    margin: 0;
+  }
+}
+
+.seal {
+  text-align: center;
+}
+
+.stamp {
+  padding: $spacing-2 $spacing-4;
+  border: 2px solid $color-gray-400;
+  border-radius: $radius-md;
+  color: $color-gray-400;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+  transform: rotate(-15deg);
+}
+
+/* Modal Footer */
+.modalFooter {
+  @include flex(row, flex-end, center, $spacing-3);
+  padding: $spacing-4 $spacing-6;
+  border-top: 1px solid $color-gray-200;
+  background: $color-gray-50;
+}
+
+.printBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-6;
+  background: $color-primary-600;
+  border: none;
+  border-radius: $radius-md;
+  color: $color-white;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-primary-700;
+    transform: translateY(-2px);
+  }
+}
+
+.closeModalBtn {
+  padding: $spacing-2 $spacing-6;
+  background: transparent;
+  border: 1px solid $color-gray-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    background: $color-gray-200;
+  }
+}
+
+.loading {
+  @include flex-center;
+  padding: $spacing-12;
+  font-size: $font-md;
+  color: $color-gray-500;
+}
+
+/* Print Styles */
+@media print {
+  .modalOverlay {
+    position: static;
+    background: white;
+  }
+  
+  .modal {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    max-height: none;
+    box-shadow: none;
+  }
+  
+  .modalHeader, .modalFooter {
+    display: none;
+  }
+  
+  .printContent {
+    padding: 0;
+  }
+  
+  .behavioralBar {
+    border: 1px solid #ddd;
+  }
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  .modal {
+    background: $color-gray-800;
+  }
+  
+  .printContent {
+    background: $color-gray-800;
+  }
+  
+  .schoolHeader h1,
+  .resultTitle h2,
+  .infoItem span,
+  .behavioralSection h3,
+  .subjectSection h3 {
+    color: $color-gray-100;
+  }
+  
+  .infoCard {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+  }
+  
+  .resultTable {
+    th, td {
+      border-color: $color-gray-600;
+    }
+    
+    th {
+      background: $color-gray-700;
+      color: $color-gray-300;
+    }
+    
+    td {
+      color: $color-gray-300;
+    }
+  }
+  
+  .totalRow {
+    background: rgba($color-primary-800, 0.5);
+  }
+}
