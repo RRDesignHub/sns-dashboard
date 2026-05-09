@@ -45,8 +45,6 @@ export interface SubjectWithMarks {
 export interface SubjectMarksEntry {
   subjectId: string;
   academicMarks: number;
-  behavioralMarks: number;
-  disciplineMarks: number;
 }
 
 // Complete result form data
@@ -73,6 +71,10 @@ export interface ResultFormData {
   };
   fees: {
     paid: number;
+    total: number;
+  };
+  discipline: {
+    obtained: number;
     total: number;
   };
   subjects: SubjectMarksEntry[];

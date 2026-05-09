@@ -6,14 +6,17 @@ const SubjectMarksInput = ({
   maxValue,
   onChange,
   step = 1,
+  disabled = false,
 }: {
   label: string;
   value: number;
   maxValue: number;
   onChange: (value: number) => void;
   step?: number;
+  disabled?: boolean;
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return; // ✅ Prevent changes if disabled
     let newValue = Number(e.target.value);
     if (isNaN(newValue)) newValue = 0;
     if (newValue < 0) newValue = 0;
@@ -36,6 +39,7 @@ const SubjectMarksInput = ({
         min={0}
         max={maxValue}
         step={step}
+        disabled={disabled}
       />
     </div>
   );

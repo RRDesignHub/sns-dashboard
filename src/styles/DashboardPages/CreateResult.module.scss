@@ -411,11 +411,14 @@
 
 .behavioralGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns:repeat(4, 1fr);
   gap: $spacing-4;
   
-  @include respond-to('md') {
-    grid-template-columns: repeat(3, 1fr);
+  @include max-width('md') {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @include max-width('sm') {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

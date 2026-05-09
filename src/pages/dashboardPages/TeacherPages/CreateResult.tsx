@@ -51,7 +51,8 @@ const CreateResult: React.FC = () => {
   });
   const [feeMonths, setFeeMonths] = useState({ paid: 0, total: 0 });
   const [subjectMarks, setSubjectMarks] = useState<SubjectMarksEntry[]>([]);
-
+  // Decipline state
+  const [disciplineMarks, setDisciplineMarks] = useState(5);
   // UI state
   const [activeTab, setActiveTab] = useState<"search" | "marks">("search");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,32 +129,23 @@ const CreateResult: React.FC = () => {
     };
   };
 
-  // Calculate behavioral marks
-  const calculateBehavioralMarks = (
-    present: number,
-    totalDays: number,
-    attended: number,
-    totalMeetings: number,
-    paid: number,
-    totalMonths: number,
-  ) => {
-    const attendanceMark = totalDays > 0 ? (present / totalDays) * 5 : 0;
-    const meetingMark = totalMeetings > 0 ? (attended / totalMeetings) * 5 : 0;
-    const feeMark = totalMonths > 0 ? (paid / totalMonths) * 5 : 0;
-    return { attendanceMark, meetingMark, feeMark };
-  };
-
   // Calculate subject total and grade
   const calculateSubjectResult = (
     academicObtained: number,
-    behavioralObtained: number,
-    disciplineMark: number,
     subject: SubjectWithMarks,
+    globalBehavioralTotal: number,
   ): GradeResult => {
-    const totalObtained =
-      academicObtained + behavioralObtained + disciplineMark;
-    const totalMax = subject.totalMarks; // ✅ Use totalMarks directly
-    const percentage = totalMax > 0 ? (totalObtained / totalMax) * 100 : 0;
+    let totalObtained;
+    if (subject.totalMarks === 100) {
+      totalObtained = academicObtained + globalBehavioralTotal;
+    } else {
+      totalObtained = academicObtained; // No behavioral for 50/30/20-mark subjects
+    }
+
+    const totalMax = subject.totalMarks;
+    const percentage = Number(
+      totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(2) : 0,
+    );
     const grade = calculateGrade(percentage);
     return { ...grade, obtained: totalObtained, max: totalMax };
   };
@@ -263,7 +255,6 @@ const CreateResult: React.FC = () => {
         subjectId: sub._id,
         academicMarks: 0,
         behavioralMarks: 0,
-        disciplineMarks: 5,
       }));
       setSubjectMarks(initialMarks);
     } catch (error: any) {
@@ -288,14 +279,22 @@ const CreateResult: React.FC = () => {
 
   // Calculate total summary
   const calculateTotalSummary = () => {
-    const behavioral = calculateBehavioralMarks(
-      attendanceDays.present,
-      attendanceDays.total,
-      meetingAttendance.attended,
-      meetingAttendance.total,
-      feeMonths.paid,
-      feeMonths.total,
-    );
+    const attendanceMark =
+      attendanceDays.total > 0
+        ? Math.round((attendanceDays.present / attendanceDays.total) * 5)
+        : 0;
+
+    const meetingMark =
+      meetingAttendance.total > 0
+        ? Math.round((meetingAttendance.attended / meetingAttendance.total) * 5)
+        : 0;
+
+    const feeMark =
+      feeMonths.total > 0
+        ? Math.round((feeMonths.paid / feeMonths.total) * 5)
+        : 0;
+    const globalBehavioralTotal =
+      attendanceMark + meetingMark + feeMark + disciplineMarks;
 
     let totalObtained = 0;
     let totalMax = 0;
@@ -303,8 +302,15 @@ const CreateResult: React.FC = () => {
     subjectMarks.forEach((mark) => {
       const subject = classSubjects.find((s) => s._id === mark.subjectId);
       if (subject) {
-        const subjectTotal =
-          mark.academicMarks + mark.behavioralMarks + mark.disciplineMarks;
+        let subjectTotal;
+        if (subject.totalMarks === 100) {
+          // 100-mark subjects: academic + global behavioral
+          subjectTotal = mark.academicMarks + globalBehavioralTotal;
+        } else {
+          // 50/30/20-mark subjects: academic only
+          subjectTotal = mark.academicMarks;
+        }
+
         totalObtained += subjectTotal;
         totalMax += subject.totalMarks;
       }
@@ -313,6 +319,15 @@ const CreateResult: React.FC = () => {
     const percentage = totalMax > 0 ? (totalObtained / totalMax) * 100 : 0;
     const grade = calculateGrade(percentage);
 
+    // Return behavioral breakdown for preview/summary
+    const behavioral = {
+      attendance: { marks: attendanceMark.toFixed(2) },
+      meetings: { marks: meetingMark.toFixed(2) },
+      fees: { marks: feeMark.toFixed(2) },
+      discipline: { marks: disciplineMarks.toFixed(2) },
+      totalBehavioralMarks: globalBehavioralTotal.toFixed(2),
+    };
+
     return { totalObtained, totalMax, percentage, grade, behavioral };
   };
 
@@ -320,7 +335,18 @@ const CreateResult: React.FC = () => {
 
   // ==================== PREVIEW FUNCTION ====================
   const handlePreview = () => {
-    // Prepare preview data (same as before)
+    // Calculate global behavioral marks
+    const attendanceMark = Math.round(
+      (attendanceDays.present / attendanceDays.total) * 5 || 0,
+    );
+    const meetingMark = Math.round(
+      (meetingAttendance.attended / meetingAttendance.total) * 5 || 0,
+    );
+    const feeMark = Math.round((feeMonths.paid / feeMonths.total) * 5 || 0);
+    const globalBehavioralTotal =
+      attendanceMark + meetingMark + feeMark + Math.round(disciplineMarks);
+
+    // Prepare preview data
     const previewData = {
       student: {
         studentName: foundStudent?.studentName,
@@ -334,51 +360,71 @@ const CreateResult: React.FC = () => {
       },
       behavioral: {
         attendance: {
-          marks: (
-            (attendanceDays.present / attendanceDays.total) * 5 || 0
-          ).toFixed(2),
+          present: attendanceDays.present,
+          total: attendanceDays.total,
+          marks: attendanceMark.toFixed(2),
         },
         meetings: {
-          marks: (
-            (meetingAttendance.attended / meetingAttendance.total) * 5 || 0
-          ).toFixed(2),
+          attended: meetingAttendance.attended,
+          total: meetingAttendance.total,
+          marks: meetingMark.toFixed(2),
         },
         fees: {
-          marks: ((feeMonths.paid / feeMonths.total) * 5 || 0).toFixed(2),
+          paid: feeMonths.paid,
+          total: feeMonths.total,
+          marks: feeMark.toFixed(2),
+        },
+        discipline: {
+          obtained: disciplineMarks,
+          total: 5,
+          marks: disciplineMarks.toFixed(2),
         },
         totalBehavioralMarks: (
-          ((attendanceDays.present / attendanceDays.total) * 5 || 0) +
-          ((meetingAttendance.attended / meetingAttendance.total) * 5 || 0) +
-          ((feeMonths.paid / feeMonths.total) * 5 || 0)
+          attendanceMark +
+          meetingMark +
+          feeMark +
+          disciplineMarks
         ).toFixed(2),
       },
-      subjects: subjectMarks.map((mark) => {
-        const subject = classSubjects.find((s) => s._id === mark.subjectId);
-        const totalObtained =
-          mark.academicMarks + mark.behavioralMarks + mark.disciplineMarks;
-        const percentage = (totalObtained / (subject?.totalMarks || 1)) * 100;
-        const grade = calculateGrade(percentage);
-        return {
-          subjectName: subject?.nameBn,
-          subjectCode: subject?.code,
-          academicObtained: mark.academicMarks,
-          academicMax: subject?.academicMarks,
-          behavioralObtained: mark.behavioralMarks,
-          behavioralMax: subject?.behavioralMarks,
-          disciplineObtained: mark.disciplineMarks,
-          totalObtained,
-          totalMax: subject?.totalMarks,
-          percentage: percentage.toFixed(2),
-          grade: grade.grade,
-          gpa: grade.gpa.toFixed(2),
-        };
-      }),
+      subjects: subjectMarks
+        .map((mark) => {
+          const subject = classSubjects.find((s) => s._id === mark.subjectId);
+          if (!subject) return null;
+
+          // ✅ Only add behavioral for 100-mark subjects
+          let totalObtained;
+          if (subject.totalMarks === 100) {
+            totalObtained = mark.academicMarks + globalBehavioralTotal;
+          } else {
+            totalObtained = mark.academicMarks;
+          }
+
+          const percentage = (totalObtained / subject.totalMarks) * 100;
+          const grade = calculateGrade(percentage);
+          return {
+            subjectName: subject.nameBn,
+            subjectCode: subject.code,
+            academicObtained: Number(mark.academicMarks.toFixed(2)),
+            academicMax: subject.academicMarks,
+            behavioralObtained: globalBehavioralTotal.toFixed(2),
+            behavioralMax: 20,
+            totalObtained: Number(totalObtained.toFixed(2)),
+            totalMax: subject.totalMarks,
+            percentage: percentage.toFixed(2),
+            grade: grade.grade,
+            gpa: grade.gpa.toFixed(2),
+            isPassed: grade.isPassed,
+          };
+        })
+        .filter(Boolean),
       summary: {
-        totalObtained: summary.totalObtained,
+        totalSubjects: classSubjects.length,
+        totalObtained: summary.totalObtained.toFixed(2),
         totalMax: summary.totalMax,
         percentage: summary.percentage.toFixed(2),
         grade: summary.grade.grade,
         gpa: summary.grade.gpa.toFixed(2),
+        isPassed: summary.grade.isPassed,
       },
     };
 
@@ -394,7 +440,38 @@ const CreateResult: React.FC = () => {
       return;
     }
 
-    // Validate subject marks
+    // Validate global behavioral marks
+    if (
+      attendanceDays.present < 0 ||
+      attendanceDays.present > attendanceDays.total
+    ) {
+      Swal.fire("ত্রুটি!", "উপস্থিতির সংখ্যা সঠিক নয়", "error");
+      return;
+    }
+
+    if (
+      meetingAttendance.attended < 0 ||
+      meetingAttendance.attended > meetingAttendance.total
+    ) {
+      Swal.fire("ত্রুটি!", "অভিভাবক সভায় উপস্থিতির সংখ্যা সঠিক নয়", "error");
+      return;
+    }
+
+    if (feeMonths.paid < 0 || feeMonths.paid > feeMonths.total) {
+      Swal.fire("ত্রুটি!", "ফি প্রদানের মাস সংখ্যা সঠিক নয়", "error");
+      return;
+    }
+
+    if (disciplineMarks < 0 || disciplineMarks > 5) {
+      Swal.fire(
+        "ত্রুটি!",
+        "শৃঙ্খলা মার্ক সঠিক নয় (০-৫ এর মধ্যে হতে হবে)",
+        "error",
+      );
+      return;
+    }
+
+    // Validate subject academic marks
     for (const mark of subjectMarks) {
       const subject = classSubjects.find((s) => s._id === mark.subjectId);
       if (subject) {
@@ -404,26 +481,7 @@ const CreateResult: React.FC = () => {
         ) {
           Swal.fire(
             "ত্রুটি!",
-            `${subject.nameBn} এর একাডেমিক মার্ক সঠিক নয়`,
-            "error",
-          );
-          return;
-        }
-        if (
-          mark.behavioralMarks < 0 ||
-          mark.behavioralMarks > subject.behavioralMarks
-        ) {
-          Swal.fire(
-            "ত্রুটি!",
-            `${subject.nameBn} এর বিহেভিওরাল মার্ক সঠিক নয়`,
-            "error",
-          );
-          return;
-        }
-        if (mark.disciplineMarks < 0 || mark.disciplineMarks > 5) {
-          Swal.fire(
-            "ত্রুটি!",
-            `${subject.nameBn} এর শৃঙ্খলা মার্ক সঠিক নয়`,
+            `${subject.nameBn} এর একাডেমিক মার্ক সঠিক নয় (০-${subject.academicMarks})`,
             "error",
           );
           return;
@@ -436,6 +494,7 @@ const CreateResult: React.FC = () => {
       studentId: foundStudent._id,
       examId: selectedExam._id,
       classId: foundStudent?.classId,
+      academicYear: selectedExam?.academicYear,
       attendance: {
         present: attendanceDays.present,
         total: attendanceDays.total,
@@ -448,15 +507,15 @@ const CreateResult: React.FC = () => {
         paid: feeMonths.paid,
         total: feeMonths.total,
       },
+      discipline: {
+        obtained: disciplineMarks,
+        total: 5,
+      },
       subjects: subjectMarks.map((mark) => ({
         subjectId: mark.subjectId,
         obtainedAcademic: mark.academicMarks,
-        obtainedBehavioral: mark.behavioralMarks,
-        obtainedDiscipline: mark.disciplineMarks,
       })),
     };
-
-    console.log("📤 SUBMIT DATA:", JSON.stringify(submitData, null, 2));
 
     setIsSubmitting(true);
 
@@ -470,7 +529,6 @@ const CreateResult: React.FC = () => {
           icon: "success",
           confirmButtonColor: "#16a34a",
         }).then(() => {
-          // Reset form after successful submission
           resetForm();
         });
       }
@@ -818,6 +876,31 @@ const CreateResult: React.FC = () => {
                         /৫
                       </span>
                     </div>
+
+                    {/* ✅ Discipline - Global (same for all subjects) */}
+                    <div className={styles.behavioralItem}>
+                      <label>🎯 শৃঙ্খলা</label>
+                      <div className={styles.rangeInput}>
+                        <input
+                          type="number"
+                          min={0}
+                          max={5}
+                          value={disciplineMarks}
+                          onChange={(e) => {
+                            let value = Number(e.target.value);
+                            if (isNaN(value)) value = 5;
+                            if (value < 0) value = 0;
+                            if (value > 5) value = 5;
+                            setDisciplineMarks(value);
+                          }}
+                          step={0.5}
+                        />
+                        <span>/ ৫</span>
+                      </div>
+                      <span className={styles.marksPreview}>
+                        মার্ক: {disciplineMarks.toFixed(1)}/৫
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -827,94 +910,72 @@ const CreateResult: React.FC = () => {
                     <MdSubject /> বিষয়ভিত্তিক প্রাপ্ত নম্বর
                   </h3>
 
-                  {classSubjects.map((subject) => {
-                    const subjectMark = subjectMarks.find(
-                      (m) => m.subjectId === subject._id,
-                    );
-                    const subjectResult = subjectMark
-                      ? calculateSubjectResult(
-                          subjectMark.academicMarks,
-                          subjectMark.behavioralMarks,
-                          subjectMark.disciplineMarks,
-                          subject,
-                        )
-                      : null;
+                  {/* Calculate global behavioral total once */}
+                  {(() => {
+                    const attendanceMark =
+                      (attendanceDays.present / attendanceDays.total) * 5 || 0;
+                    const meetingMark =
+                      (meetingAttendance.attended / meetingAttendance.total) *
+                        5 || 0;
+                    const feeMark = (feeMonths.paid / feeMonths.total) * 5 || 0;
+                    const globalBehavioralTotal =
+                      attendanceMark + meetingMark + feeMark + disciplineMarks;
 
-                    return (
-                      <div key={subject._id} className={styles.subjectEntry}>
-                        <div className={styles.subjectHeader}>
-                          <div className={styles.subjectInfo}>
-                            <strong>{subject.nameBn}</strong>
-                            <span className={styles.subjectCode}>
-                              {subject.code}
-                            </span>
-                          </div>
-                          <div className={styles.subjectTotal}>
-                            মোট: {subject.totalMarks}
-                          </div>
-                        </div>
+                    return classSubjects.map((subject) => {
+                      const subjectMark = subjectMarks.find(
+                        (m) => m.subjectId === subject._id,
+                      );
+                      const subjectResult = subjectMark
+                        ? calculateSubjectResult(
+                            subjectMark.academicMarks,
+                            subject,
+                            globalBehavioralTotal, // ✅ Same for all subjects
+                          )
+                        : null;
 
-                        <div className={styles.marksGrid}>
-                          <SubjectMarksInput
-                            label="একাডেমিক"
-                            value={subjectMark?.academicMarks || 0}
-                            maxValue={subject.academicMarks}
-                            onChange={(value) =>
-                              updateSubjectMark(
-                                subject._id,
-                                "academicMarks",
-                                value,
-                              )
-                            }
-                          />
-
-                          {subject.behavioralMarks > 0 &&
-                            subject.totalMarks > 50 && (
-                              <SubjectMarksInput
-                                label="বিহেভিওরাল"
-                                value={subjectMark?.behavioralMarks || 0}
-                                maxValue={subject.behavioralMarks}
-                                onChange={(value) =>
-                                  updateSubjectMark(
-                                    subject._id,
-                                    "behavioralMarks",
-                                    value,
-                                  )
-                                }
-                              />
-                            )}
-
-                          {subject.behavioralMarks > 0 &&
-                            subject.totalMarks > 50 && (
-                              <SubjectMarksInput
-                                label="শৃঙ্খলা"
-                                value={subjectMark?.disciplineMarks || 5}
-                                maxValue={5}
-                                onChange={(value) =>
-                                  updateSubjectMark(
-                                    subject._id,
-                                    "disciplineMarks",
-                                    value,
-                                  )
-                                }
-                                step={0.5}
-                              />
-                            )}
-
-                          {subjectResult && (
-                            <div className={styles.subjectGrade}>
-                              <span className={styles.gradeBadge}>
-                                {subjectResult.grade}
-                              </span>
-                              <span className={styles.gpaBadge}>
-                                জিপিএ: {subjectResult.gpa.toFixed(1)}
+                      return (
+                        <div key={subject._id} className={styles.subjectEntry}>
+                          <div className={styles.subjectHeader}>
+                            <div className={styles.subjectInfo}>
+                              <strong>{subject.nameBn}</strong>
+                              <span className={styles.subjectCode}>
+                                {subject.code}
                               </span>
                             </div>
-                          )}
+                            <div className={styles.subjectTotal}>
+                              মোট: {subject.totalMarks}
+                            </div>
+                          </div>
+
+                          <div className={styles.marksGrid}>
+                            <SubjectMarksInput
+                              label="একাডেমিক"
+                              value={subjectMark?.academicMarks || 0}
+                              maxValue={subject.academicMarks}
+                              onChange={(value) =>
+                                updateSubjectMark(
+                                  subject._id,
+                                  "academicMarks",
+                                  value,
+                                )
+                              }
+                            />
+
+                            {subjectResult && (
+                              <div className={styles.subjectGrade}>
+                                <span className={styles.gradeBadge}>
+                                  {subjectResult.grade}
+                                </span>
+                                <span className={styles.gpaBadge}>
+                                  জিপিএ: {subjectResult.gpa.toFixed(1)}
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
                 </div>
 
                 {/* Summary Card */}
@@ -980,7 +1041,7 @@ const CreateResult: React.FC = () => {
           onClose={() => setShowPreview(false)}
           onConfirm={() => {
             setShowPreview(false);
-            handleSubmit(); // Call your submit function
+            handleSubmit();
           }}
         />
       )}
