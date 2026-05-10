@@ -18,14 +18,10 @@ import type {
   ResultListItem,
   ResultFilters,
 } from "../../../types/ClassBasedResult";
-import ResultPrintModal from "../../../components/DashboardComponents/ResultPrintModal";
 
 const ClassBasedResults: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
-  const [selectedResultId, setSelectedResultId] = useState<string | null>(null);
-  // Add state
-  const [showPrintModal, setShowPrintModal] = useState(false);
   // Filter states
   const [filters, setFilters] = useState<ResultFilters>({
     className: "",
@@ -139,10 +135,413 @@ const ClassBasedResults: React.FC = () => {
     });
   };
 
-  // Handle print/preview
-  const handlePrintPreview = (result: ResultListItem) => {
-    setSelectedResultId(result._id);
-    setShowPrintModal(true);
+  const getPrintHTML = (result: any) => {
+    // Calculate behavioral marks as integers
+    const attendanceMark = Math.round(result.behavioralData.attendance.marks);
+    const meetingMark = Math.round(result.behavioralData.meetings.marks);
+    const feeMark = Math.round(result.behavioralData.fees.marks);
+    const disciplineMark = Math.round(result.behavioralData.discipline.marks);
+    const totalBehavioral =
+      attendanceMark + meetingMark + feeMark + disciplineMark;
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>${result.studentSnapshot.studentName} - ফলাফল</title>
+      <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        
+        body {
+          font-family: 'Nikosh', 'Siyam Rupali', 'Bangla', 'Noto Sans Bengali', Arial, sans-serif;
+          padding: 10px;
+          background: white;
+          font-size: 11px;
+        }
+        
+        .print-container {
+          max-width: 100%;
+          margin: 0 auto;
+          background: white;
+        }
+        
+        /* School Header - Compact */
+        .school-header {
+          text-align: center;
+          border-bottom: 1px solid #166534;
+          padding-bottom: 8px;
+          margin-bottom: 10px;
+        }
+        
+        .school-name {
+          font-size: 16px;
+          font-weight: bold;
+          color: #166534;
+        }
+        
+        .school-address {
+          font-size: 9px;
+          color: #555;
+        }
+        
+        .result-title {
+          font-size: 12px;
+          font-weight: bold;
+          margin-top: 5px;
+        }
+        
+        .result-subtitle {
+          font-size: 10px;
+          color: #333;
+        }
+        
+        /* Section Styles - Compact */
+        .section {
+          margin-bottom: 12px;
+        }
+        
+        .section-title {
+          font-size: 12px;
+          font-weight: bold;
+          color: #166534;
+          border-left: 3px solid #166534;
+          padding-left: 8px;
+          margin-bottom: 8px;
+        }
+        
+        /* Info Grid - Compact 4 columns */
+        .info-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 6px;
+          background: #f8fafc;
+          padding: 8px;
+          border-radius: 4px;
+        }
+        
+        .info-item {
+          display: flex;
+          align-items: center;
+          font-size: 10px;
+        }
+        
+        .info-label {
+          font-weight: bold;
+          width: 65px;
+        }
+        
+        /* Behavioral Grid - Compact 2x2 Table */
+        .behavioral-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 8px;
+        }
+        
+        .behavioral-table td {
+          border: 1px solid #ddd;
+          padding: 4px 6px;
+          font-size: 10px;
+        }
+        
+        .behavioral-label {
+          font-weight: bold;
+          width: 40%;
+        }
+        
+        .behavioral-value {
+          text-align: center;
+          width: 10%;
+          font-weight: bold;
+          color: #166534;
+        }
+        
+        .behavioral-total {
+          text-align: right;
+          padding: 6px;
+          background: #f0fdf4;
+          font-weight: bold;
+          font-size: 10px;
+        }
+        
+        /* Subject Table - Compact */
+        .subjects-table {
+          width: 100%;
+          border-collapse: collapse;
+          font-size: 9px;
+        }
+        
+        .subjects-table th,
+        .subjects-table td {
+          border: 1px solid #d1d5db;
+          padding: 4px 4px;
+          text-align: center;
+        }
+        
+        .subjects-table th {
+          background: #f3f4f6;
+          font-weight: bold;
+          font-size: 9px;
+        }
+        
+        .subject-name {
+          text-align: left;
+          font-weight: bold;
+        }
+        
+        .pass-grade {
+          color: #16a34a;
+          font-weight: bold;
+        }
+        
+        .fail-grade {
+          color: #dc2626;
+          font-weight: bold;
+        }
+        
+        /* Summary - Simple No BG */
+        .summary-section {
+          margin-top: 10px;
+          padding: 8px 0;
+          border-top: 1px solid #ddd;
+          border-bottom: 1px solid #ddd;
+        }
+        
+        .summary-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 8px;
+          text-align: center;
+          font-size: 10px;
+        }
+        
+        .summary-label {
+          font-weight: bold;
+          display: block;
+        }
+        
+        .result-status {
+          text-align: center;
+          margin-top: 8px;
+          font-size: 10px;
+          font-weight: bold;
+        }
+        
+        /* Signature Section - Compact */
+        .signature-section {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 20px;
+        }
+        
+        .signature-box {
+          text-align: center;
+          width: 120px;
+        }
+        
+        .signature-line {
+          border-top: 1px solid #000;
+          margin-top: 25px;
+          margin-bottom: 4px;
+        }
+        
+        .signature-title {
+          font-size: 8px;
+          color: #555;
+        }
+        
+        /* Seal - Smaller */
+        .school-seal {
+          text-align: center;
+          margin-top: 15px;
+        }
+        
+        .seal {
+          display: inline-block;
+          border: 1px solid #dc2626;
+          border-radius: 50%;
+          padding: 4px 12px;
+          color: #dc2626;
+          font-weight: bold;
+          font-size: 8px;
+          transform: rotate(-5deg);
+        }
+        
+        .footer-note {
+          text-align: center;
+          margin-top: 10px;
+          font-size: 7px;
+          color: #999;
+        }
+        
+        @media print {
+          body {
+            padding: 0;
+            margin: 0;
+          }
+          @page {
+            size: A4;
+            margin: 8mm;
+          }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="print-container">
+        <!-- School Header -->
+        <div class="school-header">
+          <div class="school-name">শাহ নেয়ামত (রহ:) কেজি এন্ড হাই স্কুল</div>
+          <div class="school-address">১নং বোর্ড বাজার, চরলক্ষ্যা, কর্ণফুলী, চট্টগ্রাম</div>
+          <div class="result-subtitle">${result.examSnapshot.name} পরীক্ষা - ${result.academicYear}</div>
+        </div>
+
+        <!-- Student Info Section - Compact 4 Column -->
+        <div class="section">
+          <div class="info-grid">
+            <div class="info-item"><span class="info-label">নাম:</span><span>${result.studentSnapshot.studentName}</span></div>
+            <div class="info-item"><span class="info-label">শ্রেণি:</span><span>${result.studentSnapshot.className}</span></div>
+            <div class="info-item"><span class="info-label">রোল:</span><span>${result.studentSnapshot.classRoll}</span></div>
+            <div class="info-item"><span class="info-label">আইডি:</span><span>${result.studentSnapshot.studentId}</span></div>
+          </div>
+        </div>
+
+        <!-- Behavioral Section - 2x2 Table Format -->
+        <div class="section">
+          <div class="section-title">আচরণগত মূল্যায়ন (সর্বোচ্চ ২০ মার্ক)</div>
+          <table class="behavioral-table">
+            <tr>
+              <td class="behavioral-label">📅 উপস্থিতি | ${result.behavioralData.attendance.present}/${result.behavioralData.attendance.total}</td>
+              <td class="behavioral-value">${attendanceMark}/5</td>
+              <td class="behavioral-label">👪 অভিভাবক সভা</td>
+              <td class="behavioral-value">${meetingMark}/5</td>
+            </tr>
+            <tr>
+              <td class="behavioral-label">💰 ফি প্রদান</td>
+              <td class="behavioral-value">${feeMark}/5</td>
+              <td class="behavioral-label">🎯 শৃঙ্খলা</td>
+              <td class="behavioral-value">${disciplineMark}/5</td>
+            </tr>
+            <tr>
+              <td colspan="3" class="behavioral-total">মোট আচরণগত মার্ক:</td>
+              <td class="behavioral-value">${totalBehavioral}/20</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Subject Results Table -->
+        <div class="section">
+          <div class="section-title">বিষয়ভিত্তিক ফলাফল</div>
+          <table class="subjects-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>বিষয়</th>
+                <th>প্রাপ্ত</th>
+                <th>মোট</th>
+                <th>গ্রেড</th>
+                <th>জিপিএ</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.subjectResults
+                .map(
+                  (subject: any, idx: number) => `
+                <tr>
+                  <td>${idx + 1}</td>
+                  <td class="subject-name">${subject.nameBn}</td>
+                  <td>${subject.obtainedTotal}</td>
+                  <td>${subject.totalMarks}</td>
+                  <td class="${subject.grade === "F" ? "fail-grade" : "pass-grade"}">${subject.grade}</td>
+                  <td>${subject.gpa}</td>
+                </tr>
+              `,
+                )
+                .join("")}
+            </tbody>
+            <tfoot>
+              <tr style="background: #f3f4f6; font-weight: bold;">
+                <td colspan="2">সর্বমোট</td>
+                <td>${result.summary.totalObtainedMarks}</td>
+                <td>${result.summary.totalMaxMarks}</td>
+                <td>${result.summary.finalGrade}</td>
+                <td>${result.summary.averageGPA}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Summary Section - Simple No BG -->
+        <div class="summary-section">
+          <div class="summary-grid">
+            <div><span class="summary-label">মোট প্রাপ্ত</span><span>${result.summary.totalObtainedMarks}/${result.summary.totalMaxMarks}</span></div>
+            <div><span class="summary-label">শতকরা</span><span>${result.summary.overallPercentage}%</span></div>
+            <div><span class="summary-label">গ্রেড</span><span>${result.summary.finalGrade}</span></div>
+            <div><span class="summary-label">জিপিএ</span><span>${result.summary.averageGPA}</span></div>
+          </div>
+          <div class="result-status">ফলাফল: ${result.summary.isPassed ? "পাস" : "ফেল"}</div>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="signature-section">
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-title">শ্রেণি শিক্ষক</div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-title">অভিভাবক</div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div class="signature-title">প্রধান শিক্ষক</div>
+          </div>
+        </div>
+
+        <!-- School Seal -->
+        <div class="school-seal">
+          <div class="seal">প্রাতিষ্ঠানিক সিল</div>
+        </div>
+        
+        <!-- Footer Note -->
+        <div class="footer-note">
+          এই ফলাফল কম্পিউটার জেনারেটেড, স্বাক্ষর ব্যতীত বৈধ নয়।
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+  };
+
+  const handlePrintPreview = async (result: ResultListItem) => {
+    try {
+      const { data } = await axiosSecure.get(`/api/result/${result._id}`);
+      const fullResult = data.data;
+
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        Swal.fire(
+          "ত্রুটি!",
+          "পপ-আপ ব্লকার সক্রিয় আছে। দয়া করে পপ-আপ ব্লকার বন্ধ করুন।",
+          "error",
+        );
+        return;
+      }
+
+      printWindow.document.write(getPrintHTML(fullResult));
+      printWindow.document.close();
+
+      printWindow.onload = () => {
+        printWindow.print();
+        printWindow.onafterprint = () => printWindow.close();
+      };
+    } catch (error) {
+      console.error("Print error:", error);
+      Swal.fire("ত্রুটি!", "প্রিন্ট করতে ব্যর্থ হয়েছে", "error");
+    }
   };
 
   // Export to CSV
@@ -418,17 +817,6 @@ const ClassBasedResults: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* print result preview modal */}
-      {showPrintModal && selectedResultId && (
-        <ResultPrintModal
-          resultId={selectedResultId}
-          onClose={() => {
-            setShowPrintModal(false);
-            setSelectedResultId(null);
-          }}
-        />
-      )}
     </>
   );
 };
