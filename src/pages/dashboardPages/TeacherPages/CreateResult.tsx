@@ -132,22 +132,25 @@ const CreateResult: React.FC = () => {
   // Calculate subject total and grade
   const calculateSubjectResult = (
     academicObtained: number,
+    behavioralObtained: number, // This will always be 0 now
     subject: SubjectWithMarks,
     globalBehavioralTotal: number,
   ): GradeResult => {
     let totalObtained;
     if (subject.totalMarks === 100) {
-      totalObtained = academicObtained + globalBehavioralTotal;
+      totalObtained = Math.round(academicObtained + globalBehavioralTotal);
     } else {
-      totalObtained = academicObtained; // No behavioral for 50/30/20-mark subjects
+      totalObtained = Math.round(academicObtained);
     }
 
-    const totalMax = subject.totalMarks;
-    const percentage = Number(
-      totalMax > 0 ? ((totalObtained / totalMax) * 100).toFixed(2) : 0,
-    );
+    const percentage = Math.round((totalObtained / subject.totalMarks) * 100);
     const grade = calculateGrade(percentage);
-    return { ...grade, obtained: totalObtained, max: totalMax };
+    return {
+      ...grade,
+      obtained: totalObtained,
+      max: subject.totalMarks,
+      percentage,
+    };
   };
 
   // ==================== HANDLERS ====================
@@ -279,6 +282,7 @@ const CreateResult: React.FC = () => {
 
   // Calculate total summary
   const calculateTotalSummary = () => {
+    // Round all behavioral marks
     const attendanceMark =
       attendanceDays.total > 0
         ? Math.round((attendanceDays.present / attendanceDays.total) * 5)
@@ -293,60 +297,198 @@ const CreateResult: React.FC = () => {
       feeMonths.total > 0
         ? Math.round((feeMonths.paid / feeMonths.total) * 5)
         : 0;
+
+    const disciplineMark = Math.round(disciplineMarks);
     const globalBehavioralTotal =
-      attendanceMark + meetingMark + feeMark + disciplineMarks;
+      attendanceMark + meetingMark + feeMark + disciplineMark;
 
     let totalObtained = 0;
     let totalMax = 0;
+    let totalGPA = 0;
+    let subjectCount = 0;
 
     subjectMarks.forEach((mark) => {
       const subject = classSubjects.find((s) => s._id === mark.subjectId);
       if (subject) {
         let subjectTotal;
         if (subject.totalMarks === 100) {
-          // 100-mark subjects: academic + global behavioral
-          subjectTotal = mark.academicMarks + globalBehavioralTotal;
+          subjectTotal = Math.round(mark.academicMarks + globalBehavioralTotal);
         } else {
-          // 50/30/20-mark subjects: academic only
-          subjectTotal = mark.academicMarks;
+          subjectTotal = Math.round(mark.academicMarks);
         }
+
+        const percentage = Math.round(
+          (subjectTotal / subject.totalMarks) * 100,
+        );
+        const grade = calculateGrade(percentage);
 
         totalObtained += subjectTotal;
         totalMax += subject.totalMarks;
+        totalGPA += grade.gpa;
+        subjectCount++;
       }
     });
 
-    const percentage = totalMax > 0 ? (totalObtained / totalMax) * 100 : 0;
-    const grade = calculateGrade(percentage);
+    // ✅ Overall grade based on AVERAGE GPA
+    const averageGPA = subjectCount > 0 ? totalGPA / subjectCount : 0;
 
-    // Return behavioral breakdown for preview/summary
+    let finalGrade = "";
+    if (averageGPA >= 5.0) finalGrade = "A+";
+    else if (averageGPA >= 4.0) finalGrade = "A";
+    else if (averageGPA >= 3.5) finalGrade = "A-";
+    else if (averageGPA >= 3.0) finalGrade = "B";
+    else if (averageGPA >= 2.0) finalGrade = "C";
+    else if (averageGPA >= 1.0) finalGrade = "D";
+    else finalGrade = "F";
+
+    const overallPercentage =
+      totalMax > 0 ? Math.round((totalObtained / totalMax) * 100) : 0;
+    const grade = calculateGrade(overallPercentage);
+
     const behavioral = {
-      attendance: { marks: attendanceMark.toFixed(2) },
-      meetings: { marks: meetingMark.toFixed(2) },
-      fees: { marks: feeMark.toFixed(2) },
-      discipline: { marks: disciplineMarks.toFixed(2) },
-      totalBehavioralMarks: globalBehavioralTotal.toFixed(2),
+      attendance: { marks: attendanceMark },
+      meetings: { marks: meetingMark },
+      fees: { marks: feeMark },
+      discipline: { marks: disciplineMark },
+      totalBehavioralMarks: globalBehavioralTotal,
     };
 
-    return { totalObtained, totalMax, percentage, grade, behavioral };
+    return {
+      totalObtained,
+      totalMax,
+      percentage: overallPercentage,
+      grade,
+      averageGPA,
+      finalGrade,
+      isPassed: finalGrade !== "F",
+      behavioral,
+    };
   };
 
   const summary = calculateTotalSummary();
 
   // ==================== PREVIEW FUNCTION ====================
   const handlePreview = () => {
-    // Calculate global behavioral marks
-    const attendanceMark = Math.round(
-      (attendanceDays.present / attendanceDays.total) * 5 || 0,
-    );
-    const meetingMark = Math.round(
-      (meetingAttendance.attended / meetingAttendance.total) * 5 || 0,
-    );
-    const feeMark = Math.round((feeMonths.paid / feeMonths.total) * 5 || 0);
+    // Calculate global behavioral marks (rounded to integers)
+    const attendanceMark =
+      attendanceDays.total > 0
+        ? Math.round((attendanceDays.present / attendanceDays.total) * 5)
+        : 0;
+    const meetingMark =
+      meetingAttendance.total > 0
+        ? Math.round((meetingAttendance.attended / meetingAttendance.total) * 5)
+        : 0;
+    const feeMark =
+      feeMonths.total > 0
+        ? Math.round((feeMonths.paid / feeMonths.total) * 5)
+        : 0;
+    const disciplineMark = Math.round(disciplineMarks);
     const globalBehavioralTotal =
-      attendanceMark + meetingMark + feeMark + Math.round(disciplineMarks);
+      attendanceMark + meetingMark + feeMark + disciplineMark;
 
-    // Prepare preview data
+    // Calculate subject results
+    let totalObtained = 0;
+    let totalMax = 0;
+    let totalGPA = 0;
+    let subjectCount = 0;
+
+    const subjectResultsData = subjectMarks
+      .map((mark) => {
+        const subject = classSubjects.find((s) => s._id === mark.subjectId);
+        if (!subject) return null;
+
+        // Calculate total obtained (matching server logic)
+        let obtainedTotal;
+        let obtainedBehavioral = 0;
+
+        if (subject.totalMarks === 100) {
+          obtainedBehavioral = globalBehavioralTotal;
+          obtainedTotal = Math.round(mark.academicMarks + obtainedBehavioral);
+        } else {
+          obtainedTotal = Math.round(mark.academicMarks);
+        }
+
+        const percentage = Math.round(
+          (obtainedTotal / subject.totalMarks) * 100,
+        );
+
+        // Calculate grade from percentage
+        let grade = "";
+        let gpa = 0;
+        let isPassed = true;
+
+        if (percentage >= 80) {
+          grade = "A+";
+          gpa = 5.0;
+        } else if (percentage >= 70) {
+          grade = "A";
+          gpa = 4.0;
+        } else if (percentage >= 60) {
+          grade = "A-";
+          gpa = 3.5;
+        } else if (percentage >= 50) {
+          grade = "B";
+          gpa = 3.0;
+        } else if (percentage >= 40) {
+          grade = "C";
+          gpa = 2.0;
+        } else if (percentage >= 33) {
+          grade = "D";
+          gpa = 1.0;
+        } else {
+          grade = "F";
+          gpa = 0.0;
+          isPassed = false;
+        }
+
+        totalObtained += obtainedTotal;
+        totalMax += subject.totalMarks;
+        totalGPA += gpa;
+        subjectCount++;
+
+        return {
+          subjectName: subject.nameBn,
+          subjectCode: subject.code,
+          academicObtained: mark.academicMarks,
+          academicMax: subject.academicMarks,
+          behavioralObtained:
+            subject.totalMarks === 100 ? obtainedBehavioral : 0,
+          behavioralMax: subject.totalMarks === 100 ? 20 : 0,
+          totalObtained,
+          totalMax: subject.totalMarks,
+          percentage: percentage,
+          grade,
+          gpa,
+          isPassed,
+        };
+      })
+      .filter(Boolean);
+
+    // Calculate summary (matching server logic)
+    const averageGPA = subjectCount > 0 ? totalGPA / subjectCount : 0;
+
+    let finalGrade = "";
+    if (averageGPA >= 5.0) finalGrade = "A+";
+    else if (averageGPA >= 4.0) finalGrade = "A";
+    else if (averageGPA >= 3.5) finalGrade = "A-";
+    else if (averageGPA >= 3.0) finalGrade = "B";
+    else if (averageGPA >= 2.0) finalGrade = "C";
+    else if (averageGPA >= 1.0) finalGrade = "D";
+    else finalGrade = "F";
+
+    const overallPercentage =
+      totalMax > 0 ? Math.round((totalObtained / totalMax) * 100) : 0;
+
+    // Calculate grade from percentage for display
+    let overallGrade = "";
+    if (overallPercentage >= 80) overallGrade = "A+";
+    else if (overallPercentage >= 70) overallGrade = "A";
+    else if (overallPercentage >= 60) overallGrade = "A-";
+    else if (overallPercentage >= 50) overallGrade = "B";
+    else if (overallPercentage >= 40) overallGrade = "C";
+    else if (overallPercentage >= 33) overallGrade = "D";
+    else overallGrade = "F";
+
     const previewData = {
       student: {
         studentName: foundStudent?.studentName,
@@ -362,69 +504,35 @@ const CreateResult: React.FC = () => {
         attendance: {
           present: attendanceDays.present,
           total: attendanceDays.total,
-          marks: attendanceMark.toFixed(2),
+          marks: attendanceMark,
         },
         meetings: {
           attended: meetingAttendance.attended,
           total: meetingAttendance.total,
-          marks: meetingMark.toFixed(2),
+          marks: meetingMark,
         },
         fees: {
           paid: feeMonths.paid,
           total: feeMonths.total,
-          marks: feeMark.toFixed(2),
+          marks: feeMark,
         },
         discipline: {
           obtained: disciplineMarks,
           total: 5,
-          marks: disciplineMarks.toFixed(2),
+          marks: disciplineMark,
         },
-        totalBehavioralMarks: (
-          attendanceMark +
-          meetingMark +
-          feeMark +
-          disciplineMarks
-        ).toFixed(2),
+        totalBehavioralMarks: globalBehavioralTotal,
       },
-      subjects: subjectMarks
-        .map((mark) => {
-          const subject = classSubjects.find((s) => s._id === mark.subjectId);
-          if (!subject) return null;
-
-          // ✅ Only add behavioral for 100-mark subjects
-          let totalObtained;
-          if (subject.totalMarks === 100) {
-            totalObtained = mark.academicMarks + globalBehavioralTotal;
-          } else {
-            totalObtained = mark.academicMarks;
-          }
-
-          const percentage = (totalObtained / subject.totalMarks) * 100;
-          const grade = calculateGrade(percentage);
-          return {
-            subjectName: subject.nameBn,
-            subjectCode: subject.code,
-            academicObtained: Number(mark.academicMarks.toFixed(2)),
-            academicMax: subject.academicMarks,
-            behavioralObtained: globalBehavioralTotal.toFixed(2),
-            behavioralMax: 20,
-            totalObtained: Number(totalObtained.toFixed(2)),
-            totalMax: subject.totalMarks,
-            percentage: percentage.toFixed(2),
-            grade: grade.grade,
-            gpa: grade.gpa.toFixed(2),
-            isPassed: grade.isPassed,
-          };
-        })
-        .filter(Boolean),
+      subjects: subjectResultsData,
       summary: {
-        totalSubjects: classSubjects.length,
-        totalObtained: summary.totalObtained.toFixed(2),
-        totalMax: summary.totalMax,
-        percentage: summary.percentage.toFixed(2),
-        grade: summary.grade.grade,
-        gpa: summary.grade.gpa.toFixed(2),
-        isPassed: summary.grade.isPassed,
+        totalSubjects: subjectCount,
+        totalObtained,
+        totalMax,
+        percentage: overallPercentage,
+        grade: overallGrade,
+        gpa: averageGPA,
+        finalGrade,
+        isPassed: finalGrade !== "F",
       },
     };
 
@@ -925,11 +1033,14 @@ const CreateResult: React.FC = () => {
                       const subjectMark = subjectMarks.find(
                         (m) => m.subjectId === subject._id,
                       );
+
+                      // ✅ behavioralMarks - 0 as default for non-100 mark subjects
                       const subjectResult = subjectMark
                         ? calculateSubjectResult(
                             subjectMark.academicMarks,
+                            0,
                             subject,
-                            globalBehavioralTotal, // ✅ Same for all subjects
+                            globalBehavioralTotal,
                           )
                         : null;
 
@@ -996,37 +1107,48 @@ const CreateResult: React.FC = () => {
                     </div>
                     <div className={styles.summaryItem}>
                       <label>শতকরা হার</label>
-                      <span>{summary.percentage.toFixed(2)}%</span>
+                      <span>{summary.percentage}%</span>
                     </div>
                     <div className={styles.summaryItem}>
-                      <label>গ্রেড</label>
-                      <span className={styles.finalGrade}>
-                        {summary.grade.grade}
+                      <label>গড় জিপিএ</label>
+                      <span>
+                        {summary.averageGPA?.toFixed(2) ||
+                          summary.grade.gpa.toFixed(2)}
                       </span>
                     </div>
                     <div className={styles.summaryItem}>
-                      <label>জিপিএ</label>
-                      <span>{summary.grade.gpa.toFixed(2)}</span>
+                      <label>চূড়ান্ত গ্রেড</label>
+                      <span className={styles.finalGrade}>
+                        {summary.finalGrade || summary.grade.grade}
+                      </span>
+                    </div>
+                    <div className={styles.summaryItem}>
+                      <label>ফলাফল</label>
+                      <span
+                        className={
+                          summary.isPassed ? styles.passed : styles.failed
+                        }
+                      >
+                        {summary.isPassed ? "পাস" : "ফেল"}
+                      </span>
                     </div>
                   </div>
 
                   <div className={styles.formActions}>
-                    <div className={styles.formActions}>
-                      <button
-                        className={styles.previewBtn}
-                        onClick={handlePreview}
-                      >
-                        <FaEye /> প্রিভিউ
-                      </button>
-                      <button
-                        className={styles.submitBtn}
-                        disabled={isSubmitting}
-                        onClick={handleSubmit}
-                      >
-                        <FaSave />{" "}
-                        {isSubmitting ? "সংরক্ষণ হচ্ছে..." : "সংরক্ষণ করুন"}
-                      </button>
-                    </div>
+                    <button
+                      className={styles.previewBtn}
+                      onClick={handlePreview}
+                    >
+                      <FaEye /> প্রিভিউ
+                    </button>
+                    <button
+                      className={styles.submitBtn}
+                      disabled={isSubmitting}
+                      onClick={handleSubmit}
+                    >
+                      <FaSave />{" "}
+                      {isSubmitting ? "সংরক্ষণ হচ্ছে..." : "সংরক্ষণ করুন"}
+                    </button>
                   </div>
                 </div>
               </>
