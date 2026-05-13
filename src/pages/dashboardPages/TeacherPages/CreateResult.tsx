@@ -4,7 +4,6 @@ import {
   FaUserGraduate,
   FaCalendarAlt,
   FaSave,
-  FaEye,
   FaInfoCircle,
   FaPlus,
 } from "react-icons/fa";
@@ -20,7 +19,6 @@ import type {
 import Swal from "sweetalert2";
 import { useAxiosSecure } from "../../../hooks/useAxiosSecure";
 import SubjectMarksInput from "../../../components/DashboardComponents/SubjectsMarksInputs";
-import ResultPreview from "../../../components/DashboardComponents/ResultPreview";
 
 const CreateResult: React.FC = () => {
   // ==================== STATE MANAGEMENT ====================
@@ -56,10 +54,6 @@ const CreateResult: React.FC = () => {
   // UI state
   const [activeTab, setActiveTab] = useState<"search" | "marks">("search");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // State for preview modal
-  const [showPreview, setShowPreview] = useState(false);
-  const [previewData, setPreviewData] = useState<any>(null);
 
   // ==================== HELPER FUNCTIONS ====================
 
@@ -367,179 +361,6 @@ const CreateResult: React.FC = () => {
 
   const summary = calculateTotalSummary();
 
-  // ==================== PREVIEW FUNCTION ====================
-  const handlePreview = () => {
-    // Calculate global behavioral marks (rounded to integers)
-    const attendanceMark =
-      attendanceDays.total > 0
-        ? Math.round((attendanceDays.present / attendanceDays.total) * 5)
-        : 0;
-    const meetingMark =
-      meetingAttendance.total > 0
-        ? Math.round((meetingAttendance.attended / meetingAttendance.total) * 5)
-        : 0;
-    const feeMark =
-      feeMonths.total > 0
-        ? Math.round((feeMonths.paid / feeMonths.total) * 5)
-        : 0;
-    const disciplineMark = Math.round(disciplineMarks);
-    const globalBehavioralTotal =
-      attendanceMark + meetingMark + feeMark + disciplineMark;
-
-    // Calculate subject results
-    let totalObtained = 0;
-    let totalMax = 0;
-    let totalGPA = 0;
-    let subjectCount = 0;
-
-    const subjectResultsData = subjectMarks
-      .map((mark) => {
-        const subject = classSubjects.find((s) => s._id === mark.subjectId);
-        if (!subject) return null;
-
-        // Calculate total obtained (matching server logic)
-        let obtainedTotal;
-        let obtainedBehavioral = 0;
-
-        if (subject.totalMarks === 100) {
-          obtainedBehavioral = globalBehavioralTotal;
-          obtainedTotal = Math.round(mark.academicMarks + obtainedBehavioral);
-        } else {
-          obtainedTotal = Math.round(mark.academicMarks);
-        }
-
-        const percentage = Math.round(
-          (obtainedTotal / subject.totalMarks) * 100,
-        );
-
-        // Calculate grade from percentage
-        let grade = "";
-        let gpa = 0;
-        let isPassed = true;
-
-        if (percentage >= 80) {
-          grade = "A+";
-          gpa = 5.0;
-        } else if (percentage >= 70) {
-          grade = "A";
-          gpa = 4.0;
-        } else if (percentage >= 60) {
-          grade = "A-";
-          gpa = 3.5;
-        } else if (percentage >= 50) {
-          grade = "B";
-          gpa = 3.0;
-        } else if (percentage >= 40) {
-          grade = "C";
-          gpa = 2.0;
-        } else if (percentage >= 33) {
-          grade = "D";
-          gpa = 1.0;
-        } else {
-          grade = "F";
-          gpa = 0.0;
-          isPassed = false;
-        }
-
-        totalObtained += obtainedTotal;
-        totalMax += subject.totalMarks;
-        totalGPA += gpa;
-        subjectCount++;
-
-        return {
-          subjectName: subject.nameBn,
-          subjectCode: subject.code,
-          academicObtained: mark.academicMarks,
-          academicMax: subject.academicMarks,
-          behavioralObtained:
-            subject.totalMarks === 100 ? obtainedBehavioral : 0,
-          behavioralMax: subject.totalMarks === 100 ? 20 : 0,
-          totalObtained,
-          totalMax: subject.totalMarks,
-          percentage: percentage,
-          grade,
-          gpa,
-          isPassed,
-        };
-      })
-      .filter(Boolean);
-
-    // Calculate summary (matching server logic)
-    const averageGPA = subjectCount > 0 ? totalGPA / subjectCount : 0;
-
-    let finalGrade = "";
-    if (averageGPA >= 5.0) finalGrade = "A+";
-    else if (averageGPA >= 4.0) finalGrade = "A";
-    else if (averageGPA >= 3.5) finalGrade = "A-";
-    else if (averageGPA >= 3.0) finalGrade = "B";
-    else if (averageGPA >= 2.0) finalGrade = "C";
-    else if (averageGPA >= 1.0) finalGrade = "D";
-    else finalGrade = "F";
-
-    const overallPercentage =
-      totalMax > 0 ? Math.round((totalObtained / totalMax) * 100) : 0;
-
-    // Calculate grade from percentage for display
-    let overallGrade = "";
-    if (overallPercentage >= 80) overallGrade = "A+";
-    else if (overallPercentage >= 70) overallGrade = "A";
-    else if (overallPercentage >= 60) overallGrade = "A-";
-    else if (overallPercentage >= 50) overallGrade = "B";
-    else if (overallPercentage >= 40) overallGrade = "C";
-    else if (overallPercentage >= 33) overallGrade = "D";
-    else overallGrade = "F";
-
-    const previewData = {
-      student: {
-        studentName: foundStudent?.studentName,
-        className: foundStudent?.className,
-        classRoll: foundStudent?.classRoll,
-        studentId: foundStudent?.studentID,
-      },
-      exam: {
-        name: selectedExam?.name,
-        academicYear: selectedExam?.academicYear,
-      },
-      behavioral: {
-        attendance: {
-          present: attendanceDays.present,
-          total: attendanceDays.total,
-          marks: attendanceMark,
-        },
-        meetings: {
-          attended: meetingAttendance.attended,
-          total: meetingAttendance.total,
-          marks: meetingMark,
-        },
-        fees: {
-          paid: feeMonths.paid,
-          total: feeMonths.total,
-          marks: feeMark,
-        },
-        discipline: {
-          obtained: disciplineMarks,
-          total: 5,
-          marks: disciplineMark,
-        },
-        totalBehavioralMarks: globalBehavioralTotal,
-      },
-      subjects: subjectResultsData,
-      summary: {
-        totalSubjects: subjectCount,
-        totalObtained,
-        totalMax,
-        percentage: overallPercentage,
-        grade: overallGrade,
-        gpa: averageGPA,
-        finalGrade,
-        isPassed: finalGrade !== "F",
-      },
-    };
-
-    setPreviewData(previewData);
-    setShowPreview(true);
-  };
-
   // ==================== SUBMIT FUNCTION ====================
   const handleSubmit = async () => {
     // Validate before submit
@@ -677,10 +498,6 @@ const CreateResult: React.FC = () => {
     // Reset UI state
     setActiveTab("search");
     setIsSubmitting(false);
-
-    // Optional: Clear any preview states
-    setShowPreview(false);
-    setPreviewData(null);
   };
   return (
     <>
@@ -1136,12 +953,6 @@ const CreateResult: React.FC = () => {
 
                   <div className={styles.formActions}>
                     <button
-                      className={styles.previewBtn}
-                      onClick={handlePreview}
-                    >
-                      <FaEye /> প্রিভিউ
-                    </button>
-                    <button
                       className={styles.submitBtn}
                       disabled={isSubmitting}
                       onClick={handleSubmit}
@@ -1156,17 +967,6 @@ const CreateResult: React.FC = () => {
           </div>
         )}
       </div>
-      {/* // Add modal in JSX */}
-      {showPreview && previewData && (
-        <ResultPreview
-          data={previewData}
-          onClose={() => setShowPreview(false)}
-          onConfirm={() => {
-            setShowPreview(false);
-            handleSubmit();
-          }}
-        />
-      )}
     </>
   );
 };

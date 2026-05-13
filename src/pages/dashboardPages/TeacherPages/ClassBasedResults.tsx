@@ -18,7 +18,6 @@ import type {
   ResultListItem,
   ResultFilters,
 } from "../../../types/ClassBasedResult";
-
 const ClassBasedResults: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -159,363 +158,252 @@ const ClassBasedResults: React.FC = () => {
         
         body {
           font-family: 'Nikosh', 'Siyam Rupali', 'Bangla', 'Noto Sans Bengali', Arial, sans-serif;
-          padding: 10px;
           background: white;
-          font-size: 11px;
+          font-size: 14px;
+          position: relative;
+        }
+        
+        /* Watermark Logo */
+        .watermark {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          opacity: 0.1; /* Low opacity for watermark */
+          z-index: 0;
+          pointer-events: none;
+          width: 400px; /* Adjust size as needed */
         }
         
         .print-container {
           max-width: 100%;
           margin: 0 auto;
-          background: white;
+          background: transparent;
+          position: relative;
+          z-index: 1;
+          padding: 15px;
+          min-height: 100vh;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
         
-        /* School Header - Compact */
+        /* School Header with Logo */
         .school-header {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-bottom: 1px solid #000000b0;
+          padding-bottom: 12px;
+          margin-bottom: 20px;
+          gap: 20px;
+        }
+
+        .header-logo {
+          height: 80px; /* Matches the typical height of the 3 text lines */
+          width: auto;
+          object-fit: contain;
+        }
+
+        .header-text-content {
           text-align: center;
-          border-bottom: 1px solid #166534;
-          padding-bottom: 8px;
-          margin-bottom: 10px;
         }
         
         .school-name {
-          font-size: 16px;
+          font-size: 22px;
           font-weight: bold;
-          color: #166534;
+          color: #000;
         }
         
         .school-address {
-          font-size: 9px;
-          color: #555;
-        }
-        
-        .result-title {
           font-size: 12px;
-          font-weight: bold;
-          margin-top: 5px;
-        }
-        
-        .result-subtitle {
-          font-size: 10px;
           color: #333;
+          margin-top: 4px;
         }
         
-        /* Section Styles - Compact */
-        .section {
+        .exam-info {
+          font-size: 14px;
+          font-weight: bold;
+          margin-top: 8px;
+          color: #000;
+        }
+        
+        /* ... existing section, grid, and table styles ... */
+        .section { margin-bottom: 20px; }
+        .section-title {
+          font-size: 16px;
+          font-weight: bold;
+          color: #000;
+          border-left: 4px solid #000;
+          padding-left: 10px;
           margin-bottom: 12px;
         }
-        
-        .section-title {
-          font-size: 12px;
-          font-weight: bold;
-          color: #166534;
-          border-left: 3px solid #166534;
-          padding-left: 8px;
-          margin-bottom: 8px;
-        }
-        
-        /* Info Grid - Compact 4 columns */
         .info-grid {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 6px;
-          background: #f8fafc;
-          padding: 8px;
-          border-radius: 4px;
+          gap: 10px;
+          background: #f5f5f5;
+          padding: 12px;
+          border: 1px solid #000;
         }
-        
-        .info-item {
-          display: flex;
-          align-items: center;
-          font-size: 10px;
-        }
-        
-        .info-label {
-          font-weight: bold;
-          width: 65px;
-        }
-        
-        /* Behavioral Grid - Compact 2x2 Table */
-        .behavioral-table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-bottom: 8px;
-        }
-        
-        .behavioral-table td {
-          border: 1px solid #ddd;
-          padding: 4px 6px;
-          font-size: 10px;
-        }
-        
-        .behavioral-label {
-          font-weight: bold;
-          width: 40%;
-        }
-        
-        .behavioral-value {
-          text-align: center;
-          width: 10%;
-          font-weight: bold;
-          color: #166534;
-        }
-        
-        .behavioral-total {
-          text-align: right;
-          padding: 6px;
-          background: #f0fdf4;
-          font-weight: bold;
-          font-size: 10px;
-        }
-        
-        /* Subject Table - Compact */
-        .subjects-table {
-          width: 100%;
-          border-collapse: collapse;
-          font-size: 9px;
-        }
-        
-        .subjects-table th,
-        .subjects-table td {
-          border: 1px solid #d1d5db;
-          padding: 4px 4px;
-          text-align: center;
-        }
-        
-        .subjects-table th {
-          background: #f3f4f6;
-          font-weight: bold;
-          font-size: 9px;
-        }
-        
-        .subject-name {
-          text-align: left;
-          font-weight: bold;
-        }
-        
-        .pass-grade {
-          color: #16a34a;
-          font-weight: bold;
-        }
-        
-        .fail-grade {
-          color: #dc2626;
-          font-weight: bold;
-        }
-        
-        /* Summary - Simple No BG */
-        .summary-section {
-          margin-top: 10px;
-          padding: 8px 0;
-          border-top: 1px solid #ddd;
-          border-bottom: 1px solid #ddd;
-        }
-        
-        .summary-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 8px;
-          text-align: center;
-          font-size: 10px;
-        }
-        
-        .summary-label {
-          font-weight: bold;
-          display: block;
-        }
-        
-        .result-status {
-          text-align: center;
-          margin-top: 8px;
-          font-size: 10px;
-          font-weight: bold;
-        }
-        
-        /* Signature Section - Compact */
-        .signature-section {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 20px;
-        }
-        
-        .signature-box {
-          text-align: center;
-          width: 120px;
-        }
-        
-        .signature-line {
-          border-top: 1px solid #000;
-          margin-top: 25px;
-          margin-bottom: 4px;
-        }
-        
-        .signature-title {
-          font-size: 8px;
-          color: #555;
-        }
-        
-        /* Seal - Smaller */
-        .school-seal {
-          text-align: center;
-          margin-top: 15px;
-        }
-        
-        .seal {
-          display: inline-block;
-          border: 1px solid #dc2626;
-          border-radius: 50%;
-          padding: 4px 12px;
-          color: #dc2626;
-          font-weight: bold;
-          font-size: 8px;
-          transform: rotate(-5deg);
-        }
-        
-        .footer-note {
-          text-align: center;
-          margin-top: 10px;
-          font-size: 7px;
-          color: #999;
-        }
-        
+        .info-item { display: flex; align-items: center; font-size: 13px; }
+        .info-label { font-weight: bold; width: 60px; color: #000; }
+        .info-value { width: 120px; color: #000; }
+        .behavioral-table { width: 100%; border-collapse: collapse; border: 2px solid #000000b0; }
+        .behavioral-table td { border: 1px solid #000; padding: 10px 8px; }
+        .subjects-table { width: 100%; border-collapse: collapse; border: 2px solid #000000b0; font-size: 12px; }
+        .subjects-table th, .subjects-table td { border: 1px solid #000; padding: 8px 6px; text-align: center; }
+        .subjects-table th { background: #e0e0e0; }
+        .summary-section { margin-top: 15px; padding: 12px; border: 2px solid #000; background: #f5f5f5; }
+        .summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; text-align: center; }
+        .result-status { text-align: center; margin-top: 12px; padding-top: 10px; border-top: 1px solid #000; font-weight: bold; }
+        .signature-section { display: flex; justify-content: space-between; margin-top: 30px; }
+        .signature-box { text-align: center; width: 150px; }
+        .signature-line { border-top: 1px solid #000; margin-top: 40px; margin-bottom: 6px; }
+        .school-seal { text-align: center; margin-top: 20px; }
+        .seal { display: inline-block; border: 2px solid #000; border-radius: 50%; padding: 6px 16px; font-size: 10px; transform: rotate(-5deg); }
+        .footer-note { text-align: center; margin-top: 15px; font-size: 9px; }
+
         @media print {
-          body {
-            padding: 0;
-            margin: 0;
-          }
-          @page {
-            size: A4;
-            margin: 8mm;
-          }
+          body { -webkit-print-color-adjust: exact; }
+          .watermark { opacity: 0.1; } /* Slightly darker for print visibility */
+          @page { size: A4; margin: 10mm; }
         }
       </style>
     </head>
     <body>
+      <img src="/logob.png" class="watermark" alt="watermark">
+
       <div class="print-container">
-        <!-- School Header -->
-        <div class="school-header">
-          <div class="school-name">শাহ নেয়ামত (রহ:) কেজি এন্ড হাই স্কুল</div>
-          <div class="school-address">১নং বোর্ড বাজার, চরলক্ষ্যা, কর্ণফুলী, চট্টগ্রাম</div>
-          <div class="result-subtitle">${result.examSnapshot.name} পরীক্ষা - ${result.academicYear}</div>
-        </div>
-
-        <!-- Student Info Section - Compact 4 Column -->
-        <div class="section">
-          <div class="info-grid">
-            <div class="info-item"><span class="info-label">নাম:</span><span>${result.studentSnapshot.studentName}</span></div>
-            <div class="info-item"><span class="info-label">শ্রেণি:</span><span>${result.studentSnapshot.className}</span></div>
-            <div class="info-item"><span class="info-label">রোল:</span><span>${result.studentSnapshot.classRoll}</span></div>
-            <div class="info-item"><span class="info-label">আইডি:</span><span>${result.studentSnapshot.studentId}</span></div>
+        <div>
+          <div class="school-header">
+            <img src="/logob.png" class="header-logo" alt="School Logo">
+            <div class="header-text-content">
+              <div class="school-name">শাহ নেয়ামত (রহ:) কেজি এন্ড হাই স্কুল</div>
+              <div class="school-address">১নং বোর্ড বাজার, চরলক্ষ্যা, কর্ণফুলী, চট্টগ্রাম</div>
+              <div class="exam-info">${result.examSnapshot.name} পরীক্ষা : ${result.academicYear}</div>
+            </div>
           </div>
-        </div>
 
-        <!-- Behavioral Section - 2x2 Table Format -->
-        <div class="section">
-          <div class="section-title">আচরণগত মূল্যায়ন (সর্বোচ্চ ২০ মার্ক)</div>
-          <table class="behavioral-table">
-            <tr>
-              <td class="behavioral-label">📅 উপস্থিতি | ${result.behavioralData.attendance.present}/${result.behavioralData.attendance.total}</td>
-              <td class="behavioral-value">${attendanceMark}/5</td>
-              <td class="behavioral-label">👪 অভিভাবক সভা</td>
-              <td class="behavioral-value">${meetingMark}/5</td>
-            </tr>
-            <tr>
-              <td class="behavioral-label">💰 ফি প্রদান</td>
-              <td class="behavioral-value">${feeMark}/5</td>
-              <td class="behavioral-label">🎯 শৃঙ্খলা</td>
-              <td class="behavioral-value">${disciplineMark}/5</td>
-            </tr>
-            <tr>
-              <td colspan="3" class="behavioral-total">মোট আচরণগত মার্ক:</td>
-              <td class="behavioral-value">${totalBehavioral}/20</td>
-            </tr>
-          </table>
-        </div>
+          <div class="section">
+            <div class="section-title">শিক্ষার্থীর তথ্য</div>
+            <div class="info-grid">
+              <div class="info-item"><span class="info-label">নাম:</span><span class="info-value">${result.studentSnapshot.studentName}</span></div>
+              <div class="info-item"><span class="info-label">শ্রেণি:</span><span class="info-value">${result.studentSnapshot.className}</span></div>
+              <div class="info-item"><span class="info-label">রোল:</span><span class="info-value">${result.studentSnapshot.classRoll}</span></div>
+              <div class="info-item"><span class="info-label">আইডি:</span><span class="info-value">${result.studentSnapshot.studentId}</span></div>
+            </div>
+          </div>
 
-        <!-- Subject Results Table -->
-        <div class="section">
-          <div class="section-title">বিষয়ভিত্তিক ফলাফল</div>
-          <table class="subjects-table">
-            <thead>
+          <div class="section">
+            <div class="section-title">আচরণগত মূল্যায়ন (সর্বোচ্চ 20 মার্ক)</div>
+            <table class="behavioral-table">
               <tr>
-                <th>#</th>
-                <th>বিষয়</th>
-                <th>প্রাপ্ত</th>
-                <th>মোট</th>
-                <th>গ্রেড</th>
-                <th>জিপিএ</th>
+                <td class="behavioral-label">📅 উপস্থিতি</td>
+                <td class="behavioral-detail">${result.behavioralData.attendance.present}/${result.behavioralData.attendance.total} দিন</td>
+                <td class="behavioral-value">${attendanceMark}/5</td>
+                <td class="behavioral-label">👪 অভিভাবক সভা</td>
+                <td class="behavioral-detail">${result.behavioralData.meetings.attended}/${result.behavioralData.meetings.total} টি</td>
+                <td class="behavioral-value">${meetingMark}/5</td>
               </tr>
-            </thead>
-            <tbody>
-              ${result.subjectResults
-                .map(
-                  (subject: any, idx: number) => `
+              <tr>
+                <td class="behavioral-label">💰 ফি প্রদান</td>
+                <td class="behavioral-detail">${result.behavioralData.fees.paid}/${result.behavioralData.fees.total} মাস</td>
+                <td class="behavioral-value">${feeMark}/5</td>
+                <td class="behavioral-label">🎯 শৃঙ্খলা</td>
+                <td class="behavioral-detail">-</td>
+                <td class="behavioral-value">${disciplineMark}/5</td>
+              </tr>
+              <tr>
+                <td colspan="4" style="text-align: right; padding-right: 15px; font-weight: bold;">মোট আচরণগত মার্ক:</td>
+                <td colspan="2" style="text-align: center; font-weight: bold;">${totalBehavioral}/20</td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="section">
+            <div class="section-title">বিষয়ভিত্তিক ফলাফল</div>
+            <table class="subjects-table">
+              <thead>
                 <tr>
-                  <td>${idx + 1}</td>
-                  <td class="subject-name">${subject.nameBn}</td>
-                  <td>${subject.obtainedTotal}</td>
-                  <td>${subject.totalMarks}</td>
-                  <td class="${subject.grade === "F" ? "fail-grade" : "pass-grade"}">${subject.grade}</td>
-                  <td>${subject.gpa}</td>
+                  <th>#</th>
+                  <th>বিষয়</th>
+                  <th>লিখিত</th>
+                  <th>প্রাপ্ত</th>
+                  <th>মোট</th>
+                  <th>গ্রেড</th>
+                  <th>জিপিএ</th>
                 </tr>
-              `,
-                )
-                .join("")}
-            </tbody>
-            <tfoot>
-              <tr style="background: #f3f4f6; font-weight: bold;">
-                <td colspan="2">সর্বমোট</td>
-                <td>${result.summary.totalObtainedMarks}</td>
-                <td>${result.summary.totalMaxMarks}</td>
-                <td>${result.summary.finalGrade}</td>
-                <td>${result.summary.averageGPA}</td>
-              </tr>
-            </tfoot>
-          </table>
+              </thead>
+              <tbody>
+                ${result.subjectResults
+                  .map((subject: any, idx: number) => {
+                    const writtenMax =
+                      subject.academicMarks || subject.totalMarks;
+                    const writtenObtained = subject.obtainedAcademic || 0;
+                    return `
+                    <tr>
+                      <td>${idx + 1}</td>
+                      <td style="text-align: left; font-weight: bold;">${subject.nameBn}</td>
+                      <td>${writtenObtained}/${writtenMax}</td>
+                      <td>${subject.obtainedTotal}</td>
+                      <td>${subject.totalMarks}</td>
+                      <td style="font-weight: bold;">${subject.grade}</td>
+                      <td>${subject.gpa}</td>
+                    </tr>
+                  `;
+                  })
+                  .join("")}
+              </tbody>
+              <tfoot>
+                <tr style="background: #e0e0e0; font-weight: bold;">
+                  <td colspan="3">সর্বমোট</td>
+                  <td>${result.summary.totalObtainedMarks}</td>
+                  <td>${result.summary.totalMaxMarks}</td>
+                  <td>${result.summary.finalGrade}</td>
+                  <td>${result.summary.averageGPA}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="summary-section">
+            <div class="summary-grid">
+              <div class="summary-item">
+                <span class="summary-label">মোট প্রাপ্ত :</span>
+                <span class="summary-value">${result.summary.totalObtainedMarks}/${result.summary.totalMaxMarks}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">শতকরা হার :</span>
+                <span class="summary-value">${result.summary.overallPercentage}%</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">চূড়ান্ত গ্রেড :</span>
+                <span class="summary-value">${result.summary.finalGrade}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">গড় জিপিএ :</span>
+                <span class="summary-value">${result.summary.averageGPA}</span>
+              </div>
+            </div>
+            <div class="result-status">ফলাফল: ${result.summary.isPassed ? "পাস" : "ফেল"}</div>
+          </div>
         </div>
 
-        <!-- Summary Section - Simple No BG -->
-        <div class="summary-section">
-          <div class="summary-grid">
-            <div><span class="summary-label">মোট প্রাপ্ত</span><span>${result.summary.totalObtainedMarks}/${result.summary.totalMaxMarks}</span></div>
-            <div><span class="summary-label">শতকরা</span><span>${result.summary.overallPercentage}%</span></div>
-            <div><span class="summary-label">গ্রেড</span><span>${result.summary.finalGrade}</span></div>
-            <div><span class="summary-label">জিপিএ</span><span>${result.summary.averageGPA}</span></div>
+        <div>
+          <div class="signature-section">
+            <div class="signature-box"><div class="signature-line"></div><div class="signature-title">শ্রেণি শিক্ষক</div></div>
+            <div class="signature-box"><div class="signature-line"></div><div class="signature-title">অভিভাবক</div></div>
+            <div class="signature-box"><div class="signature-line"></div><div class="signature-title">প্রধান শিক্ষক</div></div>
           </div>
-          <div class="result-status">ফলাফল: ${result.summary.isPassed ? "পাস" : "ফেল"}</div>
-        </div>
-
-        <!-- Signature Section -->
-        <div class="signature-section">
-          <div class="signature-box">
-            <div class="signature-line"></div>
-            <div class="signature-title">শ্রেণি শিক্ষক</div>
-          </div>
-          <div class="signature-box">
-            <div class="signature-line"></div>
-            <div class="signature-title">অভিভাবক</div>
-          </div>
-          <div class="signature-box">
-            <div class="signature-line"></div>
-            <div class="signature-title">প্রধান শিক্ষক</div>
-          </div>
-        </div>
-
-        <!-- School Seal -->
-        <div class="school-seal">
-          <div class="seal">প্রাতিষ্ঠানিক সিল</div>
-        </div>
-        
-        <!-- Footer Note -->
-        <div class="footer-note">
-          এই ফলাফল কম্পিউটার জেনারেটেড, স্বাক্ষর ব্যতীত বৈধ নয়।
+          <div class="school-seal"><div class="seal">প্রাতিষ্ঠানিক সিল</div></div>
+          <div class="footer-note">এই ফলাফল কম্পিউটার জেনারেটেড, স্বাক্ষর ব্যতীত বৈধ নয়।</div>
         </div>
       </div>
     </body>
     </html>
   `;
   };
-
   const handlePrintPreview = async (result: ResultListItem) => {
     try {
       const { data } = await axiosSecure.get(`/api/result/${result._id}`);
