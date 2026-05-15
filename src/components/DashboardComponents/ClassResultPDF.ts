@@ -51,7 +51,7 @@ export const getClassPrintHTML = (
           <img src="/logob.png" class="header-logo" alt="School Logo"> <div class="header-text">
             <h1>শাহ নেয়ামত (রহ:) কেজি এন্ড হাই স্কুল</h1>
             <p>১নং বোর্ড বাজার, চরলক্ষ্যা, কর্ণফুলী, চট্টগ্রাম</p>
-            <p><strong>${results[0].examName}</strong> পরীক্ষা: ${filters.academicYear}</p>
+            <p><strong>${results[0].examName}</strong> Exam: ${filters.academicYear}</p>
           </div>
         </div>
 
