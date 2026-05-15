@@ -258,6 +258,84 @@
   }
 }
 
+/* Results Header */
+.resultsHeader {
+  padding: $spacing-4 $spacing-5;
+  border-bottom: 1px solid $color-gray-200;
+  background: $color-gray-50;
+  
+  h3 {
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    margin: 0;
+  }
+  
+  .examInfo {
+    font-size: $font-sm;
+    color: $color-gray-600;
+    margin-top: $spacing-1;
+    margin-bottom: 0;
+  }
+}
+
+/* Position Column */
+.position {
+  text-align: center;
+  font-weight: $font-weight-medium;
+}
+
+.passedPosition {
+  color: $color-primary-700;
+}
+
+.failedPosition {
+  color: $color-error;
+  font-weight: $font-weight-bold;
+}
+
+/* Roll Column */
+.roll {
+  text-align: center;
+}
+
+/* Marks Column */
+.marks {
+  text-align: center;
+  font-weight: $font-weight-medium;
+}
+
+/* Percentage Column */
+.percentage {
+  text-align: center;
+}
+
+/* Grade Column */
+.grade {
+  text-align: center;
+}
+
+/* GPA Column */
+.gpa {
+  text-align: center;
+  font-weight: $font-weight-semibold;
+}
+
+/* Status Column */
+.status {
+  text-align: center;
+}
+
+/* Actions Column */
+.actions {
+  text-align: center;
+}
+
+/* Sl No Column */
+.slNo {
+  text-align: center;
+  width: 50px;
+}
+
 .studentName {
   font-weight: $font-weight-medium;
   color: $color-gray-800;

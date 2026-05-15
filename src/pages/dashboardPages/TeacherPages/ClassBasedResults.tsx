@@ -18,6 +18,7 @@ import type {
   ResultListItem,
   ResultFilters,
 } from "../../../types/ClassBasedResult";
+import { getClassPrintHTML } from "./../../../components/DashboardComponents/ClassResultPDF";
 const ClassBasedResults: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
@@ -134,6 +135,7 @@ const ClassBasedResults: React.FC = () => {
     });
   };
 
+  // -------------------print single stu result functions-------------------------
   const getPrintHTML = (result: any) => {
     // Calculate behavioral marks as integers
     const attendanceMark = Math.round(result.behavioralData.attendance.marks);
@@ -432,52 +434,27 @@ const ClassBasedResults: React.FC = () => {
     }
   };
 
-  // Export to CSV
-  const handleExportCSV = () => {
+  // -------------------print class based results functions-------------------------
+
+  // Export বাটনে ক্লিক করলে PDF প্রিন্ট হবে
+  const handleExportPDF = () => {
     if (!results.length) {
       Swal.fire("সতর্কতা!", "কোন ফলাফল নেই", "warning");
       return;
     }
 
-    const headers = [
-      "শিক্ষার্থীর নাম",
-      "রোল",
-      "পরীক্ষা",
-      "প্রাপ্ত নম্বর",
-      "মোট নম্বর",
-      "শতকরা",
-      "গ্রেড",
-      "জিপিএ",
-      "স্ট্যাটাস",
-    ];
-    const csvData = results.map((result: ResultListItem) => [
-      result.studentName,
-      result.studentRoll,
-      result.examName,
-      result.totalObtained,
-      result.totalMax,
-      `${result.percentage}%`,
-      result.grade,
-      result.gpa,
-      result.status === "published" ? "প্রকাশিত" : "ড্রাফট",
-    ]);
+    const printWindow = window.open("", "_blank");
+    if (printWindow) {
+      const htmlContent = getClassPrintHTML(results, filters);
+      printWindow.document.write(htmlContent);
+      printWindow.document.close();
 
-    const csvContent = [headers, ...csvData]
-      .map((row) => row.join(","))
-      .join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const link = document.createElement("a");
-    const url = URL.createObjectURL(blob);
-    link.setAttribute("href", url);
-    link.setAttribute(
-      "download",
-      `results_${filters.className}_${filters.academicYear}.csv`,
-    );
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      // Wait for styles/images to load before printing
+      printWindow.onload = () => {
+        printWindow.print();
+        // Optional: printWindow.close();
+      };
+    }
   };
 
   return (
@@ -597,24 +574,30 @@ const ClassBasedResults: React.FC = () => {
               </button>
 
               {results.length > 0 && (
-                <button className={styles.exportBtn} onClick={handleExportCSV}>
-                  <FaDownload /> এক্সপোর্ট
+                <button className={styles.exportBtn} onClick={handleExportPDF}>
+                  <FaDownload /> PDF প্রিন্ট
                 </button>
               )}
             </div>
           </div>
         </div>
 
-        {/* Results Table */}
+        {/* Results Section */}
         {filters.className && filters.academicYear && (
           <div className={styles.resultsSection}>
+            {/* Header with Class and Year */}
             <div className={styles.resultsHeader}>
               <h3>
-                {filters.className} - {filters.academicYear} শিক্ষাবর্ষের ফলাফল
+                শ্রেণি : {filters.className}
                 <span className={styles.resultCount}>
                   {results.length} জন শিক্ষার্থী
                 </span>
               </h3>
+              {results.length > 0 && (
+                <p className={styles.examInfo}>
+                  {results[0]?.examName} পরীক্ষা: {filters.academicYear}
+                </p>
+              )}
             </div>
 
             {isLoading ? (
@@ -638,65 +621,95 @@ const ClassBasedResults: React.FC = () => {
                         <th>#</th>
                         <th>শিক্ষার্থীর নাম</th>
                         <th>রোল</th>
-                        <th>পরীক্ষা</th>
                         <th>প্রাপ্ত নম্বর</th>
                         <th>শতকরা</th>
                         <th>গ্রেড</th>
                         <th>জিপিএ</th>
+                        <th>অবস্থান</th>
                         <th>স্ট্যাটাস</th>
                         <th>অ্যাকশন</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {results.map((result: ResultListItem, idx: number) => (
-                        <tr key={result._id} className={styles.resultRow}>
-                          <td>{idx + 1}</td>
-                          <td className={styles.studentName}>
-                            {result.studentName}
-                          </td>
-                          <td>{result.studentRoll}</td>
-                          <td>{result.examName}</td>
-                          <td>
-                            {result.totalObtained}/{result.totalMax}
-                          </td>
-                          <td>{result.percentage}%</td>
-                          <td>
-                            <span
-                              className={`${styles.gradeBadge} ${result.grade === "F" ? styles.fail : styles.pass}`}
-                            >
-                              {result.grade}
-                            </span>
-                          </td>
-                          <td>{result.gpa}</td>
-                          <td>
-                            <span
-                              className={`${styles.statusBadge} ${result.status === "published" ? styles.published : styles.draft}`}
-                            >
-                              {result.status === "published"
-                                ? "প্রকাশিত"
-                                : "ড্রাফট"}
-                            </span>
-                          </td>
-                          <td>
-                            <div className={styles.actionButtons}>
-                              <button
-                                className={styles.printBtn}
-                                onClick={() => handlePrintPreview(result)}
-                                title="প্রিন্ট প্রিভিউ"
+                      {results.map((result: ResultListItem, idx: number) => {
+                        // Determine position display
+                        let positionDisplay = "";
+                        if (result.isFailed || result.grade === "F") {
+                          positionDisplay = "ফেল";
+                        } else if (result.position === 1) {
+                          positionDisplay = "🥇 ১ম";
+                        } else if (result.position === 2) {
+                          positionDisplay = "🥈 ২য়";
+                        } else if (result.position === 3) {
+                          positionDisplay = "🥉 ৩য়";
+                        } else {
+                          positionDisplay = `${result.position} তম`;
+                        }
+
+                        return (
+                          <tr key={result._id} className={styles.resultRow}>
+                            <td className={styles.slNo}>{idx + 1}</td>
+                            <td className={styles.studentName}>
+                              {result.studentName}
+                            </td>
+                            <td className={styles.roll}>
+                              {result.studentRoll}
+                            </td>
+                            <td className={styles.marks}>
+                              {result.totalObtained}/{result.totalMax}
+                            </td>
+                            <td className={styles.percentage}>
+                              {result.percentage}%
+                            </td>
+                            <td className={styles.grade}>
+                              <span
+                                className={`${styles.gradeBadge} ${result.grade === "F" ? styles.fail : styles.pass}`}
                               >
-                                <FaPrint />
-                              </button>
-                              <button
-                                className={styles.deleteBtn}
-                                onClick={() => handleDelete(result)}
-                                title="মুছে ফেলুন"
+                                {result.grade}
+                              </span>
+                            </td>
+                            <td className={styles.gpa}>{result.gpa}</td>
+                            <td className={styles.position}>
+                              <span
+                                className={
+                                  result.grade === "F"
+                                    ? styles.failedPosition
+                                    : styles.passedPosition
+                                }
                               >
-                                <FaTrash />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                                {positionDisplay}
+                              </span>
+                            </td>
+                            <td className={styles.status}>
+                              <span
+                                className={`${styles.statusBadge} ${result.status === "published" ? styles.published : styles.draft}`}
+                              >
+                                {result.status === "published"
+                                  ? "প্রকাশিত"
+                                  : "ড্রাফট"}
+                              </span>
+                            </td>
+                            <td className={styles.actions}>
+                              <div className={styles.actionButtons}>
+                                <button
+                                  className={styles.printBtn}
+                                  onClick={() => handlePrintPreview(result)}
+                                  title="প্রিন্ট প্রিভিউ"
+                                >
+                                  <FaPrint />
+                                </button>
+                                <button
+                                  className={styles.deleteBtn}
+                                  onClick={() => handleDelete(result)}
+                                  title="মুছে ফেলুন"
+                                >
+                                  <FaTrash />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -708,5 +721,4 @@ const ClassBasedResults: React.FC = () => {
     </>
   );
 };
-
 export default ClassBasedResults;

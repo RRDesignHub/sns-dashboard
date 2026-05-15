@@ -126,24 +126,43 @@ const CreateResult: React.FC = () => {
   // Calculate subject total and grade
   const calculateSubjectResult = (
     academicObtained: number,
-    behavioralObtained: number, // This will always be 0 now
     subject: SubjectWithMarks,
     globalBehavioralTotal: number,
-  ): GradeResult => {
-    let totalObtained;
+  ): {
+    obtainedTotal: number;
+    grade: string;
+    gpa: number;
+    isPassed: boolean;
+    percentage: number;
+  } => {
+    let obtainedTotal;
     if (subject.totalMarks === 100) {
-      totalObtained = Math.round(academicObtained + globalBehavioralTotal);
+      obtainedTotal = Math.round(academicObtained + globalBehavioralTotal);
     } else {
-      totalObtained = Math.round(academicObtained);
+      obtainedTotal = Math.round(academicObtained);
     }
 
-    const percentage = Math.round((totalObtained / subject.totalMarks) * 100);
-    const grade = calculateGrade(percentage);
+    const percentage = Math.round((obtainedTotal / subject.totalMarks) * 100);
+
+    // ✅ শুধু মোট মার্কের ৩৩% চেক করবে (আলাদা একাডেমিক/বিহেভিওরাল নয়)
+    const passMarks = Math.ceil((subject.totalMarks * 33) / 100);
+    const isPassed = obtainedTotal >= passMarks;
+
+    let grade = "F";
+    let gpa = 0.0;
+
+    if (isPassed) {
+      const gradeResult = calculateGrade(percentage);
+      grade = gradeResult.grade;
+      gpa = gradeResult.gpa;
+    }
+
     return {
-      ...grade,
-      obtained: totalObtained,
-      max: subject.totalMarks,
+      obtainedTotal,
       percentage,
+      grade,
+      gpa,
+      isPassed,
     };
   };
 
@@ -298,10 +317,12 @@ const CreateResult: React.FC = () => {
 
     let totalObtained = 0;
     let totalMax = 0;
-    let totalGPA = 0;
-    let subjectCount = 0;
+    let hasAnyFailed = false;
+    let totalGPAFromPassed = 0;
+    let passedSubjectCount = 0;
 
-    subjectMarks.forEach((mark) => {
+    // Process each subject
+    for (const mark of subjectMarks) {
       const subject = classSubjects.find((s) => s._id === mark.subjectId);
       if (subject) {
         let subjectTotal;
@@ -311,33 +332,51 @@ const CreateResult: React.FC = () => {
           subjectTotal = Math.round(mark.academicMarks);
         }
 
-        const percentage = Math.round(
-          (subjectTotal / subject.totalMarks) * 100,
-        );
-        const grade = calculateGrade(percentage);
+        const passMarks = Math.ceil((subject.totalMarks * 33) / 100);
+        const isPassed = subjectTotal >= passMarks;
 
         totalObtained += subjectTotal;
         totalMax += subject.totalMarks;
-        totalGPA += grade.gpa;
-        subjectCount++;
+
+        if (!isPassed) {
+          hasAnyFailed = true;
+        } else {
+          // ✅ শুধু পাস করা বিষয়ের GPA গণনা করবে
+          const percentage = Math.round(
+            (subjectTotal / subject.totalMarks) * 100,
+          );
+          const grade = calculateGrade(percentage);
+          totalGPAFromPassed += grade.gpa;
+          passedSubjectCount++;
+        }
       }
-    });
-
-    // ✅ Overall grade based on AVERAGE GPA
-    const averageGPA = subjectCount > 0 ? totalGPA / subjectCount : 0;
-
-    let finalGrade = "";
-    if (averageGPA >= 5.0) finalGrade = "A+";
-    else if (averageGPA >= 4.0) finalGrade = "A";
-    else if (averageGPA >= 3.5) finalGrade = "A-";
-    else if (averageGPA >= 3.0) finalGrade = "B";
-    else if (averageGPA >= 2.0) finalGrade = "C";
-    else if (averageGPA >= 1.0) finalGrade = "D";
-    else finalGrade = "F";
+    }
 
     const overallPercentage =
       totalMax > 0 ? Math.round((totalObtained / totalMax) * 100) : 0;
-    const grade = calculateGrade(overallPercentage);
+    const overallGrade = calculateGrade(overallPercentage);
+
+    // ✅ কোনো ফেল থাকলে সামগ্রিক ফলাফল ফেল
+    const isOverallPassed = !hasAnyFailed;
+
+    let finalGrade = "F";
+    let averageGPA = 0;
+
+    if (isOverallPassed) {
+      averageGPA =
+        passedSubjectCount > 0 ? totalGPAFromPassed / passedSubjectCount : 0;
+
+      if (averageGPA >= 5.0) finalGrade = "A+";
+      else if (averageGPA >= 4.0) finalGrade = "A";
+      else if (averageGPA >= 3.5) finalGrade = "A-";
+      else if (averageGPA >= 3.0) finalGrade = "B";
+      else if (averageGPA >= 2.0) finalGrade = "C";
+      else if (averageGPA >= 1.0) finalGrade = "D";
+      else finalGrade = "F";
+    } else {
+      averageGPA = 0;
+      finalGrade = "F";
+    }
 
     const behavioral = {
       attendance: { marks: attendanceMark },
@@ -351,10 +390,11 @@ const CreateResult: React.FC = () => {
       totalObtained,
       totalMax,
       percentage: overallPercentage,
-      grade,
+      overallGrade,
       averageGPA,
       finalGrade,
-      isPassed: finalGrade !== "F",
+      isPassed: isOverallPassed,
+      hasAnyFailed,
       behavioral,
     };
   };
@@ -855,7 +895,6 @@ const CreateResult: React.FC = () => {
                       const subjectResult = subjectMark
                         ? calculateSubjectResult(
                             subjectMark.academicMarks,
-                            0,
                             subject,
                             globalBehavioralTotal,
                           )
@@ -928,15 +967,12 @@ const CreateResult: React.FC = () => {
                     </div>
                     <div className={styles.summaryItem}>
                       <label>গড় জিপিএ</label>
-                      <span>
-                        {summary.averageGPA?.toFixed(2) ||
-                          summary.grade.gpa.toFixed(2)}
-                      </span>
+                      <span>{summary.averageGPA?.toFixed(2) || "0.00"}</span>
                     </div>
                     <div className={styles.summaryItem}>
                       <label>চূড়ান্ত গ্রেড</label>
                       <span className={styles.finalGrade}>
-                        {summary.finalGrade || summary.grade.grade}
+                        {summary.finalGrade || "F"}
                       </span>
                     </div>
                     <div className={styles.summaryItem}>

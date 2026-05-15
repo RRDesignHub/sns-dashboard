@@ -6,12 +6,14 @@ export interface ResultListItem {
   studentId: string;
   examName: string;
   examType: string;
+  position: number;
   totalObtained: number;
   totalMax: number;
   percentage: number;
   grade: string;
   gpa: number;
-  status: 'draft' | 'published';
+  status: "draft" | "published";
+  isFailed: boolean;
   createdAt: string;
 }
 
