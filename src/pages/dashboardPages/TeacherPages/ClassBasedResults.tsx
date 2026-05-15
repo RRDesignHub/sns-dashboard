@@ -283,7 +283,7 @@ const ClassBasedResults: React.FC = () => {
             <div class="header-text-content">
               <div class="school-name">শাহ নেয়ামত (রহ:) কেজি এন্ড হাই স্কুল</div>
               <div class="school-address">১নং বোর্ড বাজার, চরলক্ষ্যা, কর্ণফুলী, চট্টগ্রাম</div>
-              <div class="exam-info">${result.examSnapshot.name} পরীক্ষা : ${result.academicYear}</div>
+              <div class="exam-info">${result.examSnapshot.name} পরীক্ষার ফলাফল : ${result.academicYear}</div>
             </div>
           </div>
 
