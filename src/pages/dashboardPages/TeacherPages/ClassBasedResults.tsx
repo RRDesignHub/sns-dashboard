@@ -171,7 +171,7 @@ const ClassBasedResults: React.FC = () => {
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          opacity: 0.1; /* Low opacity for watermark */
+          opacity: 0.5; /* Low opacity for watermark */
           z-index: 0;
           pointer-events: none;
           width: 400px; /* Adjust size as needed */
@@ -331,7 +331,7 @@ const ClassBasedResults: React.FC = () => {
                   <th>#</th>
                   <th>বিষয়</th>
                   <th>লিখিত</th>
-                  <th>প্রাপ্ত</th>
+                  <th>মোট প্রাপ্ত</th>
                   <th>মোট</th>
                   <th>গ্রেড</th>
                   <th>জিপিএ</th>
