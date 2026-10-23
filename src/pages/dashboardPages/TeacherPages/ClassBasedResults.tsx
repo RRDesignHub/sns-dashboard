@@ -17,11 +17,17 @@ import Swal from "sweetalert2";
 import type {
   ResultListItem,
   ResultFilters,
+  AggregateResult,
 } from "../../../types/ClassBasedResult";
 import { getClassPrintHTML } from "./../../../components/DashboardComponents/ClassResultPDF";
 const ClassBasedResults: React.FC = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
+  const [viewMode, setViewMode] = useState<"regular" | "aggregate">("regular");
+  const [aggregateResults, setAggregateResults] = useState<AggregateResult[]>(
+    [],
+  );
+  const [isAggregateLoading, setIsAggregateLoading] = useState(false);
   // Filter states
   const [filters, setFilters] = useState<ResultFilters>({
     className: "",
@@ -55,6 +61,12 @@ const ClassBasedResults: React.FC = () => {
       }));
     } else {
       setFilters((prev) => ({ ...prev, [key]: value }));
+    }
+
+    // ✅ Reset to regular view when filters change
+    if (viewMode === "aggregate") {
+      setViewMode("regular");
+      setAggregateResults([]);
     }
   };
   // Available academic years (last 5 years including current)
@@ -442,6 +454,17 @@ const ClassBasedResults: React.FC = () => {
       Swal.fire("সতর্কতা!", "কোন ফলাফল নেই", "warning");
       return;
     }
+    if (viewMode === "aggregate") {
+      // ⏭️ Will implement in Step 3
+      Swal.fire("আসছে", "সামগ্রিক ফলাফলের PDF শীঘ্রই আসছে", "info");
+      return;
+    }
+
+    // Existing regular class-wide print
+    if (!results.length) {
+      Swal.fire("সতর্কতা!", "কোন ফলাফল নেই", "warning");
+      return;
+    }
 
     const printWindow = window.open("", "_blank");
     if (printWindow) {
@@ -457,6 +480,51 @@ const ClassBasedResults: React.FC = () => {
     }
   };
 
+  // ✅ Fetch aggregate results
+  const handleShowAggregate = async () => {
+    if (!filters.className || !filters.academicYear) {
+      Swal.fire("সতর্কতা!", "শ্রেণি এবং শিক্ষাবর্ষ নির্বাচন করুন", "warning");
+      return;
+    }
+
+    setIsAggregateLoading(true);
+    try {
+      const { data } = await axiosSecure.get("/api/result/aggregate/class", {
+        params: {
+          className: filters.className,
+          academicYear: filters.academicYear,
+        },
+      });
+
+      if (!data.data || data.data.length === 0) {
+        setAggregateResults([]);
+        setViewMode("aggregate");
+        Swal.fire(
+          "তথ্য নেই",
+          "এই ক্লাসের কোনো শিক্ষার্থীর সম্পূর্ণ ৪ সেমিস্টার রেজাল্ট নেই।",
+          "info",
+        );
+        return;
+      }
+
+      setAggregateResults(data.data);
+      setViewMode("aggregate");
+    } catch (error: any) {
+      Swal.fire(
+        "ত্রুটি!",
+        error.response?.data?.message || "সামগ্রিক ফলাফল আনতে ব্যর্থ",
+        "error",
+      );
+    } finally {
+      setIsAggregateLoading(false);
+    }
+  };
+
+  // ✅ Switch back to regular view
+  const handleShowRegular = () => {
+    setViewMode("regular");
+    refetch();
+  };
   return (
     <>
       <div className={styles.classBasedResults}>
@@ -547,33 +615,34 @@ const ClassBasedResults: React.FC = () => {
                   </select>
                 </div>
               )}
-
-              {/* Status Filter */}
-              <div className={styles.filterGroup}>
-                <label>স্ট্যাটাস</label>
-                <select
-                  value={filters.status}
-                  onChange={(e) => handleFilterChange("status", e.target.value)}
-                  className={styles.filterSelect}
-                >
-                  <option value="">-- সব স্ট্যাটাস --</option>
-                  <option value="published">প্রকাশিত</option>
-                  <option value="draft">ড্রাফট</option>
-                </select>
-              </div>
             </div>
 
             {/* Action Buttons */}
             <div className={styles.filterActions}>
               <button
                 className={styles.searchBtn}
-                onClick={() => refetch()}
+                onClick={handleShowRegular}
                 disabled={!filters.className || !filters.academicYear}
               >
                 <FaSearch /> ফলাফল দেখুন
               </button>
 
-              {results.length > 0 && (
+              {/* ✅ NEW: Final Evaluation Button */}
+              <button
+                className={styles.aggregateBtn}
+                onClick={handleShowAggregate}
+                disabled={
+                  !filters.className ||
+                  !filters.academicYear ||
+                  isAggregateLoading
+                }
+              >
+                <FaGraduationCap />
+                {isAggregateLoading ? "লোড হচ্ছে..." : "চূড়ান্ত মূল্যায়ন"}
+              </button>
+
+              {((viewMode === "regular" && results.length > 0) ||
+                (viewMode === "aggregate" && aggregateResults.length > 0)) && (
                 <button className={styles.exportBtn} onClick={handleExportPDF}>
                   <FaDownload /> PDF প্রিন্ট
                 </button>
@@ -585,135 +654,267 @@ const ClassBasedResults: React.FC = () => {
         {/* Results Section */}
         {filters.className && filters.academicYear && (
           <div className={styles.resultsSection}>
-            {/* Header with Class and Year */}
-            <div className={styles.resultsHeader}>
-              <h3>
-                শ্রেণি : {filters.className}
-                <span className={styles.resultCount}>
-                  {results.length} জন শিক্ষার্থী
-                </span>
-              </h3>
-              {results.length > 0 && (
-                <p className={styles.examInfo}>
-                  {results[0]?.examName} পরীক্ষা: {filters.academicYear}
-                </p>
-              )}
-            </div>
-
-            {isLoading ? (
-              <div className={styles.loading}>লোড হচ্ছে...</div>
-            ) : results.length === 0 ? (
-              <div className={styles.emptyState}>
-                <FaGraduationCap />
-                <p>কোন ফলাফল পাওয়া যায়নি</p>
-                <p className={styles.emptyHint}>
-                  {!filters.className
-                    ? "দয়া করে একটি ক্লাস নির্বাচন করুন"
-                    : "এই ক্লাসের জন্য এখনো কোন ফলাফল তৈরি করা হয়নি"}
-                </p>
-              </div>
-            ) : (
-              <div className={styles.tableContainer}>
-                <div className={styles.tableWrapper}>
-                  <table className={styles.resultTable}>
-                    <thead>
-                      <tr>
-                        <th>#</th>
-                        <th>শিক্ষার্থীর নাম</th>
-                        <th>রোল</th>
-                        <th>প্রাপ্ত নম্বর</th>
-                        <th>শতকরা</th>
-                        <th>গ্রেড</th>
-                        <th>জিপিএ</th>
-                        <th>অবস্থান</th>
-                        <th>স্ট্যাটাস</th>
-                        <th>অ্যাকশন</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {results.map((result: ResultListItem, idx: number) => {
-                        // Determine position display
-                        let positionDisplay = "";
-                        if (result.isFailed || result.grade === "F") {
-                          positionDisplay = "ফেল";
-                        } else if (result.position === 1) {
-                          positionDisplay = "🥇 ১ম";
-                        } else if (result.position === 2) {
-                          positionDisplay = "🥈 ২য়";
-                        } else if (result.position === 3) {
-                          positionDisplay = "🥉 ৩য়";
-                        } else {
-                          positionDisplay = `${result.position} তম`;
-                        }
-
-                        return (
-                          <tr key={result._id} className={styles.resultRow}>
-                            <td className={styles.slNo}>{idx + 1}</td>
-                            <td className={styles.studentName}>
-                              {result.studentName}
-                            </td>
-                            <td className={styles.roll}>
-                              {result.studentRoll}
-                            </td>
-                            <td className={styles.marks}>
-                              {result.totalObtained}/{result.totalMax}
-                            </td>
-                            <td className={styles.percentage}>
-                              {result.percentage}%
-                            </td>
-                            <td className={styles.grade}>
-                              <span
-                                className={`${styles.gradeBadge} ${result.grade === "F" ? styles.fail : styles.pass}`}
-                              >
-                                {result.grade}
-                              </span>
-                            </td>
-                            <td className={styles.gpa}>{result.gpa}</td>
-                            <td className={styles.position}>
-                              <span
-                                className={
-                                  result.grade === "F"
-                                    ? styles.failedPosition
-                                    : styles.passedPosition
-                                }
-                              >
-                                {positionDisplay}
-                              </span>
-                            </td>
-                            <td className={styles.status}>
-                              <span
-                                className={`${styles.statusBadge} ${result.status === "published" ? styles.published : styles.draft}`}
-                              >
-                                {result.status === "published"
-                                  ? "প্রকাশিত"
-                                  : "ড্রাফট"}
-                              </span>
-                            </td>
-                            <td className={styles.actions}>
-                              <div className={styles.actionButtons}>
-                                <button
-                                  className={styles.printBtn}
-                                  onClick={() => handlePrintPreview(result)}
-                                  title="প্রিন্ট প্রিভিউ"
-                                >
-                                  <FaPrint />
-                                </button>
-                                <button
-                                  className={styles.deleteBtn}
-                                  onClick={() => handleDelete(result)}
-                                  title="মুছে ফেলুন"
-                                >
-                                  <FaTrash />
-                                </button>
-                              </div>
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
+            {viewMode === "aggregate" ? (
+              // ============ AGGREGATE VIEW ============
+              <>
+                <div className={styles.resultsHeader}>
+                  <h3>
+                    চূড়ান্ত মূল্যায়ন (৪ সেমিস্টারের গড়) - শ্রেণি:{" "}
+                    {filters.className}
+                    <span className={styles.resultCount}>
+                      {aggregateResults.length} জন শিক্ষার্থী
+                    </span>
+                  </h3>
+                  <p className={styles.examInfo}>
+                    {filters.academicYear} শিক্ষাবর্ষ
+                  </p>
                 </div>
-              </div>
+
+                {isAggregateLoading ? (
+                  <div className={styles.loading}>লোড হচ্ছে...</div>
+                ) : aggregateResults.length === 0 ? (
+                  <div className={styles.emptyState}>
+                    <FaGraduationCap />
+                    <p>কোন সামগ্রিক ফলাফল পাওয়া যায়নি</p>
+                    <p className={styles.emptyHint}>
+                      কমপক্ষে ৪টি সেমিস্টার রেজাল্ট থাকতে হবে
+                    </p>
+                  </div>
+                ) : (
+                  <div className={styles.tableContainer}>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.resultTable}>
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>শিক্ষার্থীর নাম</th>
+                            <th>রোল</th>
+                            <th>সেমিস্টার</th>
+                            <th>মোট প্রাপ্ত (গড়)</th>
+                            <th>শতকরা</th>
+                            <th>গ্রেড</th>
+                            <th>জিপিএ</th>
+                            <th>অবস্থান</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {aggregateResults.map((agg, idx) => {
+                            let positionDisplay = "";
+                            if (agg.summary.finalGrade === "F") {
+                              positionDisplay = "ফেল";
+                            } else if (agg.position === 1) {
+                              positionDisplay = "🥇 ১ম";
+                            } else if (agg.position === 2) {
+                              positionDisplay = "🥈 ২য়";
+                            } else if (agg.position === 3) {
+                              positionDisplay = "🥉 ৩য়";
+                            } else {
+                              positionDisplay = `${agg.position} তম`;
+                            }
+
+                            return (
+                              <tr
+                                key={agg.studentId}
+                                className={styles.resultRow}
+                              >
+                                <td className={styles.slNo}>{idx + 1}</td>
+                                <td className={styles.studentName}>
+                                  {agg.studentSnapshot.studentName}
+                                </td>
+                                <td className={styles.roll}>
+                                  {agg.studentSnapshot.classRoll}
+                                </td>
+                                <td className={styles.semesterCell}>
+                                  {agg.semesterCount} টি
+                                </td>
+                                <td className={styles.marks}>
+                                  {agg.summary.totalObtained}/
+                                  {agg.summary.totalMax}
+                                </td>
+                                <td className={styles.percentage}>
+                                  {agg.summary.overallPercentage}%
+                                </td>
+                                <td className={styles.grade}>
+                                  <span
+                                    className={`${styles.gradeBadge} ${
+                                      agg.summary.finalGrade === "F"
+                                        ? styles.fail
+                                        : styles.pass
+                                    }`}
+                                  >
+                                    {agg.summary.finalGrade}
+                                  </span>
+                                </td>
+                                <td className={styles.gpa}>
+                                  {agg.summary.averageGPA}
+                                </td>
+                                <td className={styles.position}>
+                                  <span
+                                    className={
+                                      agg.summary.finalGrade === "F"
+                                        ? styles.failedPosition
+                                        : styles.passedPosition
+                                    }
+                                  >
+                                    {positionDisplay}
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </>
+            ) : (
+              // ============ REGULAR VIEW (existing) ============
+              <>
+                <div className={styles.resultsHeader}>
+                  <h3>
+                    শ্রেণি : {filters.className}
+                    <span className={styles.resultCount}>
+                      {results.length} জন শিক্ষার্থী
+                    </span>
+                  </h3>
+                  {results.length > 0 && (
+                    <p className={styles.examInfo}>
+                      {results[0]?.examName} পরীক্ষা: {filters.academicYear}
+                    </p>
+                  )}
+                </div>
+
+                {isLoading ? (
+                  <div className={styles.loading}>লোড হচ্ছে...</div>
+                ) : results.length === 0 ? (
+                  <div className={styles.emptyState}>
+                    <FaGraduationCap />
+                    <p>কোন ফলাফল পাওয়া যায়নি</p>
+                    <p className={styles.emptyHint}>
+                      {!filters.className
+                        ? "দয়া করে একটি ক্লাস নির্বাচন করুন"
+                        : "এই ক্লাসের জন্য এখনো কোন ফলাফল তৈরি করা হয়নি"}
+                    </p>
+                  </div>
+                ) : (
+                  <div className={styles.tableContainer}>
+                    <div className={styles.tableWrapper}>
+                      <table className={styles.resultTable}>
+                        <thead>
+                          <tr>
+                            <th>#</th>
+                            <th>শিক্ষার্থীর নাম</th>
+                            <th>রোল</th>
+                            <th>প্রাপ্ত নম্বর</th>
+                            <th>শতকরা</th>
+                            <th>গ্রেড</th>
+                            <th>জিপিএ</th>
+                            <th>অবস্থান</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {results.map(
+                            (result: ResultListItem, idx: number) => {
+                              let positionDisplay = "";
+                              if (result.isFailed || result.grade === "F") {
+                                positionDisplay = "ফেল";
+                              } else if (result.position === 1) {
+                                positionDisplay = "🥇 ১ম";
+                              } else if (result.position === 2) {
+                                positionDisplay = "🥈 ২য়";
+                              } else if (result.position === 3) {
+                                positionDisplay = "🥉 ৩য়";
+                              } else {
+                                positionDisplay = `${result.position} তম`;
+                              }
+
+                              return (
+                                <tr
+                                  key={result._id}
+                                  className={styles.resultRow}
+                                >
+                                  <td className={styles.slNo}>{idx + 1}</td>
+                                  <td className={styles.studentName}>
+                                    {result.studentName}
+                                  </td>
+                                  <td className={styles.roll}>
+                                    {result.studentRoll}
+                                  </td>
+                                  <td className={styles.marks}>
+                                    {result.totalObtained}/{result.totalMax}
+                                  </td>
+                                  <td className={styles.percentage}>
+                                    {result.percentage}%
+                                  </td>
+                                  <td className={styles.grade}>
+                                    <span
+                                      className={`${styles.gradeBadge} ${
+                                        result.grade === "F"
+                                          ? styles.fail
+                                          : styles.pass
+                                      }`}
+                                    >
+                                      {result.grade}
+                                    </span>
+                                  </td>
+                                  <td className={styles.gpa}>{result.gpa}</td>
+                                  <td className={styles.position}>
+                                    <span
+                                      className={
+                                        result.grade === "F"
+                                          ? styles.failedPosition
+                                          : styles.passedPosition
+                                      }
+                                    >
+                                      {positionDisplay}
+                                    </span>
+                                  </td>
+                                  <td className={styles.status}>
+                                    <span
+                                      className={`${styles.statusBadge} ${
+                                        result.status === "published"
+                                          ? styles.published
+                                          : styles.draft
+                                      }`}
+                                    >
+                                      {result.status === "published"
+                                        ? "প্রকাশিত"
+                                        : "ড্রাফট"}
+                                    </span>
+                                  </td>
+                                  <td className={styles.actions}>
+                                    <div className={styles.actionButtons}>
+                                      <button
+                                        className={styles.printBtn}
+                                        onClick={() =>
+                                          handlePrintPreview(result)
+                                        }
+                                        title="প্রিন্ট প্রিভিউ"
+                                      >
+                                        <FaPrint />
+                                      </button>
+                                      <button
+                                        className={styles.deleteBtn}
+                                        onClick={() => handleDelete(result)}
+                                        title="মুছে ফেলুন"
+                                      >
+                                        <FaTrash />
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            },
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
