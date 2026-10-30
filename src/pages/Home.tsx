@@ -5,7 +5,11 @@ const Home: React.FC = () => {
     <div className="home">
       <div className="home-container">
         <Link to="/dashboard/overview" className="dashboard-button">
-          Go to Dashboard
+          ড্যাশবোর্ডে যান
+        </Link>
+
+        <Link to="/result" className="dashboard-button">
+          ফলাফল দেখুন
         </Link>
       </div>
     </div>

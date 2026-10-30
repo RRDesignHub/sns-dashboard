@@ -1,0 +1,1210 @@
+@import "../variables";
+@import "../mixin";
+
+/* ============ PAGE WRAPPER ============ */
+.resultPage {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: $spacing-3;
+  position: relative;
+
+  @include respond-to("md") {
+    padding: $spacing-4;
+  }
+
+  @include respond-to("lg") {
+    padding: $spacing-4;
+  }
+}
+
+/* ============ HERO ============ */
+.hero {
+  text-align: center;
+  padding: $spacing-6 0 $spacing-8;
+  position: relative;
+
+  @include respond-to("md") {
+    padding: $spacing-8 0 $spacing-10;
+  }
+}
+
+.heroBadge {
+  @include flex-center;
+  width: 72px;
+  height: 72px;
+  margin: 0 auto $spacing-4;
+  border-radius: $radius-full;
+  background: linear-gradient(
+    135deg,
+    $color-primary-600 0%,
+    $color-primary-800 100%
+  );
+  color: $color-white;
+  box-shadow:
+    0 0 0 4px rgba($color-warning, 0.25),
+    0 8px 24px rgba($color-primary-800, 0.35);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px dashed rgba($color-warning, 0.5);
+    opacity: 0.6;
+  }
+
+  svg {
+    font-size: $font-2xl;
+    filter: drop-shadow(0 2px 4px rgba($color-black, 0.3));
+  }
+
+  @include respond-to("md") {
+    width: 88px;
+    height: 88px;
+
+    svg {
+      font-size: $font-3xl;
+    }
+  }
+}
+
+.heroTitle {
+  font-size: $font-2xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary-900;
+  margin: 0 0 $spacing-2;
+  letter-spacing: -0.02em;
+  background: linear-gradient(
+    135deg,
+    $color-primary-900 0%,
+    $color-primary-700 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  @include respond-to("md") {
+    font-size: $font-3xl;
+  }
+}
+
+.heroSubtitle {
+  font-size: $font-sm;
+  color: $color-gray-600;
+  max-width: 560px;
+  margin: 0 auto;
+  line-height: 1.6;
+
+  @include respond-to("md") {
+    font-size: $font-base;
+  }
+}
+
+.heroDecor {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    $color-warning 50%,
+    transparent 100%
+  );
+}
+
+/* ============ SEARCH CARD ============ */
+.searchSection {
+  margin-bottom: $spacing-8;
+}
+
+.searchCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  box-shadow:
+    0 10px 30px -5px rgba($color-primary-900, 0.15),
+    0 4px 12px -2px rgba($color-black, 0.05),
+    inset 0 1px 0 rgba($color-white, 0.9);
+  border: 1px solid rgba($color-primary-200, 0.5);
+  position: relative;
+  overflow: hidden;
+
+  /* Subtle corner accent */
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba($color-teal-500, 0.08) 0%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  @include respond-to("md") {
+    padding: $spacing-6;
+  }
+
+  @include respond-to("lg") {
+    padding: $spacing-8;
+  }
+}
+
+.searchCardHeader {
+  @include flex(row, flex-start, center, $spacing-3);
+  margin-bottom: $spacing-5;
+  padding-bottom: $spacing-4;
+  border-bottom: 2px solid $color-primary-100;
+  position: relative;
+  z-index: 1;
+
+  h2 {
+    font-size: $font-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-primary-900;
+    margin: 0;
+
+    @include respond-to("md") {
+      font-size: $font-xl;
+    }
+  }
+}
+
+.searchCardIcon {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: linear-gradient(
+    135deg,
+    $color-primary-600 0%,
+    $color-teal-500 100%
+  );
+  color: $color-white;
+  box-shadow: 0 4px 12px rgba($color-primary-600, 0.3);
+
+  svg {
+    font-size: $font-md;
+  }
+}
+
+.searchGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+  margin-bottom: $spacing-5;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("lg") {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Fields */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    letter-spacing: 0.01em;
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: $spacing-3;
+    border: 1.5px solid $color-gray-200;
+    border-radius: $radius-md;
+    font-size: $font-sm;
+    color: $color-gray-800;
+    background: $color-gray-50;
+    transition: all $transition-base;
+    appearance: none;
+    -webkit-appearance: none;
+    font-family: inherit;
+
+    &::placeholder {
+      color: $color-gray-400;
+    }
+
+    &:hover {
+      border-color: $color-primary-300;
+      background: $color-white;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-primary-500;
+      background: $color-white;
+      box-shadow: 0 0 0 3px rgba($color-primary-500, 0.15);
+    }
+  }
+}
+
+.required {
+  color: $color-error;
+  font-weight: $font-weight-bold;
+}
+
+.selectWrap {
+  position: relative;
+
+  select {
+    padding-right: $spacing-8;
+    cursor: pointer;
+  }
+}
+
+.selectArrow {
+  position: absolute;
+  right: $spacing-3;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $color-gray-500;
+  font-size: $font-xs;
+  pointer-events: none;
+}
+
+/* Actions */
+.searchActions {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to("sm") {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.searchBtn {
+  @include button-base;
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-6;
+  background: linear-gradient(
+    135deg,
+    $color-primary-700 0%,
+    $color-primary-600 50%,
+    $color-primary-800 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: $color-white;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-md;
+  box-shadow:
+    0 4px 14px rgba($color-primary-700, 0.35),
+    inset 0 1px 0 rgba($color-white, 0.2);
+  transition: all $transition-base;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($color-warning, 0.35),
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  &:hover:not(:disabled) {
+    background-position: 100% 50%;
+    transform: translateY(-2px);
+    box-shadow:
+      0 6px 20px rgba($color-primary-700, 0.45),
+      inset 0 1px 0 rgba($color-white, 0.2);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+
+  svg {
+    font-size: $font-md;
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.resetBtn {
+  @include button-base;
+  padding: $spacing-3 $spacing-5;
+  background: $color-white;
+  color: $color-primary-700;
+  border: 1.5px solid $color-primary-300;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $color-primary-50;
+    border-color: $color-primary-500;
+  }
+}
+
+/* ============ RESULT SECTION ============ */
+.resultSection {
+  margin-top: $spacing-8;
+  animation: fadeUp 0.5s ease-out;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.resultCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  overflow: hidden;
+  box-shadow:
+    0 20px 40px -10px rgba($color-primary-900, 0.2),
+    0 8px 20px -5px rgba($color-black, 0.08);
+  border: 1px solid rgba($color-primary-200, 0.4);
+}
+
+/* Ribbon */
+.resultRibbon {
+  @include flex-between;
+  padding: $spacing-4 $spacing-5;
+  background: linear-gradient(
+    135deg,
+    $color-primary-800 0%,
+    $color-primary-700 50%,
+    $color-primary-900 100%
+  );
+  color: $color-white;
+  position: relative;
+  overflow: hidden;
+  flex-wrap: wrap;
+  gap: $spacing-3;
+
+  /* Decorative dot pattern */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      rgba($color-white, 0.08) 1px,
+      transparent 1px
+    );
+    background-size: 16px 16px;
+    pointer-events: none;
+  }
+
+  /* Gold accent right side */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 200px;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba($color-warning, 0.15)
+    );
+    pointer-events: none;
+  }
+
+  @include respond-to("md") {
+    padding: $spacing-5 $spacing-6;
+  }
+}
+
+.ribbonLeft {
+  @include flex(row, flex-start, center, $spacing-3);
+  position: relative;
+  z-index: 1;
+
+  h2 {
+    font-size: $font-md;
+    font-weight: $font-weight-bold;
+    margin: 0;
+    line-height: 1.2;
+
+    @include respond-to("md") {
+      font-size: $font-xl;
+    }
+  }
+
+  p {
+    font-size: $font-xs;
+    margin: 2px 0 0;
+    color: rgba($color-white, 0.85);
+
+    @include respond-to("md") {
+      font-size: $font-sm;
+    }
+  }
+}
+
+.avatarBadge {
+  @include flex-center;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  background: rgba($color-white, 0.15);
+  border: 1.5px solid rgba($color-warning, 0.5);
+  backdrop-filter: blur(4px);
+  flex-shrink: 0;
+
+  svg {
+    font-size: $font-lg;
+    color: $color-warning;
+  }
+
+  @include respond-to("md") {
+    width: 52px;
+    height: 52px;
+
+    svg {
+      font-size: $font-xl;
+    }
+  }
+}
+
+.printBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-2 $spacing-4;
+  background: $color-white;
+  color: $color-primary-800;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-base;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba($color-black, 0.15);
+
+  &:hover {
+    background: $color-warning;
+    color: $color-primary-950;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba($color-warning, 0.4);
+  }
+
+  span {
+    display: none;
+
+    @include respond-to("sm") {
+      display: inline;
+    }
+  }
+}
+
+/* Info Strip */
+.infoStrip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: $color-primary-100;
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.infoCell {
+  padding: $spacing-3;
+  background: $color-white;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+
+  @include respond-to("md") {
+    padding: $spacing-4 $spacing-3;
+  }
+
+  span {
+    font-size: 10px;
+    color: $color-gray-500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: $font-weight-medium;
+
+    @include respond-to("md") {
+      font-size: $font-xs;
+    }
+  }
+
+  strong {
+    font-size: $font-sm;
+    color: $color-gray-900;
+    font-weight: $font-weight-semibold;
+
+    @include respond-to("md") {
+      font-size: $font-md;
+    }
+  }
+}
+
+/* Table Block */
+.tableBlock {
+  padding: $spacing-4;
+
+  @include respond-to("md") {
+    padding: $spacing-5 $spacing-6;
+  }
+}
+
+.tableBlockHeader {
+  @include flex(row, flex-start, center, $spacing-2);
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-3;
+  border-bottom: 1px solid $color-gray-200;
+
+  svg {
+    color: $color-primary-600;
+    font-size: $font-md;
+  }
+
+  h3 {
+    font-size: $font-md;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-800;
+    margin: 0;
+
+    @include respond-to("md") {
+      font-size: $font-lg;
+    }
+  }
+}
+
+.tableScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: $radius-md;
+  border: 1px solid $color-gray-200;
+}
+
+.subjectTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: $font-sm;
+  min-width: 500px;
+
+  thead {
+    background: linear-gradient(
+      135deg,
+      $color-primary-50 0%,
+      $color-primary-100 100%
+    );
+
+    th {
+      padding: $spacing-3;
+      text-align: left;
+      font-size: $font-xs;
+      font-weight: $font-weight-semibold;
+      color: $color-primary-800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+
+      &:first-child,
+      &:nth-child(3),
+      &:nth-child(4),
+      &:nth-child(5),
+      &:nth-child(6) {
+        text-align: center;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-top: 1px solid $color-gray-100;
+      transition: background $transition-base;
+
+      &:hover {
+        background: $color-primary-50;
+      }
+
+      &:nth-child(even) {
+        background: rgba($color-gray-50, 0.6);
+      }
+    }
+
+    td {
+      padding: $spacing-3;
+      color: $color-gray-700;
+    }
+  }
+}
+
+.slNo {
+  text-align: center;
+  font-weight: $font-weight-semibold;
+  color: $color-gray-500;
+  width: 50px;
+}
+
+.subjectName {
+  font-weight: $font-weight-medium;
+  color: $color-gray-900;
+}
+
+.marks {
+  text-align: center;
+  font-weight: $font-weight-medium;
+}
+
+.gradeChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px $spacing-3;
+  border-radius: $radius-full;
+  font-size: $font-xs;
+  font-weight: $font-weight-bold;
+  min-width: 44px;
+}
+
+.gradePass {
+  background: rgba($color-primary-500, 0.12);
+  color: $color-primary-700;
+  border: 1px solid rgba($color-primary-500, 0.3);
+}
+
+.gradeFail {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  border: 1px solid rgba($color-error, 0.3);
+}
+
+.gpa {
+  text-align: center;
+  font-weight: $font-weight-semibold;
+  color: $color-primary-700;
+}
+/* ============ SUMMARY STRIP (Enhanced) ============ */
+.summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-3;
+  padding: $spacing-4;
+  background: linear-gradient(
+    135deg,
+    $color-primary-50 0%,
+    #fefce8 50%,
+    $color-primary-50 100%
+  );
+  border-top: 2px solid $color-primary-200;
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(5, 1fr);
+    padding: $spacing-5;
+    gap: $spacing-4;
+  }
+}
+
+/* Base card */
+.summaryBox {
+  position: relative;
+  padding: $spacing-3 $spacing-4;
+  border-radius: $radius-lg;
+  background: $color-white;
+  box-shadow:
+    0 2px 8px rgba($color-black, 0.06),
+    0 1px 2px rgba($color-black, 0.04);
+  overflow: hidden;
+  transition: all $transition-base;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  border: 1px solid rgba($color-primary-200, 0.5);
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 8px 20px rgba($color-primary-800, 0.15),
+      0 4px 8px rgba($color-black, 0.06);
+  }
+
+  @include respond-to("md") {
+    padding: $spacing-4;
+  }
+}
+
+/* Icon (top-left small badge) */
+.summaryIcon {
+  @include flex-center;
+  width: 32px;
+  height: 32px;
+  border-radius: $radius-md;
+  color: $color-white;
+  font-size: $font-sm;
+  box-shadow: 0 3px 8px rgba($color-black, 0.15);
+  flex-shrink: 0;
+
+  @include respond-to("md") {
+    width: 36px;
+    height: 36px;
+    font-size: $font-md;
+  }
+}
+
+/* Content */
+.summaryContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: $font-weight-medium;
+    color: $color-gray-500;
+    line-height: 1.2;
+
+    @include respond-to("md") {
+      font-size: $font-xs;
+    }
+  }
+
+  strong {
+    font-size: $font-lg;
+    font-weight: $font-weight-bold;
+    color: $color-gray-900;
+    line-height: 1.1;
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+
+    @include respond-to("md") {
+      font-size: $font-xl;
+    }
+
+    small {
+      font-size: $font-sm;
+      font-weight: $font-weight-medium;
+      color: $color-gray-500;
+      opacity: 0.7;
+
+      @include respond-to("md") {
+        font-size: $font-base;
+      }
+    }
+  }
+}
+
+/* Right-edge decorative accent bar */
+.summaryAccent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  border-radius: 0 $radius-lg $radius-lg 0;
+  opacity: 0.9;
+}
+
+/* ============ INDIVIDUAL CARD THEMES ============ */
+
+/* 1. Total Marks — Deep Emerald */
+.boxMarks {
+  background: linear-gradient(
+    135deg,
+    $color-white 0%,
+    $color-primary-50 100%
+  );
+
+  .summaryIcon {
+    background: linear-gradient(
+      135deg,
+      $color-primary-700,
+      $color-primary-900
+    );
+  }
+
+  .summaryAccent {
+    background: linear-gradient(
+      180deg,
+      $color-primary-600,
+      $color-primary-800
+    );
+  }
+
+  strong {
+    color: $color-primary-900;
+  }
+}
+
+/* 2. Percentage — Teal (cool contrast) */
+.boxPercent {
+  background: linear-gradient(
+    135deg,
+    $color-white 0%,
+    rgba($color-teal-500, 0.06) 100%
+  );
+
+  .summaryIcon {
+    background: linear-gradient(
+      135deg,
+      $color-teal-500,
+      darken($color-teal-500, 15%)
+    );
+  }
+
+  .summaryAccent {
+    background: linear-gradient(
+      180deg,
+      $color-teal-500,
+      darken($color-teal-500, 20%)
+    );
+  }
+
+  strong {
+    color: darken($color-teal-500, 25%);
+  }
+}
+
+/* 3. Grade — Gold (prestige) */
+.boxGrade {
+  background: linear-gradient(
+    135deg,
+    $color-white 0%,
+    rgba($color-warning, 0.08) 100%
+  );
+
+  .summaryIcon {
+    background: linear-gradient(
+      135deg,
+      $color-warning,
+      darken($color-warning, 12%)
+    );
+  }
+
+  .summaryAccent {
+    background: linear-gradient(
+      180deg,
+      $color-warning,
+      darken($color-warning, 15%)
+    );
+  }
+
+  strong {
+    color: darken($color-warning, 25%);
+    font-size: $font-xl;
+
+    @include respond-to("md") {
+      font-size: $font-2xl;
+    }
+  }
+}
+
+/* 4. GPA — Deep Emerald → Teal (blend) */
+.boxGpa {
+  background: linear-gradient(
+    135deg,
+    $color-white 0%,
+    $color-primary-50 60%,
+    rgba($color-teal-500, 0.08) 100%
+  );
+
+  .summaryIcon {
+    background: linear-gradient(
+      135deg,
+      $color-primary-600,
+      $color-teal-500
+    );
+  }
+
+  .summaryAccent {
+    background: linear-gradient(
+      180deg,
+      $color-primary-600,
+      $color-teal-500
+    );
+  }
+
+  strong {
+    color: $color-primary-800;
+  }
+}
+
+/* 5. Status — Special treatment */
+.summaryStatus {
+  .summaryIcon {
+    box-shadow:
+      0 3px 8px rgba($color-black, 0.2),
+      0 0 0 3px rgba($color-white, 0.3);
+  }
+
+  .summaryContent span {
+    color: rgba($color-white, 0.85);
+  }
+
+  .summaryContent strong {
+    color: $color-white;
+    font-size: $font-xl;
+
+    @include respond-to("md") {
+      font-size: $font-2xl;
+    }
+  }
+
+  .summaryAccent {
+    background: rgba($color-white, 0.3);
+  }
+
+  &.pass {
+    background: linear-gradient(
+      135deg,
+      $color-primary-600 0%,
+      $color-primary-800 60%,
+      $color-teal-500 100%
+    );
+    border-color: $color-primary-500;
+    box-shadow:
+      0 4px 14px rgba($color-primary-700, 0.35),
+      inset 0 1px 0 rgba($color-white, 0.2);
+
+    .summaryIcon {
+      background: rgba($color-white, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    &:hover {
+      box-shadow:
+        0 10px 24px rgba($color-primary-700, 0.45),
+        inset 0 1px 0 rgba($color-white, 0.2);
+    }
+  }
+
+  &.fail {
+    background: linear-gradient(
+      135deg,
+      $color-error 0%,
+      darken($color-error, 15%) 100%
+    );
+    border-color: darken($color-error, 10%);
+    box-shadow:
+      0 4px 14px rgba($color-error, 0.35),
+      inset 0 1px 0 rgba($color-white, 0.2);
+
+    .summaryIcon {
+      background: rgba($color-white, 0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    &:hover {
+      box-shadow:
+        0 10px 24px rgba($color-error, 0.45),
+        inset 0 1px 0 rgba($color-white, 0.2);
+    }
+  }
+}
+
+/* ============ DARK THEME ============ */
+[data-theme="dark"] {
+  .summaryStrip {
+    background: linear-gradient(
+      135deg,
+      $color-gray-800 0%,
+      $color-gray-900 100%
+    );
+    border-top-color: $color-gray-700;
+  }
+
+  .summaryBox {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+
+    .summaryContent span {
+      color: $color-gray-400;
+    }
+
+    .summaryContent strong {
+      color: $color-gray-100;
+    }
+  }
+
+  .boxMarks,
+  .boxPercent,
+  .boxGrade,
+  .boxGpa {
+    background: linear-gradient(
+      135deg,
+      $color-gray-800 0%,
+      $color-gray-700 100%
+    );
+  }
+
+  .summaryStatus {
+    &.pass {
+      .summaryContent strong,
+      .summaryContent span {
+        color: $color-white;
+      }
+    }
+
+    &.fail {
+      .summaryContent strong,
+      .summaryContent span {
+        color: $color-white;
+      }
+    }
+  }
+}
+
+/* ============ DARK THEME ============ */
+[data-theme="dark"] {
+  .heroTitle {
+    background: linear-gradient(
+      135deg,
+      $color-primary-300 0%,
+      $color-primary-400 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .heroSubtitle {
+    color: $color-gray-300;
+  }
+
+  .searchCard,
+  .resultCard {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+  }
+
+  .searchCardHeader {
+    border-color: $color-gray-700;
+
+    h2 {
+      color: $color-gray-100;
+    }
+  }
+
+  .fieldGroup label {
+    color: $color-gray-300;
+  }
+
+  .fieldGroup input,
+  .fieldGroup select {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-100;
+
+    &::placeholder {
+      color: $color-gray-500;
+    }
+
+    &:hover {
+      background: $color-gray-600;
+    }
+
+    &:focus {
+      background: $color-gray-600;
+    }
+  }
+
+  .infoStrip {
+    background: $color-gray-700;
+  }
+
+  .infoCell {
+    background: $color-gray-800;
+
+    span {
+      color: $color-gray-400;
+    }
+
+    strong {
+      color: $color-gray-100;
+    }
+  }
+
+  .tableBlockHeader h3 {
+    color: $color-gray-100;
+  }
+
+  .subjectTable thead {
+    background: $color-gray-700;
+
+    th {
+      color: $color-primary-300;
+    }
+  }
+
+  .subjectTable tbody tr {
+    border-color: $color-gray-700;
+
+    &:nth-child(even) {
+      background: rgba($color-gray-700, 0.5);
+    }
+
+    &:hover {
+      background: $color-gray-700;
+    }
+  }
+
+  .subjectTable tbody td {
+    color: $color-gray-300;
+  }
+
+  .subjectName {
+    color: $color-gray-100;
+  }
+}

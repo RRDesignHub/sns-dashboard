@@ -21,7 +21,7 @@ import {
   Line,
 } from "recharts";
 import styles from "./../../../styles/components/Overview.module.scss";
-import { MdAttachMoney, MdBarChart, MdCalendarMonth } from "react-icons/md";
+import { MdBarChart, MdCalendarMonth } from "react-icons/md";
 import { FiTrendingUp } from "react-icons/fi";
 import { BiBell, BiBookOpen } from "react-icons/bi";
 

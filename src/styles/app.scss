@@ -35,9 +35,9 @@ li{
 }
 
 .home-container {
-  @include flex(column, center, center, 0);
+  @include flex(row, center, center, $spacing-4);
   width: 100%;
-  max-width: 400px;
+  max-width: 800px;
 }
 
 .dashboard-button {

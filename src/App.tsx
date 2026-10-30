@@ -57,6 +57,10 @@ const ManageExams = lazy(
 const ClassBasedResult = lazy(
   () => import("./pages/dashboardPages/TeacherPages/ClassBasedResults"),
 );
+
+// client pages reff
+const ClientLayout = lazy(() => import("./layouts/ClientLayout"));
+const ClientResultView = lazy(() => import("./pages/ClientResultPage"));
 function App() {
   useEffect(() => {
     // Remove preload class after mount
@@ -78,6 +82,12 @@ function App() {
 
                 {/* login page */}
                 <Route path="/login" element={<Login />} />
+                {/* ✅ Public Client Result Route (no login required) */}
+                <Route element={<ClientLayout />}>
+                  <Route path="/result" element={<ClientResultView />} />
+                </Route>
+
+                {/* dashboard all routes */}
                 <Route
                   path="/dashboard"
                   element={
