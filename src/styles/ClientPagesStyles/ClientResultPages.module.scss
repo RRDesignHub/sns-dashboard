@@ -701,11 +701,15 @@
   text-align: center;
   font-weight: $font-weight-medium;
 }
+.gpaParent{
+  text-align: center;
+}
 
 .gradeChip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   padding: 4px $spacing-3;
   border-radius: $radius-full;
   font-size: $font-xs;
@@ -876,12 +880,12 @@
   }
 
   .summaryAccent {
-    background: linear-gradient(
-      180deg,
-      $color-primary-600,
-      $color-primary-800
-    );
-  }
+  background: linear-gradient(
+    180deg,
+    $color-warning,
+    darken($color-warning, 15%)
+  );
+}
 
   strong {
     color: $color-primary-900;
@@ -934,15 +938,15 @@
   }
 
   .summaryAccent {
-    background: linear-gradient(
-      180deg,
-      $color-warning,
-      darken($color-warning, 15%)
-    );
+  background: linear-gradient(
+    180deg,
+    $color-warning,
+    darken($color-warning, 15%)
+  );
   }
 
   strong {
-    color: darken($color-warning, 25%);
+    color: darken($color-warning, 30%);
     font-size: $font-xl;
 
     @include respond-to("md") {
@@ -1103,6 +1107,212 @@
         color: $color-white;
       }
     }
+  }
+}
+
+/* ============ HEAD TEACHER'S MESSAGE ============ */
+.teacherMessageCard {
+  position: relative;
+  margin: $spacing-4;
+  padding: $spacing-5;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    $color-primary-50 0%,
+    #fffbeb 50%,
+    $color-primary-50 100%
+  );
+  border: 1px solid rgba($color-warning, 0.35);
+  box-shadow:
+    0 4px 14px rgba($color-primary-800, 0.08),
+    inset 0 1px 0 rgba($color-white, 0.8);
+
+  @include respond-to("md") {
+    margin: $spacing-5 $spacing-6;
+    padding: $spacing-6;
+  }
+
+  /* Decorative top-left quote mark */
+  &::before {
+    content: "" "";
+    position: absolute;
+    top: -20px;
+    left: -10px;
+    font-size: 120px;
+    font-family: Georgia, serif;
+    color: rgba($color-warning, 0.15);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
+
+
+
+
+/* Gold accent bar on left */
+.teacherMessageDecor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    $color-warning 0%,
+    $color-primary-500 100%
+  );
+}
+
+/* Header */
+.teacherMessageHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  margin-bottom: $spacing-4;
+  padding-bottom: $spacing-3;
+  border-bottom: 1px dashed rgba($color-gray-400, 0.4);
+
+  h3 {
+    font-size: $font-md;
+    font-weight: $font-weight-bold;
+    color: $color-gray-900;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+
+    @include respond-to("md") {
+      font-size: $font-lg;
+    }
+  }
+
+  p {
+    font-size: 10px;
+    color: $color-gray-500;
+    margin: 2px 0 0;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+
+    @include respond-to("md") {
+      font-size: $font-xs;
+    }
+  }
+}
+
+.teacherMessageIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border:1px solid $color-primary-400;
+  border-radius: 50%;
+  color: $color-white;
+  font-size: $font-lg;
+  box-shadow:
+    0 4px 10px rgba($color-black, 0.15),
+    0 0 0 3px rgba($color-white, 0.7);
+  flex-shrink: 0;
+ .headTeacherImg {
+      width: 44px;
+  height: 44px;
+      border-radius: 50%;
+    }
+  @include respond-to("md") {
+    width: 52px;
+    height: 52px;
+    font-size: $font-xl;
+  }
+}
+
+/* Quote */
+.teacherMessageQuote {
+  font-size: $font-base;
+  line-height: 1.7;
+  color: $color-gray-800;
+  margin: 0 0 $spacing-4;
+  font-style: italic;
+  font-weight: $font-weight-normal;
+  position: relative;
+  z-index: 1;
+
+  @include respond-to("md") {
+    font-size: $font-md;
+    line-height: 1.8;
+  }
+}
+
+/* Signature */
+.teacherMessageSignature {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  .teacherSignatureLine {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      $color-gray-400 50%,
+      transparent 100%
+    );
+  }
+
+  span {
+    font-size: $font-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-700;
+    letter-spacing: 0.02em;
+  }
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  .teacherMessageCard {
+    background: linear-gradient(
+      135deg,
+      $color-gray-800 0%,
+      $color-gray-700 50%,
+      $color-gray-800 100%
+    );
+    border-color: rgba($color-warning, 0.3);
+
+    &::before {
+      color: rgba($color-warning, 0.1);
+    }
+  }
+
+  .teacherMessageHeader {
+    border-bottom-color: rgba($color-gray-600, 0.5);
+
+    h3 {
+      color: $color-gray-100;
+    }
+
+    p {
+      color: $color-gray-400;
+    }
+  }
+
+  .teacherMessageQuote {
+    color: $color-gray-200;
+  }
+
+  .teacherMessageSignature span {
+    color: $color-gray-300;
+  }
+
+  .teacherFail {
+    background: linear-gradient(
+      135deg,
+      $color-gray-800 0%,
+      rgba($color-error, 0.15) 50%,
+      $color-gray-800 100%
+    );
   }
 }
 

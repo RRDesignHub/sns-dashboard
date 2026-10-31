@@ -9,11 +9,12 @@ import {
   FaChartLine,
   FaStar,
   FaCheckCircle,
+  FaTimesCircle,
 } from "react-icons/fa";
 import axios from "axios";
 import Swal from "sweetalert2";
 import styles from "../styles/ClientPagesStyles/ClientResultPages.module.scss";
-import { getDummyResult } from "./../assets/dummyResult";
+
 const ClientResultPage = () => {
   const [className, setClassName] = useState("");
   const [classRoll, setClassRoll] = useState("");
@@ -57,41 +58,62 @@ const ClientResultPage = () => {
     setResult(null);
 
     try {
-      // 🧪 DUMMY
-      await new Promise((r) => setTimeout(r, 400));
-
-      const dummy = getDummyResult(
-        className,
-        classRoll.trim(),
-        examName,
-        academicYear,
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_SERVER_API}/api/result/public-search`,
+        {
+          params: {
+            className,
+            classRoll: classRoll.trim(),
+            examName,
+            academicYear,
+          },
+        },
       );
 
-      if (!dummy) {
+      if (data.success && data.data) {
+        setResult(data.data);
+
+        setTimeout(() => {
+          document
+            .getElementById("result-anchor")
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 100);
+      } else {
         Swal.fire({
           icon: "info",
           title: "পাওয়া যায়নি",
-          text: "এই শ্রেণি, রোল ও পরীক্ষার জন্য কোনো ডেমো ডেটা নেই। রোল ৩ এবং ৩য় সেমিস্টার ব্যবহার করুন।",
+          text: "এই তথ্য অনুযায়ী কোনো ফলাফল পাওয়া যায়নি।",
           confirmButtonColor: "#166534",
         });
-        setIsLoading(false);
-        return;
       }
-
-      setResult(dummy);
-
-      setTimeout(() => {
-        document
-          .getElementById("result-anchor")
-          ?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
     } catch (error: any) {
-      Swal.fire({
-        icon: "error",
-        title: "ত্রুটি",
-        text: "ফলাফল আনতে ব্যর্থ হয়েছে",
-        confirmButtonColor: "#166534",
-      });
+      // Handle different error scenarios
+      if (error.response?.status === 404) {
+        Swal.fire({
+          icon: "info",
+          title: "পাওয়া যায়নি",
+          text:
+            error.response?.data?.message ||
+            "শ্রেণি, রোল ও পরীক্ষার নাম সঠিকভাবে যাচাই করুন।",
+          confirmButtonColor: "#166534",
+        });
+      } else if (error.response?.status === 400) {
+        Swal.fire({
+          icon: "warning",
+          title: "তথ্য অসম্পূর্ণ",
+          text:
+            error.response?.data?.message ||
+            "সব প্রয়োজনীয় তথ্য সঠিকভাবে দিন।",
+          confirmButtonColor: "#166534",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "সার্ভার ত্রুটি",
+          text: "ফলাফল আনতে ব্যর্থ হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।",
+          confirmButtonColor: "#166534",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -246,10 +268,7 @@ const ClientResultPage = () => {
                 <span>রোল</span>
                 <strong>{result.studentSnapshot.classRoll}</strong>
               </div>
-              <div className={styles.infoCell}>
-                <span>আইডি</span>
-                <strong>{result.studentSnapshot.studentId}</strong>
-              </div>
+
               <div className={styles.infoCell}>
                 <span>পরীক্ষা</span>
                 <strong>{result.examSnapshot.name}</strong>
@@ -275,7 +294,6 @@ const ClientResultPage = () => {
                       <th>প্রাপ্ত</th>
                       <th>মোট</th>
                       <th>গ্রেড</th>
-                      <th>জিপিএ</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -285,7 +303,7 @@ const ClientResultPage = () => {
                         <td className={styles.subjectName}>{s.nameBn}</td>
                         <td className={styles.marks}>{s.obtainedTotal}</td>
                         <td className={styles.marks}>{s.totalMarks}</td>
-                        <td>
+                        <td className={styles.gpaParent}>
                           <span
                             className={`${styles.gradeChip} ${
                               s.grade === "F"
@@ -296,13 +314,49 @@ const ClientResultPage = () => {
                             {s.grade}
                           </span>
                         </td>
-                        <td className={styles.gpa}>{s.gpa}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
+
+            {/* ✅ NEW: Head Teacher's Message */}
+            {result.headTeacherMessage && (
+              <div
+                className={`${styles.teacherMessageCard} ${
+                  result.summary.isPassed
+                    ? styles.teacherPass
+                    : styles.teacherFail
+                }`}
+              >
+                <div className={styles.teacherMessageDecor}></div>
+
+                <div className={styles.teacherMessageHeader}>
+                  <div className={styles.teacherMessageIcon}>
+                    <img
+                      src="https://i.ibb.co.com/3ySTt4gN/Hasan-Sir.jpg"
+                      alt="Head_Teacer_Img"
+                      className={styles.headTeacherImg}
+                    />
+                  </div>
+                  <div>
+                    <h3>প্রধান শিক্ষকের বাণী</h3>
+                    <p>Head Teacher's Note</p>
+                  </div>
+                </div>
+
+                <blockquote className={styles.teacherMessageQuote}>
+                  "{result.headTeacherMessage}"
+                </blockquote>
+
+                <div className={styles.teacherMessageSignature}>
+                  <div className={styles.teacherSignatureLine}></div>
+                  <span>— প্রধান শিক্ষক,</span>
+                  <span>মোঃ আবুল হাসান</span>
+                </div>
+              </div>
+            )}
 
             {/* Summary Strip */}
             <div className={styles.summaryStrip}>
