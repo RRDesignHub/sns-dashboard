@@ -9,6 +9,6 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
   }
 }

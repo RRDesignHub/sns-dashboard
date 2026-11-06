@@ -1,0 +1,814 @@
+@import "../variables";
+@import "../mixin";
+
+/* ============ PAGE WRAPPER ============ */
+.addStudentPage {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: $spacing-3;
+
+  @include respond-to("md") {
+    padding: $spacing-4;
+  }
+}
+
+/* ============ HERO ============ */
+.hero {
+  text-align: center;
+  padding: $spacing-4 0 $spacing-6;
+  position: relative;
+
+  @include respond-to("md") {
+    padding: $spacing-6 0 $spacing-8;
+  }
+}
+
+.heroBadge {
+  @include flex-center;
+  width: 68px;
+  height: 68px;
+  margin: 0 auto $spacing-3;
+  border-radius: $radius-full;
+  background: linear-gradient(
+    135deg,
+    $color-primary-600 0%,
+    $color-primary-800 100%
+  );
+  color: $color-white;
+  box-shadow:
+    0 0 0 4px rgba($color-warning, 0.25),
+    0 8px 24px rgba($color-primary-800, 0.35);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px dashed rgba($color-warning, 0.5);
+    opacity: 0.6;
+  }
+
+  svg {
+    font-size: $font-2xl;
+    filter: drop-shadow(0 2px 4px rgba($color-black, 0.3));
+  }
+
+  @include respond-to("md") {
+    width: 80px;
+    height: 80px;
+
+    svg {
+      font-size: $font-3xl;
+    }
+  }
+}
+
+.heroTitle {
+  font-size: $font-xl;
+  font-weight: $font-weight-bold;
+  margin: 0 0 $spacing-2;
+  letter-spacing: -0.02em;
+  background: linear-gradient(
+    135deg,
+    $color-primary-900 0%,
+    $color-primary-700 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  @include respond-to("md") {
+    font-size: $font-2xl;
+  }
+}
+
+.heroSubtitle {
+  font-size: $font-sm;
+  color: $color-gray-600;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.heroDecor {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    $color-warning 50%,
+    transparent 100%
+  );
+}
+
+/* ============ STEP INDICATOR ============ */
+.stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  margin-bottom: $spacing-5;
+  padding: $spacing-3 $spacing-2;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  @include respond-to("md") {
+    gap: $spacing-3;
+  }
+}
+
+.stepWrapper {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+
+  @include respond-to("md") {
+    gap: $spacing-3;
+  }
+}
+
+.stepItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-1;
+  min-width: 64px;
+  transition: all $transition-base;
+
+  @include respond-to("md") {
+    flex-direction: row;
+    gap: $spacing-2;
+    min-width: auto;
+  }
+}
+
+.stepCircle {
+  @include flex-center;
+  width: 34px;
+  height: 34px;
+  border-radius: $radius-full;
+  background: $color-gray-200;
+  color: $color-gray-500;
+  font-size: $font-sm;
+  transition: all $transition-base;
+  border: 2px solid transparent;
+  flex-shrink: 0;
+
+  @include respond-to("md") {
+    width: 40px;
+    height: 40px;
+    font-size: $font-md;
+  }
+
+  svg {
+    font-size: inherit;
+  }
+}
+
+.stepLabel {
+  font-size: 10px;
+  font-weight: $font-weight-medium;
+  color: $color-gray-500;
+  text-align: center;
+  white-space: nowrap;
+
+  @include respond-to("md") {
+    font-size: $font-sm;
+  }
+}
+
+.stepActive {
+  .stepCircle {
+    background: linear-gradient(
+      135deg,
+      $color-primary-600,
+      $color-primary-800
+    );
+    color: $color-white;
+    border-color: rgba($color-warning, 0.4);
+    box-shadow:
+      0 0 0 4px rgba($color-primary-500, 0.15),
+      0 4px 12px rgba($color-primary-700, 0.35);
+    transform: scale(1.08);
+  }
+
+  .stepLabel {
+    color: $color-primary-800;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.stepDone {
+  .stepCircle {
+    background: linear-gradient(135deg, $color-teal-500, $color-primary-600);
+    color: $color-white;
+  }
+
+  .stepLabel {
+    color: $color-primary-700;
+  }
+}
+
+.stepConnector {
+  width: 20px;
+  height: 2px;
+  background: $color-gray-200;
+  transition: all $transition-base;
+
+  @include respond-to("md") {
+    width: 40px;
+  }
+}
+
+.connectorDone {
+  background: linear-gradient(
+    90deg,
+    $color-primary-500,
+    $color-teal-500
+  );
+}
+
+/* ============ FORM CARD ============ */
+.formCard {
+  background: $color-white;
+  border-radius: $radius-xl;
+  box-shadow:
+    0 10px 30px -5px rgba($color-primary-900, 0.15),
+    0 4px 12px -2px rgba($color-black, 0.05);
+  border: 1px solid rgba($color-primary-200, 0.5);
+  overflow: hidden;
+}
+
+/* ============ SLIDER ============ */
+.stepSlider {
+  overflow: hidden;
+  width: 100%;
+}
+
+.stepTrack {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+}
+
+.stepPane {
+  flex: 0 0 100%;
+  width: 100%;
+  padding: $spacing-4;
+
+  @include respond-to("md") {
+    padding: $spacing-6;
+  }
+
+  @include respond-to("lg") {
+    padding: $spacing-8;
+  }
+}
+
+/* Pane header */
+.paneHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  margin-bottom: $spacing-5;
+  padding-bottom: $spacing-4;
+  border-bottom: 2px solid $color-primary-100;
+
+  h2 {
+    font-size: $font-md;
+    font-weight: $font-weight-bold;
+    color: $color-primary-900;
+    margin: 0;
+    line-height: 1.2;
+
+    @include respond-to("md") {
+      font-size: $font-lg;
+    }
+  }
+
+  p {
+    font-size: $font-xs;
+    color: $color-gray-500;
+    margin: 2px 0 0;
+
+    @include respond-to("md") {
+      font-size: $font-sm;
+    }
+  }
+}
+
+.paneHeaderIcon {
+  @include flex-center;
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-md;
+  background: linear-gradient(
+    135deg,
+    $color-primary-600 0%,
+    $color-teal-500 100%
+  );
+  color: $color-white;
+  font-size: $font-md;
+  box-shadow: 0 4px 12px rgba($color-primary-600, 0.3);
+  flex-shrink: 0;
+
+  @include respond-to("md") {
+    width: 48px;
+    height: 48px;
+    font-size: $font-lg;
+  }
+}
+
+/* ============ FORM GRID ============ */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $spacing-4;
+
+  @include respond-to("sm") {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include respond-to("md") {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  grid-column: span 1;
+
+  label {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: center;
+    gap: $spacing-1;
+  }
+}
+
+.fieldFull {
+  grid-column: 1 / -1;
+}
+
+.required {
+  color: $color-error;
+  font-weight: $font-weight-bold;
+}
+
+.optional {
+  color: $color-gray-400;
+  font-weight: $font-weight-normal;
+  font-size: $font-xs;
+}
+
+.inlineIcon {
+  font-size: $font-xs;
+  color: $color-primary-600;
+}
+
+/* Inputs */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: $spacing-3;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  color: $color-gray-800;
+  background: $color-gray-50;
+  transition: all $transition-base;
+  font-family: inherit;
+
+  &::placeholder {
+    color: $color-gray-400;
+  }
+
+  &:hover {
+    border-color: $color-primary-300;
+    background: $color-white;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary-500;
+    background: $color-white;
+    box-shadow: 0 0 0 3px rgba($color-primary-500, 0.15);
+  }
+}
+
+.select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right $spacing-3 center;
+  background-size: 16px;
+  padding-right: $spacing-8;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.errorText {
+  color: $color-error;
+  font-size: $font-xs;
+  margin-top: 2px;
+}
+
+.helpText {
+  color: $color-gray-500;
+  font-size: $font-xs;
+  margin-top: 2px;
+}
+
+/* ============ SECTION TOGGLE (Primary / Higher) ============ */
+.sectionToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2;
+
+  input[type="radio"] {
+    display: none;
+  }
+}
+
+.sectionOption {
+  padding: $spacing-3;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-gray-50;
+  cursor: pointer;
+  transition: all $transition-base;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  text-align: center;
+
+  span {
+    font-size: $font-sm;
+    font-weight: $font-weight-semibold;
+    color: $color-gray-700;
+  }
+
+  small {
+    font-size: $font-xs;
+    color: $color-gray-500;
+  }
+
+  &:hover {
+    border-color: $color-primary-400;
+    background: $color-white;
+  }
+}
+
+.sectionSelected {
+  background: linear-gradient(
+    135deg,
+    rgba($color-primary-600, 0.1) 0%,
+    rgba($color-teal-500, 0.1) 100%
+  );
+  border-color: $color-primary-500;
+  box-shadow: 0 4px 12px rgba($color-primary-600, 0.2);
+
+  span {
+    color: $color-primary-900;
+  }
+
+  small {
+    color: $color-primary-700;
+  }
+}
+
+/* ============ GENDER TOGGLE ============ */
+.genderToggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-2;
+
+  input[type="radio"] {
+    display: none;
+  }
+}
+
+.genderOption {
+  padding: $spacing-3;
+  border: 1.5px solid $color-gray-200;
+  border-radius: $radius-md;
+  background: $color-gray-50;
+  cursor: pointer;
+  transition: all $transition-base;
+  text-align: center;
+
+  span {
+    font-size: $font-sm;
+    font-weight: $font-weight-medium;
+    color: $color-gray-700;
+  }
+
+  &:hover {
+    border-color: $color-primary-400;
+    background: $color-white;
+  }
+}
+
+.genderSelected {
+  background: linear-gradient(
+    135deg,
+    rgba($color-primary-600, 0.1) 0%,
+    rgba($color-teal-500, 0.1) 100%
+  );
+  border-color: $color-primary-500;
+  box-shadow: 0 4px 12px rgba($color-primary-600, 0.2);
+
+  span {
+    color: $color-primary-900;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+/* ============ IMAGE UPLOAD ============ */
+.imageUploadRow {
+  display: flex;
+  gap: $spacing-3;
+  align-items: flex-start;
+}
+
+.imagePreviewBox {
+  @include flex-center;
+  width: 80px;
+  height: 80px;
+  border-radius: $radius-md;
+  background: linear-gradient(
+    135deg,
+    $color-primary-100,
+    $color-teal-500
+  );
+  color: $color-white;
+  font-size: $font-2xl;
+  border: 2px dashed rgba($color-primary-400, 0.5);
+  flex-shrink: 0;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.imageInputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileInputLabel {
+  display: inline-block;
+  padding: $spacing-2 $spacing-4;
+  background: linear-gradient(
+    135deg,
+    $color-primary-700,
+    $color-primary-600
+  );
+  color: $color-white;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  text-align: center;
+  transition: all $transition-base;
+
+  &:hover {
+    background: linear-gradient(
+      135deg,
+      $color-primary-800,
+      $color-primary-700
+    );
+    transform: translateY(-1px);
+  }
+}
+
+/* ============ NAVIGATION ============ */
+.formNavigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-3;
+  padding: $spacing-4;
+  border-top: 1px solid $color-gray-200;
+  background: $color-gray-50;
+
+  @include respond-to("md") {
+    padding: $spacing-5 $spacing-6;
+  }
+}
+
+.stepCounter {
+  font-size: $font-xs;
+  font-weight: $font-weight-medium;
+  color: $color-gray-500;
+  padding: $spacing-1 $spacing-3;
+  background: $color-white;
+  border-radius: $radius-full;
+  border: 1px solid $color-gray-200;
+
+  @include respond-to("md") {
+    font-size: $font-sm;
+  }
+}
+
+.prevBtn,
+.nextBtn,
+.submitBtn {
+  @include flex(row, center, center, $spacing-2);
+  padding: $spacing-3 $spacing-5;
+  border: none;
+  border-radius: $radius-md;
+  font-size: $font-sm;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.prevBtn {
+  background: $color-white;
+  color: $color-gray-700;
+  border: 1.5px solid $color-gray-300;
+
+  &:hover:not(:disabled) {
+    background: $color-gray-100;
+    border-color: $color-gray-400;
+  }
+}
+
+.nextBtn {
+  background: linear-gradient(
+    135deg,
+    $color-primary-700 0%,
+    $color-primary-600 50%,
+    $color-primary-800 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 50%;
+  color: $color-white;
+  box-shadow:
+    0 4px 14px rgba($color-primary-700, 0.35),
+    inset 0 1px 0 rgba($color-white, 0.2);
+
+  &:hover:not(:disabled) {
+    background-position: 100% 50%;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba($color-primary-700, 0.45);
+  }
+}
+
+.submitBtn {
+  background: linear-gradient(
+    135deg,
+    $color-primary-700,
+    $color-teal-500
+  );
+  color: $color-white;
+  box-shadow:
+    0 4px 14px rgba($color-primary-700, 0.35),
+    inset 0 1px 0 rgba($color-white, 0.2);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba($color-primary-700, 0.45);
+  }
+}
+
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba($color-white, 0.4);
+  border-top-color: $color-white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============ DARK THEME ============ */
+[data-theme="dark"] {
+  .heroTitle {
+    background: linear-gradient(
+      135deg,
+      $color-primary-300 0%,
+      $color-primary-400 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .heroSubtitle {
+    color: $color-gray-300;
+  }
+
+  .formCard {
+    background: $color-gray-800;
+    border-color: $color-gray-700;
+  }
+
+  .stepPane {
+    color: $color-gray-200;
+  }
+
+  .paneHeader {
+    border-bottom-color: $color-gray-700;
+
+    h2 {
+      color: $color-gray-100;
+    }
+
+    p {
+      color: $color-gray-400;
+    }
+  }
+
+  .fieldGroup label {
+    color: $color-gray-300;
+  }
+
+  .input,
+  .select,
+  .textarea {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+    color: $color-gray-100;
+
+    &::placeholder {
+      color: $color-gray-500;
+    }
+
+    &:hover {
+      background: $color-gray-600;
+    }
+
+    &:focus {
+      background: $color-gray-600;
+    }
+  }
+
+  .sectionOption,
+  .genderOption {
+    background: $color-gray-700;
+    border-color: $color-gray-600;
+
+    span {
+      color: $color-gray-300;
+    }
+  }
+
+  .formNavigation {
+    background: $color-gray-700;
+    border-top-color: $color-gray-600;
+  }
+
+  .prevBtn {
+    background: $color-gray-700;
+    color: $color-gray-300;
+    border-color: $color-gray-600;
+
+    &:hover:not(:disabled) {
+      background: $color-gray-600;
+    }
+  }
+
+  .stepCounter {
+    background: $color-gray-700;
+    color: $color-gray-300;
+    border-color: $color-gray-600;
+  }
+}
